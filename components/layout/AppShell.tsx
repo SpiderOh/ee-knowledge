@@ -5,6 +5,7 @@ const nav = [
   ["知识库", "/courses"],
   ["课程", "/courses"],
   ["教材", "/courses"],
+  ["收藏", "/favorites"],
   ["复习中心", null],
   ["复试题库", null],
   ["学习统计", null],

@@ -8,7 +8,7 @@ export async function getCourseList() {
         orderBy: { sortOrder: "asc" },
         include: {
           _count: { select: { books: true, knowledgePoints: true } },
-          knowledgePoints: { select: { studyProgress: { select: { mastery: true } } } },
+          knowledgePoints: { select: { studyProgress: { select: { status: true } } } },
         },
       },
     },
@@ -21,13 +21,13 @@ export async function getCourseBySlug(slug: string) {
     include: {
       subjectArea: true,
       books: { orderBy: { sortOrder: "asc" }, include: { _count: { select: { chapters: true } } } },
-      knowledgePoints: { select: { studyProgress: { select: { mastery: true } } } },
+      knowledgePoints: { select: { studyProgress: { select: { status: true } } } },
       _count: { select: { books: true, knowledgePoints: true } },
     },
   });
 }
 
-export function calculateProgress(points: { studyProgress: { mastery: number } | null }[]) {
+export function calculateProgress(points: { studyProgress: { status: string } | null }[]) {
   if (!points.length) return 0;
-  return Math.round(points.reduce((sum, point) => sum + (point.studyProgress?.mastery ?? 0), 0) / points.length);
+  return Math.round(points.filter((point) => point.studyProgress !== null && point.studyProgress.status !== "NOT_STARTED").length / points.length * 100);
 }
