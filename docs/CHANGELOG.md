@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.0-alpha.4 - 2026-09-30
+
+### Added
+
+- 新增统一 `MarkdownRenderer`，支持 Markdown、GFM、代码、表格、链接和 KaTeX 数学公式。
+- 新增结构化 Formula、Example、KnowledgeRelation 展示组件。
+- 新增 `KnowledgeImage` 和 `MediaProvider` 图片显示接口。
+- 扩展 Demo Seed，增加 KCL/KVL 公式、KCL 示例和少量知识关系，并保持幂等。
+- 新增 `docs/MEDIA.md`。
+
+### Changed
+
+- KnowledgePoint 正文统一通过 Markdown 内容渲染层显示。
+- 项目版本更新为 `v0.1.0-alpha.4`。
+
+### Not included
+
+- 本轮未实现图片上传、MediaAsset 表、对象存储、AI、RAG 或复习中心。
+
 ## 0.1.0-alpha.3 - 2026-09-30
 
 ### Fixed

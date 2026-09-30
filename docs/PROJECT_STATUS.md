@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0-alpha.3`
+`v0.1.0-alpha.4`
 
 ## 当前阶段
 
-第四轮开发完成基础学习工具主链。正式 `v0.1.0` 仍等待更多内容管理和复习能力完成。
+第五轮开发完成专业知识内容展示层。正式 `v0.1.0` 仍等待内容管理、公式编辑和复习能力完成。
 
 ## 已完成
 
@@ -28,6 +28,11 @@
 - 知识点查询包含收藏与笔记上下文
 - 笔记创建返回真实数据库记录，编辑后按更新时间重新排序
 - 知识点切换时学习状态、收藏和笔记组件按知识点 ID 重建
+- 统一 Markdown + GFM 内容渲染
+- KaTeX 行内和块级公式渲染
+- 结构化 Formula、Example、KnowledgeRelation 展示
+- KnowledgeImage 图片渲染接口和 DirectMediaProvider 抽象
+- Demo Formula、Example、Relation 幂等 Seed 与验证
 
 ## 部分完成
 
@@ -35,19 +40,22 @@
 - 章节树支持递归和折叠，移动端暂时隐藏左侧目录
 - 学习工具为单用户本地数据，尚未接入登录和云同步
 - 当前 PR 修复已限定为状态一致性和笔记 CRUD 稳定性，不扩展新的学习功能
+- 图片仅支持 Markdown 引用和显示接口，尚未接入上传与媒体库
 
 ## 未完成
 
 - 知识点 CRUD、管理后台、JSON 导入导出
+- 公式、示例和关系的内容编辑工作流
+- 真正图片上传、MediaAsset 数据模型和对象存储
 - 复习中心、间隔复习和学习统计
-- KaTeX 公式展示
 - shadcn/ui
 - AI、RAG、复试训练和多用户能力
 
 ## 依赖状态
 
 - Zod：已安装并用于搜索参数校验
-- KaTeX：尚未配置，本轮没有公式渲染需求
+- KaTeX：已安装并通过 `remark-math`、`rehype-katex` 配置
+- Markdown：已安装 `react-markdown`、`remark-gfm`
 - shadcn/ui：尚未初始化
 
 ## 下一步
