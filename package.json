@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.1.0-alpha.4",
+  "version": "0.1.0-alpha.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,7 +12,8 @@
     "db:push": "prisma db push",
     "db": "prisma migrate deploy && npm run db:seed",
     "db:seed": "tsx prisma/seed.ts",
-    "verify:demo": "tsx scripts/verify-demo-data.ts"
+    "verify:demo": "tsx scripts/verify-demo-data.ts",
+    "verify:content": "tsx scripts/verify-content-transfer.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

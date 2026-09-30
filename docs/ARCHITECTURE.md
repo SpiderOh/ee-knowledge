@@ -65,6 +65,34 @@ MarkdownRenderer
 
 `Formula`、`Example` 和 `KnowledgeRelation` 保持结构化查询，分别由独立组件展示。图片只依赖规范化媒体引用；未来可以通过 `MediaProvider` 接入本地文件或对象存储。
 
+## 3.2 Content Management Layer
+
+```text
+Admin UI
+   ↓
+Content Management Server Actions
+   ↓
+Prisma
+```
+
+`/admin` 当前未配置身份认证，仅适合本地使用或可信网络。公开部署前必须增加 Authentication。
+
+## 3.3 Content Transfer Layer
+
+```text
+External JSON
+   ↓
+Knowledge Bundle Zod Schema
+   ↓
+Validation / Preview
+   ↓
+Import Service
+   ↓
+Prisma Transaction
+```
+
+导入导出服务与 NextRequest、React 和 UI 组件解耦。Bundle 只处理知识内容，不处理教材结构或用户学习数据。
+
 ## 4. AI 架构
 
 业务层不得直接依赖 OpenAI、Anthropic 或 Google SDK。

@@ -1,0 +1,58 @@
+{
+  "kind": "ee-knowledge-content",
+  "schemaVersion": "1.0",
+  "exportedAt": "2026-09-30T00:00:00.000Z",
+  "subjectAreas": [
+    {
+      "slug": "signals",
+      "name": "信号与系统",
+      "description": "信号处理基础",
+      "sortOrder": 1
+    }
+  ],
+  "courses": [
+    {
+      "slug": "signals-and-systems",
+      "name": "信号与系统",
+      "description": "连续与离散信号系统分析",
+      "sortOrder": 0,
+      "subjectAreaSlug": "signals"
+    }
+  ],
+  "knowledgePoints": [
+    {
+      "slug": "fourier-transform",
+      "courseSlug": "signals-and-systems",
+      "title": "傅里叶变换",
+      "category": "THEOREM",
+      "summary": "将信号从时域转换到频域。",
+      "definition": "傅里叶变换描述信号的频谱组成。\n\n![频谱示意](https://cdn.example.com/spectrum.png)",
+      "importance": 5,
+      "interviewImportance": 5,
+      "difficulty": 4,
+      "reviewStatus": "AI_DRAFT",
+      "confidence": null,
+      "formulas": [
+        {
+          "key": "fourier-main",
+          "name": "连续时间傅里叶变换",
+          "latex": "X(j\\omega)=\\int_{-\\infty}^{\\infty}x(t)e^{-j\\omega t}dt",
+          "description": "信号的频域表示。",
+          "conditions": "满足相应收敛条件。",
+          "sortOrder": 0
+        }
+      ],
+      "examples": [
+        {
+          "key": "spectrum-example",
+          "title": "矩形脉冲频谱",
+          "type": "示例",
+          "content": "分析矩形脉冲的频谱。",
+          "solution": "使用傅里叶变换定义计算。",
+          "sortOrder": 0
+        }
+      ]
+    }
+  ],
+  "relations": []
+}

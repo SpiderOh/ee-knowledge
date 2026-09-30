@@ -120,3 +120,27 @@ Markdown 能支持公式、表格、代码和列表等专业内容；结构化�
 原因：
 
 当前图片的复用、版权、来源和上传需求还未稳定。先隔离渲染层和存储层，避免过早绑定数据库或云厂商。
+
+---
+
+## ADR-009：Knowledge Bundle v1 使用 slug 作为知识实体标识
+
+状态：Accepted
+
+跨系统内容使用 SubjectArea、Course、KnowledgePoint 的 slug，以及 Formula、Example 的 package-local key。Bundle 不暴露内部 cuid，避免导入格式绑定某个数据库。
+
+---
+
+## ADR-010：知识导入采用 Merge / Upsert
+
+状态：Accepted
+
+导入只创建或更新 Bundle 明确提供的内容，不删除 Bundle 缺失的数据。这样可以安全接收部分 AI 生成文件，避免不完整文件误删已有知识。
+
+---
+
+## ADR-011：Book / Chapter 不进入 Knowledge Bundle v1
+
+状态：Accepted
+
+当前教材和章节没有稳定的跨库自然标识。本轮 Bundle 只处理知识内容；教材结构未来由独立 Library Bundle 设计，不为导入格式修改 Book 或 Chapter Schema。

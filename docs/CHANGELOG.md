@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.1.0-alpha.5 - 2026-09-30
+
+### Added
+
+- 新增内容管理后台 `/admin` 和 KnowledgePoint 分页管理。
+- 新增 KnowledgePoint 创建、编辑、安全删除以及 Formula、Example、Relation 和教材章节关联管理。
+- 新增 Knowledge Bundle v1 的 JSON 校验、预览、Merge/Upsert 导入和稳定导出。
+- 新增 `docs/CONTENT_FORMAT.md`、Bundle 示例和 `npm run verify:content`。
+
+### Safety
+
+- 管理后台当前未认证，仅适合本地或可信网络。
+- 知识点存在学习记录、收藏、笔记或复习记录时禁止删除。
+- Knowledge Bundle 不包含用户学习数据，不删除 Bundle 缺失内容。
+- 导入内容默认保留 AI 草稿审核状态，不自动标记为 VERIFIED。
+
 ## 0.1.0-alpha.4 - 2026-09-30
 
 ### Added
