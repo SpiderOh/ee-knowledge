@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 
+const optionalFilter = z.preprocess((value) => typeof value === "string" && value.trim() === "" ? undefined : value, z.string().trim().min(1).optional());
 const searchParamsSchema = z.object({
   q: z.string().trim().max(100).optional().default(""),
-  course: z.string().trim().min(1).optional(),
-  book: z.string().trim().min(1).optional(),
+  course: optionalFilter,
+  book: optionalFilter,
 });
 
 export type SearchParamsInput = Record<string, string | string[] | undefined>;
@@ -13,8 +14,13 @@ export type SearchParams = z.infer<typeof searchParamsSchema>;
 function first(value: string | string[] | undefined) { return Array.isArray(value) ? value[0] : value; }
 
 export function parseSearchParams(input: SearchParamsInput): SearchParams {
-  const parsed = searchParamsSchema.safeParse({ q: first(input.q), course: first(input.course), book: first(input.book) });
-  return parsed.success ? parsed.data : { q: "", course: undefined, book: undefined };
+  const normalized = { q: first(input.q), course: first(input.course), book: first(input.book) };
+  const parsed = searchParamsSchema.safeParse(normalized);
+  if (parsed.success) return parsed.data;
+  const query = z.string().trim().max(100).safeParse(normalized.q);
+  const course = optionalFilter.safeParse(normalized.course);
+  const book = optionalFilter.safeParse(normalized.book);
+  return { q: query.success ? query.data : "", course: course.success ? course.data : undefined, book: book.success ? book.data : undefined };
 }
 
 export async function getSearchResults(params: SearchParams) {
