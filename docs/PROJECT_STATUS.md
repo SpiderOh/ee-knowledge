@@ -33,6 +33,7 @@
 - 结构化 Formula、Example、KnowledgeRelation 展示
 - KnowledgeImage 图片渲染接口和 DirectMediaProvider 抽象
 - Demo Formula、Example、Relation 幂等 Seed 与验证
+- 修复对称知识关系重复展示及 Markdown、图片 URL 安全边界
 
 ## 部分完成
 

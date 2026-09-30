@@ -10,12 +10,23 @@ type KnowledgePointContentData = Pick<KnowledgePoint, "definition" | "plainExpla
   outgoingRelations: Array<{ id: string; relationType: RelationType; description: string | null; target: { id: string; title: string; slug: string; course: { name: string } } }>;
   incomingRelations: Array<{ id: string; relationType: RelationType; description: string | null; source: { id: string; title: string; slug: string; course: { name: string } } }>;
 };
-const sections = [["definition", "标准定义"], ["plainExplanation", "通俗理解"], ["principle", "核心原理"], ["physicalMeaning", "物理意义"], ["engineeringMeaning", "工程意义"]] as const;
+const symmetricRelationTypes = new Set<RelationType>(["RELATED", "SIMILAR", "DIFFERENT"]);
 
 export function KnowledgePointContent({ point }: { point: KnowledgePointContentData }) {
-  const relations = [
+  const allRelations = [
     ...point.outgoingRelations.map((relation) => ({ id: relation.id, relationType: relation.relationType, description: relation.description, direction: "outgoing" as const, knowledgePoint: relation.target })),
     ...point.incomingRelations.map((relation) => ({ id: relation.id, relationType: relation.relationType, description: relation.description, direction: "incoming" as const, knowledgePoint: relation.source })),
   ];
-  return <div className="knowledge-content">{sections.map(([field, title]) => point[field] ? <section key={field}><h2>{title}</h2><MarkdownRenderer content={point[field]} /></section> : null)}<FormulaSection formulas={point.formulas} /><ExampleSection examples={point.examples} /><KnowledgeRelations relations={relations} /></div>;
+  const relations = allRelations.filter((relation, index, list) => !symmetricRelationTypes.has(relation.relationType) || list.findIndex((candidate) => candidate.relationType === relation.relationType && candidate.knowledgePoint.id === relation.knowledgePoint.id) === index);
+  const section = (field: keyof Pick<KnowledgePoint, "definition" | "plainExplanation" | "principle" | "physicalMeaning" | "engineeringMeaning">, title: string) => point[field] ? <section key={field}><h2>{title}</h2><MarkdownRenderer content={point[field]} /></section> : null;
+  return <div className="knowledge-content">
+    {section("definition", "标准定义")}
+    {section("plainExplanation", "通俗理解")}
+    {section("principle", "核心原理")}
+    <FormulaSection formulas={point.formulas} />
+    {section("physicalMeaning", "物理意义")}
+    {section("engineeringMeaning", "工程意义")}
+    <ExampleSection examples={point.examples} />
+    <KnowledgeRelations relations={relations} />
+  </div>;
 }

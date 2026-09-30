@@ -3,27 +3,14 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import { isExternalContentLink, isSafeContentLink } from "@/lib/content/url-safety";
 import { KnowledgeImage } from "./KnowledgeImage";
-
-function isSafeLink(url: string) {
-  const value = url.trim();
-  if (value.startsWith("/")) return true;
-  try {
-    const protocol = new URL(value).protocol;
-    return protocol === "http:" || protocol === "https:";
-  } catch {
-    return false;
-  }
-}
-
-function isExternalLink(url: string) {
-  return /^https?:\/\//i.test(url.trim());
-}
 
 const components: Components = {
   a: ({ href, children }) => {
-    if (!href || !isSafeLink(href)) return <span>{children}</span>;
-    return <a href={href} target={isExternalLink(href) ? "_blank" : undefined} rel={isExternalLink(href) ? "noopener noreferrer" : undefined}>{children}</a>;
+    if (!href || !isSafeContentLink(href)) return <span>{children}</span>;
+    const external = isExternalContentLink(href);
+    return <a href={href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>{children}</a>;
   },
   img: ({ src, alt, title }) => <KnowledgeImage src={typeof src === "string" ? src : ""} alt={alt || "知识图片"} caption={title || undefined} />,
   p: ({ children }) => {

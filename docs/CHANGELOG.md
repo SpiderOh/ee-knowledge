@@ -15,6 +15,12 @@
 - KnowledgePoint 正文统一通过 Markdown 内容渲染层显示。
 - 项目版本更新为 `v0.1.0-alpha.4`。
 
+### Fixed
+
+- 修复对称知识关系重复显示，并清理 Demo 中反向 RELATED 镜像。
+- 加固 Markdown 链接和图片 URL 的安全判断。
+- 调整知识点正文中的公式、物理意义和工程意义展示顺序。
+
 ### Not included
 
 - 本轮未实现图片上传、MediaAsset 表、对象存储、AI、RAG 或复习中心。

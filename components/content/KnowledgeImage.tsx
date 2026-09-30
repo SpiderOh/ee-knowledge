@@ -3,19 +3,9 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useState } from "react";
+import { isSafeImageSource } from "@/lib/content/url-safety";
 import { directMediaProvider } from "@/lib/media/provider";
 import type { MediaAssetRef } from "@/lib/media/types";
-
-function isSafeImageSource(src: string) {
-  const value = src.trim();
-  if (value.startsWith("/")) return true;
-  try {
-    const protocol = new URL(value).protocol;
-    return protocol === "https:" || protocol === "http:";
-  } catch {
-    return false;
-  }
-}
 
 export function KnowledgeImage({ src, alt, caption, width, height }: MediaAssetRef) {
   const [failed, setFailed] = useState(false);

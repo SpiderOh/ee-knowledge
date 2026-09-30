@@ -5,6 +5,8 @@
 - Markdown 图片语法通过 `KnowledgeImage` 统一渲染。
 - 支持站内相对路径，例如 `/media/circuit/kcl.png`。
 - 支持 HTTPS URL；开发环境也允许 HTTP URL。
+- 拒绝 protocol-relative URL（例如 `//example.com/a.png`）和 `javascript:`、`data:`、`file:`、`vbscript:` 等危险 scheme。
+- 生产环境拒绝 HTTP 图片，开发环境可用于本地调试。
 - 图片失败时保留替代文本并显示“图片加载失败”。
 - 图片使用响应式 `max-width: 100%`，不会主动造成移动端横向滚动。
 
