@@ -166,6 +166,45 @@ h1 { margin: 6px 0 8px; font-size: 32px; letter-spacing: -.03em; }
 .search-result p, .search-result small { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .result-meta { display: flex; align-items: flex-end; flex-direction: column; gap: 5px; white-space: nowrap; font-size: 11px; color: var(--muted); }
 .result-meta strong { color: #f59e0b; letter-spacing: 1px; }
+.markdown-content { color: #374151; line-height: 1.85; overflow-wrap: anywhere; }
+.markdown-content > :first-child { margin-top: 0; }
+.markdown-content > :last-child { margin-bottom: 0; }
+.markdown-content p, .markdown-paragraph { margin: 0 0 14px; }
+.markdown-content strong { color: var(--text); }
+.markdown-content a { color: var(--blue); text-decoration: underline; text-underline-offset: 2px; }
+.markdown-content ul, .markdown-content ol { margin: 0 0 16px; padding-left: 24px; }
+.markdown-content blockquote { margin: 14px 0; padding: 8px 14px; border-left: 3px solid #bfdbfe; color: var(--muted); background: #f8fbff; }
+.markdown-content table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 16px 0; }
+.markdown-content th, .markdown-content td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; white-space: nowrap; }
+.markdown-content th { background: #f8fafc; color: var(--text); }
+.markdown-content code { border-radius: 4px; background: #f1f5f9; padding: 2px 5px; font-size: .9em; }
+.markdown-code-block { overflow-x: auto; margin: 16px 0; padding: 14px 16px; border-radius: 8px; background: #111827; color: #e5e7eb; line-height: 1.6; }
+.markdown-code-block code { padding: 0; background: transparent; color: inherit; }
+.math-block, .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 5px 0; }
+.formula-section, .example-section, .knowledge-relations { margin-top: 34px; }
+.formula-section > h2, .example-section > h2, .knowledge-relations > h2 { font-size: 19px; margin: 0 0 14px; }
+.formula-list, .example-list, .relation-list { display: grid; gap: 12px; }
+.formula-card, .example-card { border: 1px solid var(--line); border-radius: 10px; padding: 16px; background: #fbfdff; }
+.formula-card h3, .example-card h3 { margin: 0; font-size: 15px; }
+.formula-body { margin: 10px 0; min-width: 0; }
+.formula-body .markdown-content { text-align: center; }
+.formula-card p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.formula-fallback { display: grid; gap: 6px; padding: 10px; border: 1px dashed #f59e0b; border-radius: 7px; background: #fffbeb; color: #92400e; }
+.formula-fallback code { overflow-x: auto; white-space: pre-wrap; }
+.example-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.example-heading span, .relation-label { border-radius: 99px; padding: 4px 8px; color: #1d4ed8; background: var(--blue-soft); font-size: 11px; }
+.example-solution { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.example-solution h4 { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+.relation-card { display: flex; justify-content: space-between; align-items: center; gap: 18px; border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; background: var(--surface); }
+.relation-card:hover { border-color: #93c5fd; background: var(--blue-soft); }
+.relation-card h3 { margin: 7px 0 3px; font-size: 15px; }
+.relation-card small, .relation-card p { color: var(--muted); font-size: 12px; }
+.relation-card p { margin: 7px 0 0; line-height: 1.5; }
+.knowledge-image { margin: 18px auto; text-align: center; }
+.knowledge-image img { display: block; max-width: 100%; height: auto; margin: 0 auto; border: 1px solid var(--line); border-radius: 8px; }
+.knowledge-image figcaption { margin-top: 7px; color: var(--muted); font-size: 12px; }
+.knowledge-image-fallback { display: grid; gap: 4px; place-items: center; min-height: 90px; padding: 18px; border: 1px dashed var(--line); border-radius: 8px; color: var(--muted); background: #fafafa; }
+.knowledge-image-fallback small { color: #b45309; }
 @media (max-width: 1000px) { .course-grid { grid-template-columns: repeat(2, 1fr); } .knowledge-layout { grid-template-columns: 1fr; } .knowledge-aside { position: static; } }
 @media (max-width: 900px) { .sidebar { width: 190px; } .main { padding: 24px; } .stats { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
 @media (max-width: 620px) { .sidebar, .knowledge-sidebar { display: none; } .main, .knowledge-main { padding: 20px 16px; } .topbar, .page-header, .course-hero, .knowledge-heading { display: block; } .search, .search-form { width: 100%; margin-top: 18px; } .course-list, .course-grid, .book-grid { grid-template-columns: 1fr; } .course-overview { overflow-x: auto; } .stat-inline { min-width: 110px; padding: 14px; } .hero-progress { text-align: left; margin-top: 20px; } .knowledge-badges { flex-direction: row; flex-wrap: wrap; margin-top: 18px; } .search-result, .favorite-card { align-items: flex-start; flex-direction: column; } .result-meta { align-items: flex-start; flex-direction: row; flex-wrap: wrap; } .recent-study { grid-template-columns: 1fr; } .recent-study time { grid-column: auto; grid-row: auto; } }

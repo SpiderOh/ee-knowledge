@@ -1,4 +1,4 @@
-import { PrismaClient, KnowledgeCategory, ReviewStatus } from "@prisma/client";
+import { PrismaClient, KnowledgeCategory, RelationType, ReviewStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -38,6 +38,21 @@ async function main() {
     ["诺顿定理", "norton-theorem", "线性有源二端网络可等效为电流源并联电阻。", "任一线性有源二端网络可等效为一个电流源和电阻并联的电路。", KnowledgeCategory.THEOREM],
   ] as const;
   for (const [title, slug, summary, definition, category] of points) await prisma.knowledgePoint.upsert({ where: { slug }, update: { title, summary, definition, category, courseId: circuit.id, reviewStatus: ReviewStatus.VERIFIED }, create: { title, slug, summary, definition, category, courseId: circuit.id, reviewStatus: ReviewStatus.VERIFIED } });
+
+  const [currentLaw, voltageLaw, current] = await Promise.all([
+    prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: "kirchhoff-current-law" } }),
+    prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: "kirchhoff-voltage-law" } }),
+    prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: "electric-current" } }),
+  ]);
+  await prisma.knowledgeRelation.deleteMany({ where: { id: "demo-relation-kvl-kcl", sourceKnowledgePointId: voltageLaw.id, targetKnowledgePointId: currentLaw.id, relationType: RelationType.RELATED } });
+  await prisma.formula.upsert({ where: { id: "demo-formula-kcl-1" }, update: { knowledgePointId: currentLaw.id, name: "节点电流定律", latex: "\\sum_{k=1}^{n} i_k = 0", description: "节点处各支路电流的代数和为零。", conditions: "集总参数电路节点分析。", sortOrder: 0 }, create: { id: "demo-formula-kcl-1", knowledgePointId: currentLaw.id, name: "节点电流定律", latex: "\\sum_{k=1}^{n} i_k = 0", description: "节点处各支路电流的代数和为零。", conditions: "集总参数电路节点分析。", sortOrder: 0 } });
+  await prisma.formula.upsert({ where: { id: "demo-formula-kvl-1" }, update: { knowledgePointId: voltageLaw.id, name: "回路电压定律", latex: "\\sum_{k=1}^{n} u_k = 0", description: "沿闭合回路电压的代数和为零。", conditions: "集总参数电路闭合回路分析。", sortOrder: 0 }, create: { id: "demo-formula-kvl-1", knowledgePointId: voltageLaw.id, name: "回路电压定律", latex: "\\sum_{k=1}^{n} u_k = 0", description: "沿闭合回路电压的代数和为零。", conditions: "集总参数电路闭合回路分析。", sortOrder: 0 } });
+  await prisma.example.upsert({ where: { id: "demo-example-kcl-1" }, update: { knowledgePointId: currentLaw.id, title: "节点电流计算", content: "某节点有 $2A$ 和 $3A$ 电流流入，另有 $1A$ 电流流出，求另一支路流出电流。", solution: "根据 KCL：\n\n$$\n2+3=1+I\n$$\n\n因此：\n\n$$\nI=4A\n$$", type: "计算题", sortOrder: 0 }, create: { id: "demo-example-kcl-1", knowledgePointId: currentLaw.id, title: "节点电流计算", content: "某节点有 $2A$ 和 $3A$ 电流流入，另有 $1A$ 电流流出，求另一支路流出电流。", solution: "根据 KCL：\n\n$$\n2+3=1+I\n$$\n\n因此：\n\n$$\nI=4A\n$$", type: "计算题", sortOrder: 0 } });
+  const relations = [
+    { id: "demo-relation-current-kcl", sourceKnowledgePointId: current.id, targetKnowledgePointId: currentLaw.id, relationType: RelationType.PREREQUISITE, description: "先理解电流方向和符号，才能进行节点电流分析。" },
+    { id: "demo-relation-kcl-kvl", sourceKnowledgePointId: currentLaw.id, targetKnowledgePointId: voltageLaw.id, relationType: RelationType.RELATED, description: "KCL 与 KVL 共同构成基尔霍夫定律。" },
+  ];
+  for (const relation of relations) await prisma.knowledgeRelation.upsert({ where: { sourceKnowledgePointId_targetKnowledgePointId_relationType: { sourceKnowledgePointId: relation.sourceKnowledgePointId, targetKnowledgePointId: relation.targetKnowledgePointId, relationType: relation.relationType } }, update: { description: relation.description }, create: relation });
 
   const book = await prisma.book.upsert({ where: { id: "demo-circuit-book" }, update: { title: "电路（第五版）", author: "邱关源", publisher: "高等教育出版社", edition: "第五版" }, create: { id: "demo-circuit-book", courseId: circuit.id, title: "电路（第五版）", author: "邱关源", publisher: "高等教育出版社", edition: "第五版" } });
   // 仅同步 Demo 教材的章节关联，避免历史 fixture 残留影响正式或其他教材数据。

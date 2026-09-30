@@ -7,6 +7,15 @@ export async function getKnowledgePointBySlug(slug: string) {
     include: {
       course: true,
       formulas: { orderBy: { sortOrder: "asc" } },
+      examples: { orderBy: { sortOrder: "asc" } },
+      outgoingRelations: {
+        orderBy: { relationType: "asc" },
+        select: { id: true, relationType: true, description: true, target: { select: { id: true, title: true, slug: true, course: { select: { name: true } } } } },
+      },
+      incomingRelations: {
+        orderBy: { relationType: "asc" },
+        select: { id: true, relationType: true, description: true, source: { select: { id: true, title: true, slug: true, course: { select: { name: true } } } } },
+      },
       chapters: {
         orderBy: { sortOrder: "asc" },
         include: {

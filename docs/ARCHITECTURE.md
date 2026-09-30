@@ -49,6 +49,22 @@ Feature 层负责业务。
 
 数据库访问集中到 `lib/db` 或对应 Repository。
 
+## 3.1 内容渲染层
+
+知识点正文和结构化内容通过统一渲染层输出：
+
+```text
+KnowledgePoint Data
+        ↓
+MarkdownRenderer
+├─ Markdown / GFM
+├─ Math / KaTeX
+├─ Code
+└─ KnowledgeImage
+```
+
+`Formula`、`Example` 和 `KnowledgeRelation` 保持结构化查询，分别由独立组件展示。图片只依赖规范化媒体引用；未来可以通过 `MediaProvider` 接入本地文件或对象存储。
+
 ## 4. AI 架构
 
 业务层不得直接依赖 OpenAI、Anthropic 或 Google SDK。
