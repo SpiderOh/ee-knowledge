@@ -40,14 +40,16 @@ async function main() {
   for (const [title, slug, summary, definition, category] of points) await prisma.knowledgePoint.upsert({ where: { slug }, update: { title, summary, definition, category, courseId: circuit.id, reviewStatus: ReviewStatus.VERIFIED }, create: { title, slug, summary, definition, category, courseId: circuit.id, reviewStatus: ReviewStatus.VERIFIED } });
 
   const book = await prisma.book.upsert({ where: { id: "demo-circuit-book" }, update: { title: "电路（第五版）", author: "邱关源", publisher: "高等教育出版社", edition: "第五版" }, create: { id: "demo-circuit-book", courseId: circuit.id, title: "电路（第五版）", author: "邱关源", publisher: "高等教育出版社", edition: "第五版" } });
+  // 仅同步 Demo 教材的章节关联，避免历史 fixture 残留影响正式或其他教材数据。
+  await prisma.chapterKnowledgePoint.deleteMany({ where: { chapter: { bookId: book.id } } });
   const chapterData = [
-    { id: "demo-circuit-chapter-1", title: "电路模型和电路定律", number: "1", level: 1, parentId: null, points: ["circuit-model", "electric-current", "electric-voltage", "electric-power"] },
-    { id: "demo-circuit-chapter-1-1", title: "基本物理量", number: "1.1", level: 2, parentId: "demo-circuit-chapter-1", points: ["electric-current", "electric-voltage", "electric-power"] },
-    { id: "demo-circuit-chapter-1-2", title: "基尔霍夫定律", number: "1.2", level: 2, parentId: "demo-circuit-chapter-1", points: ["kirchhoff-current-law", "kirchhoff-voltage-law"] },
-    { id: "demo-circuit-chapter-2", title: "电阻电路分析", number: "2", level: 1, parentId: null, points: ["resistor-equivalent", "superposition-theorem", "thevenin-theorem", "norton-theorem"] },
+    { id: "demo-circuit-chapter-1", title: "电路模型和电路定律", number: "1", level: 1, parentId: null, sortOrder: 0, points: ["circuit-model"] },
+    { id: "demo-circuit-chapter-1-1", title: "基本物理量", number: "1.1", level: 2, parentId: "demo-circuit-chapter-1", sortOrder: 0, points: ["electric-current", "electric-voltage", "electric-power"] },
+    { id: "demo-circuit-chapter-1-2", title: "基尔霍夫定律", number: "1.2", level: 2, parentId: "demo-circuit-chapter-1", sortOrder: 1, points: ["kirchhoff-current-law", "kirchhoff-voltage-law"] },
+    { id: "demo-circuit-chapter-2", title: "电阻电路分析", number: "2", level: 1, parentId: null, sortOrder: 1, points: ["resistor-equivalent", "superposition-theorem", "thevenin-theorem", "norton-theorem"] },
   ];
   for (const chapter of chapterData) {
-    const record = await prisma.chapter.upsert({ where: { id: chapter.id }, update: { bookId: book.id, title: chapter.title, number: chapter.number, level: chapter.level, parentId: chapter.parentId }, create: { id: chapter.id, bookId: book.id, title: chapter.title, number: chapter.number, level: chapter.level, parentId: chapter.parentId } });
+    const record = await prisma.chapter.upsert({ where: { id: chapter.id }, update: { bookId: book.id, title: chapter.title, number: chapter.number, level: chapter.level, parentId: chapter.parentId, sortOrder: chapter.sortOrder }, create: { id: chapter.id, bookId: book.id, title: chapter.title, number: chapter.number, level: chapter.level, parentId: chapter.parentId, sortOrder: chapter.sortOrder } });
     for (let index = 0; index < chapter.points.length; index++) {
       const knowledgePoint = await prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: chapter.points[index] } });
       await prisma.chapterKnowledgePoint.upsert({ where: { chapterId_knowledgePointId: { chapterId: record.id, knowledgePointId: knowledgePoint.id } }, update: { sortOrder: index }, create: { chapterId: record.id, knowledgePointId: knowledgePoint.id, sortOrder: index } });

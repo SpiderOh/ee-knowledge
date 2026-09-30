@@ -1,10 +1,23 @@
 # START_HERE
 
-如果你把这个项目交给新的 AI，请直接发送：
+如果你把这个项目交给新的 AI，请先阅读：
 
-> 请先阅读 `README.md`、`AGENTS.md`、`docs/MASTER_SPEC.md`、`docs/PROJECT_STATUS.md`、`docs/ARCHITECTURE.md`、`docs/DATABASE.md` 和 `docs/DECISIONS.md`。  
-> 这是一个已经规划好的长期项目，不要重新设计。先汇报现状，再根据 `PROJECT_STATUS.md` 的 Next Step 继续开发。
+> `README.md`、`AGENTS.md`、`docs/MASTER_SPEC.md`、`docs/PROJECT_STATUS.md`、`docs/ARCHITECTURE.md`、`docs/DATABASE.md`、`docs/UI.md`、`docs/DECISIONS.md`。
 
-当前下一步：
+这是一个已经初始化并持续开发中的 Next.js + Prisma 知识库项目，不要重新初始化或重设计数据库。先检查当前 Git 分支和状态，再根据 `docs/PROJECT_STATUS.md` 的下一步继续开发。
 
-**初始化 Next.js 项目，并基于 `prisma/schema.prisma` 创建第一版数据库。**
+当前版本：
+
+`v0.1.0-alpha.2`
+
+已完成：
+
+- 首页、课程、教材、章节树和知识点阅读
+- 稳定的 Demo Seed 与教材阅读顺序
+- 基础全局搜索和课程过滤
+
+下一步：
+
+- 学习状态操作
+- 收藏
+- 个人笔记

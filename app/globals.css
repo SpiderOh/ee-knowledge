@@ -19,6 +19,9 @@ a { color: inherit; text-decoration: none; }
 h1 { margin: 6px 0 8px; font-size: 32px; letter-spacing: -.03em; }
 .subtitle { color: var(--muted); margin: 0; }
 .search { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 11px 14px; width: 260px; color: var(--muted); }
+.search-form { display: flex; width: 280px; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; overflow: hidden; }
+.search-form input { min-width: 0; flex: 1; border: 0; outline: 0; padding: 11px 12px; color: var(--text); background: transparent; }
+.search-form button { border: 0; background: transparent; color: var(--muted); padding: 0 13px; cursor: pointer; font-size: 18px; }
 .grid { display: grid; gap: 16px; }
 .stats { grid-template-columns: repeat(4, 1fr); margin: 24px 0; }
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
@@ -113,6 +116,21 @@ h1 { margin: 6px 0 8px; font-size: 32px; letter-spacing: -.03em; }
 .not-found h1 { margin: 0; }
 .not-found p { color: var(--muted); }
 .primary-button { display: inline-block; background: var(--blue); color: white; padding: 10px 16px; border-radius: 8px; margin: 10px auto; }
+.search-page-form { margin-bottom: 14px; }
+.search-page-form .search-form { width: min(100%, 560px); }
+.search-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; color: var(--muted); font-size: 12px; }
+.search-filters a { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 6px 10px; }
+.search-filters a:hover, .search-filters a.filter-active { color: var(--blue); border-color: #93c5fd; background: var(--blue-soft); }
+.search-empty { text-align: center; padding: 45px 20px; }
+.search-empty a { color: var(--blue); }
+.search-group { margin-top: 26px; }
+.search-group > .section-heading { margin-bottom: 12px; }
+.search-result { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px; padding: 15px 18px; }
+.search-result:hover { border-color: #93c5fd; background: var(--blue-soft); }
+.search-result h3 { margin: 0 0 6px; font-size: 15px; }
+.search-result p, .search-result small { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.result-meta { display: flex; align-items: flex-end; flex-direction: column; gap: 5px; white-space: nowrap; font-size: 11px; color: var(--muted); }
+.result-meta strong { color: #f59e0b; letter-spacing: 1px; }
 @media (max-width: 1000px) { .course-grid { grid-template-columns: repeat(2, 1fr); } .knowledge-layout { grid-template-columns: 1fr; } .knowledge-aside { position: static; } }
 @media (max-width: 900px) { .sidebar { width: 190px; } .main { padding: 24px; } .stats { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
-@media (max-width: 620px) { .sidebar, .knowledge-sidebar { display: none; } .main, .knowledge-main { padding: 20px 16px; } .topbar, .page-header, .course-hero, .knowledge-heading { display: block; } .search { width: 100%; margin-top: 18px; } .course-list, .course-grid, .book-grid { grid-template-columns: 1fr; } .course-overview { overflow-x: auto; } .stat-inline { min-width: 110px; padding: 14px; } .hero-progress { text-align: left; margin-top: 20px; } .knowledge-badges { flex-direction: row; flex-wrap: wrap; margin-top: 18px; } }
+@media (max-width: 620px) { .sidebar, .knowledge-sidebar { display: none; } .main, .knowledge-main { padding: 20px 16px; } .topbar, .page-header, .course-hero, .knowledge-heading { display: block; } .search, .search-form { width: 100%; margin-top: 18px; } .course-list, .course-grid, .book-grid { grid-template-columns: 1fr; } .course-overview { overflow-x: auto; } .stat-inline { min-width: 110px; padding: 14px; } .hero-progress { text-align: left; margin-top: 20px; } .knowledge-badges { flex-direction: row; flex-wrap: wrap; margin-top: 18px; } .search-result { align-items: flex-start; flex-direction: column; } .result-meta { align-items: flex-start; flex-direction: row; flex-wrap: wrap; } }
