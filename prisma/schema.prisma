@@ -1,0 +1,348 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum KnowledgeCategory {
+  CONCEPT
+  THEOREM
+  FORMULA
+  ALGORITHM
+  CIRCUIT
+  SYSTEM
+  PROTOCOL
+  DEVICE
+  METHOD
+  EXPERIMENT
+  OTHER
+}
+
+enum ReviewStatus {
+  AI_DRAFT
+  REVIEWED
+  VERIFIED
+}
+
+enum StudyStatus {
+  NOT_STARTED
+  LEARNING
+  MASTERED
+  REVIEW
+}
+
+enum RelationType {
+  PREREQUISITE
+  RELATED
+  EXTENSION
+  SIMILAR
+  DIFFERENT
+  APPLICATION
+  DERIVED_FROM
+}
+
+enum InterviewAnswerType {
+  SHORT_30S
+  MEDIUM_1MIN
+  DEEP
+}
+
+enum PracticeQuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  FILL
+  SHORT_ANSWER
+  CALCULATION
+  COMPREHENSIVE
+}
+
+model SubjectArea {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  courses Course[]
+}
+
+model Course {
+  id            String   @id @default(cuid())
+  subjectAreaId String?
+  name          String
+  slug          String   @unique
+  description   String?
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subjectArea    SubjectArea?     @relation(fields: [subjectAreaId], references: [id], onDelete: SetNull)
+  books          Book[]
+  knowledgePoints KnowledgePoint[]
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  author      String?
+  publisher   String?
+  edition     String?
+  isbn        String?
+  description String?
+  cover       String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course   Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapters Chapter[]
+
+  @@index([courseId])
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  bookId    String
+  parentId  String?
+  title     String
+  number    String?
+  level     Int      @default(1)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  book       Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  parent     Chapter?  @relation("ChapterTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children   Chapter[] @relation("ChapterTree")
+  knowledgePoints ChapterKnowledgePoint[]
+
+  @@index([bookId])
+  @@index([parentId])
+}
+
+model KnowledgePoint {
+  id                  String            @id @default(cuid())
+  courseId            String
+  title               String
+  slug                String            @unique
+  category            KnowledgeCategory @default(CONCEPT)
+  summary             String?
+  definition          String?
+  plainExplanation    String?
+  principle           String?
+  physicalMeaning     String?
+  engineeringMeaning  String?
+  importance          Int               @default(3)
+  interviewImportance Int               @default(3)
+  difficulty          Int               @default(3)
+  reviewStatus        ReviewStatus      @default(AI_DRAFT)
+  source              String?
+  sourceBook          String?
+  sourceChapter       String?
+  sourcePage          String?
+  confidence          Float?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  course             Course                  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapters           ChapterKnowledgePoint[]
+  formulas           Formula[]
+  examples           Example[]
+  outgoingRelations  KnowledgeRelation[]     @relation("KnowledgeRelationSource")
+  incomingRelations  KnowledgeRelation[]     @relation("KnowledgeRelationTarget")
+  interviewQuestions InterviewQuestion[]
+  practiceQuestions  PracticeQuestion[]
+  studyProgress      StudyProgress?
+  reviewRecords      ReviewRecord[]
+  notes              Note[]
+  favorite           Favorite?
+  schoolLinks        SchoolQuestionKnowledgePoint[]
+
+  @@index([courseId])
+  @@index([title])
+}
+
+model ChapterKnowledgePoint {
+  id               String @id @default(cuid())
+  chapterId        String
+  knowledgePointId String
+  sortOrder        Int    @default(0)
+  note             String?
+
+  chapter        Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@unique([chapterId, knowledgePointId])
+  @@index([knowledgePointId])
+}
+
+model Formula {
+  id               String @id @default(cuid())
+  knowledgePointId String
+  name             String?
+  latex            String
+  description      String?
+  conditions       String?
+  sortOrder        Int    @default(0)
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@index([knowledgePointId])
+}
+
+model Example {
+  id               String @id @default(cuid())
+  knowledgePointId String
+  title            String?
+  content          String
+  solution         String?
+  type             String?
+  sortOrder        Int    @default(0)
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@index([knowledgePointId])
+}
+
+model KnowledgeRelation {
+  id                     String       @id @default(cuid())
+  sourceKnowledgePointId String
+  targetKnowledgePointId String
+  relationType           RelationType
+  description            String?
+
+  source KnowledgePoint @relation("KnowledgeRelationSource", fields: [sourceKnowledgePointId], references: [id], onDelete: Cascade)
+  target KnowledgePoint @relation("KnowledgeRelationTarget", fields: [targetKnowledgePointId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceKnowledgePointId, targetKnowledgePointId, relationType])
+  @@index([targetKnowledgePointId])
+}
+
+model InterviewQuestion {
+  id               String   @id @default(cuid())
+  knowledgePointId String
+  question         String
+  level            Int      @default(1)
+  frequency        Int      @default(3)
+  source           String?
+  createdAt        DateTime @default(now())
+
+  knowledgePoint KnowledgePoint  @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+  answers        InterviewAnswer[]
+
+  @@index([knowledgePointId])
+}
+
+model InterviewAnswer {
+  id                  String              @id @default(cuid())
+  interviewQuestionId String
+  answerType          InterviewAnswerType
+  content             String
+
+  question InterviewQuestion @relation(fields: [interviewQuestionId], references: [id], onDelete: Cascade)
+
+  @@unique([interviewQuestionId, answerType])
+}
+
+model PracticeQuestion {
+  id               String               @id @default(cuid())
+  knowledgePointId String
+  type             PracticeQuestionType
+  question         String
+  answer           String
+  explanation      String?
+  difficulty       Int                  @default(3)
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@index([knowledgePointId])
+}
+
+model StudyProgress {
+  id                String      @id @default(cuid())
+  knowledgePointId  String      @unique
+  status            StudyStatus @default(NOT_STARTED)
+  mastery           Int         @default(0)
+  lastStudiedAt     DateTime?
+  studyCount        Int         @default(0)
+  totalStudySeconds Int         @default(0)
+  updatedAt         DateTime    @updatedAt
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+}
+
+model ReviewRecord {
+  id               String   @id @default(cuid())
+  knowledgePointId String
+  reviewedAt       DateTime @default(now())
+  result           Int
+  nextReviewAt     DateTime?
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@index([knowledgePointId])
+  @@index([nextReviewAt])
+}
+
+model Note {
+  id               String   @id @default(cuid())
+  knowledgePointId String
+  content          String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@index([knowledgePointId])
+}
+
+model Favorite {
+  id               String   @id @default(cuid())
+  knowledgePointId String   @unique
+  createdAt        DateTime @default(now())
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+}
+
+model School {
+  id          String @id @default(cuid())
+  name        String
+  department  String?
+  major       String?
+  description String?
+
+  interviewQuestions SchoolInterviewQuestion[]
+}
+
+model SchoolInterviewQuestion {
+  id       String @id @default(cuid())
+  schoolId String
+  year     Int?
+  question String
+  source   String?
+  notes    String?
+
+  school     School                         @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  knowledgePoints SchoolQuestionKnowledgePoint[]
+
+  @@index([schoolId])
+}
+
+model SchoolQuestionKnowledgePoint {
+  id                        String @id @default(cuid())
+  schoolInterviewQuestionId String
+  knowledgePointId          String
+  confidence                Float?
+
+  schoolInterviewQuestion SchoolInterviewQuestion @relation(fields: [schoolInterviewQuestionId], references: [id], onDelete: Cascade)
+  knowledgePoint          KnowledgePoint          @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+
+  @@unique([schoolInterviewQuestionId, knowledgePointId])
+}

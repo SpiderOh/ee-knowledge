@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KnowledgePointImport",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "title",
+    "course",
+    "content"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "course": {
+      "type": "string",
+      "minLength": 1
+    },
+    "category": {
+      "type": "string"
+    },
+    "importance": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "interviewImportance": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "content": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "plainExplanation": {
+          "type": "string"
+        },
+        "principle": {
+          "type": "string"
+        },
+        "physicalMeaning": {
+          "type": "string"
+        },
+        "engineeringMeaning": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "formulas": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "interviewQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "practiceQuestions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "title": "卷积",
+  "course": "信号与系统",
+  "category": "CONCEPT",
+  "importance": 5,
+  "interviewImportance": 5,
+  "content": {
+    "summary": "描述两个信号组合关系的重要数学运算。",
+    "definition": "待录入",
+    "plainExplanation": "待录入",
+    "principle": "待录入",
+    "physicalMeaning": "待录入",
+    "engineeringMeaning": "待录入"
+  },
+  "formulas": [],
+  "relations": [],
+  "interviewQuestions": [],
+  "practiceQuestions": []
+}
