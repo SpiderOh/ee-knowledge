@@ -2,10 +2,10 @@ import { prisma } from "@/lib/db";
 
 export async function getCourseList() {
   const areas = await prisma.subjectArea.findMany({
-    orderBy: { sortOrder: "asc" },
+    orderBy: [{ sortOrder: "asc" }, { slug: "asc" }],
     include: {
       courses: {
-        orderBy: { sortOrder: "asc" },
+        orderBy: [{ sortOrder: "asc" }, { slug: "asc" }],
         include: {
           _count: { select: { books: true, knowledgePoints: true } },
           knowledgePoints: { select: { studyProgress: { select: { status: true } } } },
@@ -22,7 +22,7 @@ export async function getCourseBySlug(slug: string) {
     where: { slug },
     include: {
       subjectArea: true,
-      books: { orderBy: { sortOrder: "asc" }, include: { _count: { select: { chapters: true } } } },
+      books: { orderBy: [{ sortOrder: "asc" }, { id: "asc" }], include: { _count: { select: { chapters: true } } } },
       knowledgePoints: { select: { studyProgress: { select: { status: true } } } },
       _count: { select: { books: true, knowledgePoints: true } },
     },

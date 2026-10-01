@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0-alpha.6`
+`v0.1.0-rc.1`
 
 ## 当前阶段
 
-第七轮开发完成知识库结构管理。正式 `v0.1.0` 仅剩 MVP 最终稳定性和小范围收尾。
+第八轮 Release Candidate 完成 MVP 全链路稳定性、SQLite 安全工具和发布检查。正式 `v0.1.0` 还需要代码审查、合并和最终版本确认。
 
 ## 已完成
 
@@ -50,11 +50,19 @@
 - StructureForm 使用结构化输入类型，ChapterAdminTree 增加循环数据兜底
 - 搜索课程与教材筛选 UI，未分类 Course 前台和后台可见
 - `npm run verify:structure` 结构验证脚本
+- `npm run db` 仅执行 Prisma migration，`npm run db:setup` 明确执行 migration + Demo Seed
+- 隔离 SQLite 的 `npm run verify:mvp` 和统一 `npm run release:check`
+- 只读数据库完整性检查 `npm run db:check`
+- SQLite CLI 备份和显式确认恢复：`npm run db:backup`、`npm run db:restore`
+- 全局 `app/not-found.tsx` 和 `app/error.tsx`
+- AppShell 与知识点页移动端导航
+- 中文 KnowledgeCategory 展示、稳定 sibling 排序和主要空状态
+- `docs/BACKUP_RESTORE.md`、`docs/RELEASE_CHECKLIST.md`
 
 ## 部分完成
 
 - 搜索课程与教材过滤已提供基础 UI
-- 章节树支持递归和折叠，移动端暂时隐藏左侧目录
+- 章节树支持递归和折叠，移动端使用顶部上下文导航，教材目录仍以内容区域展示
 - 学习工具为单用户本地数据，尚未接入登录和云同步
 - 当前版本继续限定在 MVP 结构与内容管理，不扩展复习中心或 AI 功能
 - 图片仅支持 Markdown 引用和显示接口，尚未接入上传与媒体库
@@ -62,10 +70,10 @@
 
 ## 未完成
 
-- v0.1.0 MVP 全链路回归、空状态和文档版本收尾
+- v0.1.0 RC 代码审查、阻塞问题修复、合并和最终版本确认
 - 真正图片上传、MediaAsset 数据模型和对象存储
 - 复习中心、间隔复习和学习统计（v0.2.0）
-- shadcn/ui
+- Tailwind CSS、shadcn/ui（当前项目使用原生 CSS，尚未初始化）
 - AI、RAG、复试训练和多用户能力
 
 ## 依赖状态
@@ -77,15 +85,15 @@
 
 ## 下一步
 
-- 发布候选前的全链路回归
-- 数据库备份 / 恢复说明
-- 空状态、错误状态和文档版本检查
-- v0.2.0 再构建复习中心和更完整的学习统计
+- RC 代码审查、阻塞问题修复、合并和最终版本确认
 - v0.2.0 再构建复习中心和更完整的学习统计
 
 ## 已知问题
 
-构建时 Next.js 原生 SWC 模块在当前 Windows Node 环境不可加载，会自动回退 WASM 编译；构建结果正常。
+- Windows 环境可能出现 Next.js SWC 原生模块 fallback 警告；只要 build 最终退出码为 0，不影响本轮发布检查。
+- `/admin` 尚未接入 Authentication，仅适合本地使用或可信网络。
+- 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
+- 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
 
 ## 数据库
 

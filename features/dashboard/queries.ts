@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 
 export async function getDashboardStats() {
   const [courses, pointCount, bookCount, learnedPointCount, reviewCount, recentStudy] = await Promise.all([
-    prisma.course.findMany({ orderBy: { sortOrder: "asc" }, include: { _count: { select: { knowledgePoints: true, books: true } } } }),
+    prisma.course.findMany({ orderBy: [{ sortOrder: "asc" }, { slug: "asc" }], include: { _count: { select: { knowledgePoints: true, books: true } } } }),
     prisma.knowledgePoint.count(),
     prisma.book.count(),
     prisma.studyProgress.count({ where: { status: { in: [StudyStatus.LEARNING, StudyStatus.MASTERED, StudyStatus.REVIEW] } } }),

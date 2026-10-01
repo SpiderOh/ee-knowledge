@@ -33,8 +33,8 @@ export async function getSearchResults(params: SearchParams) {
 
   const [knowledgePoints, courses, books] = await Promise.all([
     prisma.knowledgePoint.findMany({ where: { AND: [textFilter, courseFilter, bookFilter] }, select: { slug: true, title: true, summary: true, category: true, importance: true, interviewImportance: true, course: { select: { name: true } } }, orderBy: { title: "asc" }, take: 100 }),
-    prisma.course.findMany({ where: { AND: [courseTextFilter, params.course ? { slug: params.course } : {}] }, select: { slug: true, name: true, description: true, _count: { select: { books: true, knowledgePoints: true } } }, orderBy: { sortOrder: "asc" }, take: 100 }),
-    prisma.book.findMany({ where: { AND: [bookTextFilter, params.course ? { course: { slug: params.course } } : {}, params.book ? { id: params.book } : {}] }, select: { id: true, title: true, author: true, publisher: true, edition: true, course: { select: { name: true } } }, orderBy: { title: "asc" }, take: 100 }),
+    prisma.course.findMany({ where: { AND: [courseTextFilter, params.course ? { slug: params.course } : {}] }, select: { slug: true, name: true, description: true, _count: { select: { books: true, knowledgePoints: true } } }, orderBy: [{ sortOrder: "asc" }, { slug: "asc" }], take: 100 }),
+    prisma.book.findMany({ where: { AND: [bookTextFilter, params.course ? { course: { slug: params.course } } : {}, params.book ? { id: params.book } : {}] }, select: { id: true, title: true, author: true, publisher: true, edition: true, course: { select: { name: true } } }, orderBy: [{ title: "asc" }, { id: "asc" }], take: 100 }),
   ]);
   return { knowledgePoints, courses, books };
 }

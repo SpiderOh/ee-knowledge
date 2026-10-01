@@ -24,8 +24,7 @@ SQLite
 
 - Next.js App Router
 - TypeScript
-- Tailwind CSS
-- shadcn/ui
+- 原生 CSS 组件样式
 - KaTeX
 
 ## 3. 模块边界
@@ -198,4 +197,5 @@ KnowledgePoint 仍是正式数据源。
 - Provider 与业务分离。
 - 导入格式与内部数据库结构分离。
 - 学习数据与知识数据可独立备份。
+- SQLite 路径由 `DATABASE_URL` 解析，验证、备份和恢复脚本不硬编码 `prisma/dev.db`。
 - 重大结构调整要求 Migration 和 Decision Record。

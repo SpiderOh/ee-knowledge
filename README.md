@@ -35,8 +35,7 @@
 
 - Next.js
 - TypeScript
-- Tailwind CSS
-- shadcn/ui
+- 原生 CSS 组件样式（当前未初始化 Tailwind 或 shadcn/ui）
 - SQLite
 - Prisma ORM
 - Zod
@@ -63,3 +62,16 @@ v0.1.0 目标：
 ## 项目文档
 
 详见 `docs/`。
+
+## 本地初始化与数据库安全
+
+```bash
+npm install
+Copy-Item .env.example .env
+npm run db:setup
+npm run dev
+```
+
+已有数据库升级时运行 `npm run db`，它只执行 Prisma migration，不会自动同步 Demo Fixture。需要明确初始化或刷新 Demo 数据时才运行 `npm run db:seed`。
+
+Knowledge Bundle 是知识内容交换格式，不是个人完整备份。SQLite 完整备份和恢复流程见 [`docs/BACKUP_RESTORE.md`](docs/BACKUP_RESTORE.md)。

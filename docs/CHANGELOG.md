@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-rc.1 - 2026-10-01
+
+### Added
+
+- 新增非破坏性的 `npm run db`、明确的 `npm run db:setup` 和 Demo Seed 边界说明。
+- 新增隔离 SQLite 的 `verify:mvp`、只读 `db:check`、`release:check` 以及 SQLite CLI 备份/恢复。
+- 新增统一错误边界、移动端导航、RC 发布清单和完整数据库备份说明。
+
+### Fixed
+
+- 移除外部 Google Fonts 运行时依赖，校准 README、架构和项目状态中的实际技术栈。
+- 补充主要空状态、中文知识类别和稳定的课程/教材排序。
+
 ## 0.1.0-alpha.6 - 2026-10-01
 
 ### Added
