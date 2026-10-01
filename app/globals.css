@@ -272,6 +272,24 @@ h1 { margin: 6px 0 8px; font-size: 32px; letter-spacing: -.03em; }
 .transfer-error { white-space: pre-wrap; color: #991b1b; background: #fff1f2; border: 1px solid #fecdd3; padding: 10px; border-radius: 8px; font: 12px/1.5 inherit; }
 .transfer-success { color: #166534 !important; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; border-radius: 8px; }
 .import-preview { border-top: 1px solid var(--line); padding-top: 14px; }
+.structure-area { margin-bottom: 18px; }
+.structure-heading { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding-bottom: 12px; }
+.structure-heading h2, .structure-heading h3 { margin: 0 0 5px; }
+.structure-heading h2 { font-size: 19px; }
+.structure-heading h3 { font-size: 16px; }
+.structure-heading span, .structure-book small, .structure-course > span { color: var(--muted); font-size: 12px; }
+.structure-course { border-top: 1px solid var(--line); padding: 14px 0 4px 18px; }
+.structure-book { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px dashed var(--line); padding: 10px 0 10px 18px; font-size: 13px; }
+.structure-form { max-width: 760px; display: grid; gap: 14px; }
+.structure-form h2 { margin: 0 0 5px; font-size: 19px; }
+.structure-form label { display: grid; gap: 7px; color: var(--muted); font-size: 12px; }
+.structure-form input, .structure-form select, .structure-form textarea { border: 1px solid var(--line); border-radius: 8px; padding: 10px 11px; background: var(--surface); color: var(--text); font: inherit; }
+.structure-form textarea { min-height: 100px; resize: vertical; }
+.admin-chapter-tree { display: grid; gap: 3px; }
+.admin-chapter-row { display: flex; align-items: center; gap: 10px; min-height: 48px; border-bottom: 1px solid var(--line); padding: 8px 0; }
+.admin-chapter-row > span { display: grid; gap: 4px; flex: 1; }
+.admin-chapter-row small { color: var(--muted); font-size: 11px; }
+.danger-text { color: #b91c1c !important; }
 .import-preview h3 { margin: 0 0 10px; font-size: 15px; }
 .preview-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 13px; }
 .preview-row:last-child { border-bottom: 0; }

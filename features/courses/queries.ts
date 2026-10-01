@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 
 export async function getCourseList() {
-  return prisma.subjectArea.findMany({
+  const areas = await prisma.subjectArea.findMany({
     orderBy: { sortOrder: "asc" },
     include: {
       courses: {
@@ -13,6 +13,8 @@ export async function getCourseList() {
       },
     },
   });
+  const ungrouped = await prisma.course.findMany({ where: { subjectAreaId: null }, orderBy: [{ sortOrder: "asc" }, { slug: "asc" }], include: { _count: { select: { books: true, knowledgePoints: true } }, knowledgePoints: { select: { studyProgress: { select: { status: true } } } } } });
+  return ungrouped.length ? [...areas, { id: "ungrouped", name: "未分类课程", slug: "", description: null, sortOrder: 0, courses: ungrouped }] : areas;
 }
 
 export async function getCourseBySlug(slug: string) {

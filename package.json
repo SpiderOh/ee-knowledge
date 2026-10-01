@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,7 +14,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "verify:demo": "tsx scripts/verify-demo-data.ts",
     "verify:content": "tsx scripts/verify-content-transfer.ts",
-    "verify:admin-query": "tsx scripts/verify-admin-query.ts"
+    "verify:admin-query": "tsx scripts/verify-admin-query.ts",
+    "verify:structure": "tsx scripts/verify-structure.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

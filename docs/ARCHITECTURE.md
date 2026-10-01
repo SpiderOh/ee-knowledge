@@ -93,6 +93,20 @@ Prisma Transaction
 
 导入导出服务与 NextRequest、React 和 UI 组件解耦。Bundle 只处理知识内容，不处理教材结构或用户学习数据。
 
+## 3.4 Structure Management Layer
+
+```text
+Admin Structure UI
+   ↓
+Structure Management Actions
+   ↓
+SubjectArea / Course / Book / Chapter
+   ↓
+ChapterKnowledgePoint
+```
+
+结构管理使用独立 Feature 边界。KnowledgePoint 仍是核心实体；结构层只维护课程、教材、章节和教材关联。
+
 ## 4. AI 架构
 
 业务层不得直接依赖 OpenAI、Anthropic 或 Google SDK。

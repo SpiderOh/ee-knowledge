@@ -47,10 +47,16 @@ export async function getOrderedBookKnowledgePoints(bookId: string): Promise<Ord
   }
   for (const siblings of children.values()) siblings.sort((a, b) => a.sortOrder - b.sortOrder || a.id.localeCompare(b.id));
 
+  const parentById = new Map(chapters.map((chapter) => [chapter.id, chapter.parentId]));
+  for (const chapter of chapters) { const chain = new Set<string>(); let current: string | null = chapter.id; while (current) { if (chain.has(current)) throw new Error("章节树数据存在循环，请先修复结构。"); chain.add(current); current = parentById.get(current) ?? null; } }
+
   const ordered: OrderedBookKnowledgePoint[] = [];
   const seen = new Set<string>();
+  const visiting = new Set<string>();
   const visit = (parentId: string | null) => {
     for (const chapter of children.get(parentId) ?? []) {
+      if (visiting.has(chapter.id)) throw new Error("章节树数据存在循环，请先修复结构。");
+      visiting.add(chapter.id);
       for (const link of chapter.knowledgePoints) {
         // 同一知识点在同一本教材重复出现时，MVP 使用它的第一次出现位置导航。
         if (!seen.has(link.knowledgePoint.id)) {
@@ -59,6 +65,7 @@ export async function getOrderedBookKnowledgePoints(bookId: string): Promise<Ord
         }
       }
       visit(chapter.id);
+      visiting.delete(chapter.id);
     }
   };
   visit(null);

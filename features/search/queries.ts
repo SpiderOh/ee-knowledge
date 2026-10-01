@@ -40,5 +40,6 @@ export async function getSearchResults(params: SearchParams) {
 }
 
 export async function getSearchFilters() {
-  return prisma.course.findMany({ select: { slug: true, name: true }, orderBy: { sortOrder: "asc" } });
+  const [courses, books] = await Promise.all([prisma.course.findMany({ select: { slug: true, name: true }, orderBy: [{ sortOrder: "asc" }, { slug: "asc" }] }), prisma.book.findMany({ select: { id: true, title: true, courseId: true, course: { select: { name: true, slug: true } } }, orderBy: [{ sortOrder: "asc" }, { title: "asc" }] })]);
+  return { courses, books };
 }
