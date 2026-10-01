@@ -66,7 +66,7 @@ v0.1.0 目标：
 ## 本地初始化与数据库安全
 
 ```bash
-npm install
+npm ci
 Copy-Item .env.example .env
 npm run db:setup
 npm run dev

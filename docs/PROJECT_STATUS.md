@@ -55,6 +55,8 @@
 - 只读数据库完整性检查 `npm run db:check`
 - SQLite CLI 备份和显式确认恢复：`npm run db:backup`、`npm run db:restore`
 - 全局 `app/not-found.tsx` 和 `app/error.tsx`
+- RC 导航、课程/教材/知识点/管理空状态、无效管理章节参数 404 和移动端管理入口已完成
+- 统一 KnowledgeCategory 与 ReviewStatus 标签，并补充键盘焦点和树形控件 ARIA
 - AppShell 与知识点页移动端导航
 - 中文 KnowledgeCategory 展示、稳定 sibling 排序和主要空状态
 - `docs/BACKUP_RESTORE.md`、`docs/RELEASE_CHECKLIST.md`
