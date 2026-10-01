@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0-alpha.4`
+`v0.1.0-alpha.5`
 
 ## 当前阶段
 
-第五轮开发完成专业知识内容展示层。正式 `v0.1.0` 仍等待内容管理、公式编辑和复习能力完成。
+第六轮开发完成内容管理后台和 Knowledge Bundle v1。正式 `v0.1.0` 仍等待课程、教材、章节结构管理以及 MVP 收尾。
 
 ## 已完成
 
@@ -34,6 +34,14 @@
 - KnowledgeImage 图片渲染接口和 DirectMediaProvider 抽象
 - Demo Formula、Example、Relation 幂等 Seed 与验证
 - 修复对称知识关系重复展示及 Markdown、图片 URL 安全边界
+- 内容管理首页和未认证的本地管理入口 `/admin`
+- KnowledgePoint 分页、搜索、课程过滤、审核状态过滤和 CRUD
+- 编辑页 Formula、Example、KnowledgeRelation CRUD
+- ChapterKnowledgePoint 关联和移除
+- Knowledge Bundle v1 的 Zod 校验、预览、Merge/Upsert 导入和稳定导出
+- `npm run verify:content` 内容传输验证
+- PR #4 稳定性修复：Markdown Preview 保存保护、Import Preview 内容绑定、已有 Course/SubjectArea 引用导入、子实体 ownership、`db:` key 防劫持、空 Course 导出和关系稳定排序
+- PR #4 本轮修复：管理后台空 reviewStatus 参数归一化、跨数据库 identity 预览计数、确定性 Formula/Example ownership、Bundle 部分更新与 sortOrder 默认语义
 
 ## 部分完成
 
@@ -42,11 +50,11 @@
 - 学习工具为单用户本地数据，尚未接入登录和云同步
 - 当前 PR 修复已限定为状态一致性和笔记 CRUD 稳定性，不扩展新的学习功能
 - 图片仅支持 Markdown 引用和显示接口，尚未接入上传与媒体库
+- `/admin` 当前没有身份认证，仅适合本地使用或可信网络；公网部署前必须增加 Authentication
 
 ## 未完成
 
-- 知识点 CRUD、管理后台、JSON 导入导出
-- 公式、示例和关系的内容编辑工作流
+- 课程、教材、章节网页 CRUD
 - 真正图片上传、MediaAsset 数据模型和对象存储
 - 复习中心、间隔复习和学习统计
 - shadcn/ui
@@ -62,8 +70,8 @@
 ## 下一步
 
 - 完善搜索教材筛选 UI
-- 构建复习中心和更完整的学习统计
-- 增加知识点内容管理工作流
+- 课程、教材、章节结构管理
+- v0.2.0 再构建复习中心和更完整的学习统计
 
 ## 已知问题
 
@@ -71,4 +79,4 @@
 
 ## 数据库
 
-本轮未修改 `prisma/schema.prisma`，没有新增 migration。
+本轮未修改 `prisma/schema.prisma`，没有新增 migration。Knowledge Bundle 不包含 Book、Chapter 或用户学习数据。

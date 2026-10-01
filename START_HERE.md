@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.1.0-alpha.4`
+`v0.1.0-alpha.5`
 
 已完成：
 
@@ -19,10 +19,11 @@
 - 首页已学习知识点、需要复习和最近学习
 - Markdown、GFM、KaTeX、结构化公式、示例和知识关系展示
 - KnowledgeImage 与 MediaProvider 基础接口
+- 内容管理后台、KnowledgePoint 及结构化内容 CRUD
+- Knowledge Bundle v1 的 JSON 校验、预览、导入和导出
 
 下一步：
 
-- 完善搜索教材筛选 UI
+- 课程、教材、章节结构管理
 - 学习记录与复习中心
-- 知识点内容管理与公式编辑
 - 图片上传和媒体库

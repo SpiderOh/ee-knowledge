@@ -97,6 +97,8 @@ Chapter B ↔ 傅里叶变换
 
 后续导入导出也建议分开。
 
+Knowledge Bundle 不是数据库备份。它只交换 SubjectArea、Course、KnowledgePoint、Formula、Example 和 KnowledgeRelation，不包含 Book、Chapter 或 ChapterKnowledgePoint，也不包含 StudyProgress、ReviewRecord、Note、Favorite。导入采用 Merge / Upsert，不会因为缺失项删除现有内容。
+
 ### Rule C：AI 内容必须有审核状态
 
 推荐：

@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.1.0-alpha.5 - 2026-09-30
+
+### Added
+
+- 新增内容管理后台 `/admin` 和 KnowledgePoint 分页管理。
+- 新增 KnowledgePoint 创建、编辑、安全删除以及 Formula、Example、Relation 和教材章节关联管理。
+- 新增 Knowledge Bundle v1 的 JSON 校验、预览、Merge/Upsert 导入和稳定导出。
+- 新增 `docs/CONTENT_FORMAT.md`、Bundle 示例和 `npm run verify:content`。
+
+### Safety
+
+- 管理后台当前未认证，仅适合本地或可信网络。
+- 知识点存在学习记录、收藏、笔记或复习记录时禁止删除。
+- Knowledge Bundle 不包含用户学习数据，不删除 Bundle 缺失内容。
+- 导入内容默认保留 AI 草稿审核状态，不自动标记为 VERIFIED。
+
+### Fixed
+
+- 修复 Markdown Preview 状态下保存导致五个 Markdown 字段被清空的问题。
+- 将 Import Confirmation 绑定到已成功预览的 JSON 内容，JSON 改变后必须重新预览。
+- 修复已有 Course、SubjectArea 未在 Bundle 中重复声明时的引用导入。
+- 加固 Formula、Example、Relation 和 ChapterKnowledgePoint 的 ownership 校验。
+- 加固 Formula、Example 的 `db:` key，禁止劫持其他知识点的记录。
+- 修复空 Course 导出，并按 sourceSlug、relationType、targetSlug 稳定排序关系。
+- 修复管理后台空 `reviewStatus` 清空 q/course 筛选的问题，非法状态也不会覆盖合法筛选条件。
+- 修复跨数据库 `db:` key 使用确定性 fallback 后预览 create/update 计数不一致的问题。
+- 加固 Formula、Example 确定性 fallback ID 的 ownership 校验，并保持原知识点归属。
+- 明确 Bundle 部分更新语义：字段省略保留原值，显式 null 清除可空字段，新增记录的 sortOrder 默认为 0。
+- 配置 Server Action 传输上限为 3 MB，使 2 MB Knowledge Bundle 应用限制可以正常生效。
+- 修正 PROJECT_STATUS 中 v0.1.0 MVP 与 v0.2.0 复习阶段的边界。
+
 ## 0.1.0-alpha.4 - 2026-09-30
 
 ### Added
