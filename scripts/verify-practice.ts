@@ -32,6 +32,9 @@ async function runCase() {
     if (demoCount !== 5) throw new Error(`Demo 题数量错误：${demoCount}。`);
     const overview = await getPracticeOverview();
     if (overview.totalQuestions < 5) throw new Error("练习概览未包含 Demo 题。");
+    const filteredOverview = await getPracticeOverview({ course: "circuit-theory" });
+    if (!filteredOverview.questions.every((item) => item.knowledgePoint.course.slug === "circuit-theory")) throw new Error("课程筛选未生效。");
+    if (filteredOverview.totalQuestions !== overview.totalQuestions || filteredOverview.currentWrongCount !== overview.currentWrongCount) throw new Error("顶部统计不应随筛选变化。");
 
     const invalidOptions = await savePracticeQuestion({ ...input, optionsText: "A|一\nA|二" });
     if (invalidOptions.ok) throw new Error("重复选项 key 应拒绝。");
@@ -39,6 +42,12 @@ async function runCase() {
     if (missingKey.ok) throw new Error("缺失答案 key 应拒绝。");
     const tooFew = await savePracticeQuestion({ ...input, optionsText: "A|一" });
     if (tooFew.ok) throw new Error("单选少于两项应拒绝。");
+    const invalidKey = await savePracticeQuestion({ ...input, optionsText: "A,B|一\nC|二" });
+    if (invalidKey.ok) throw new Error("非法选项 key 应拒绝。");
+    const trueFalseWithOptions = await savePracticeQuestion({ ...input, type: "TRUE_FALSE", answer: "TRUE", optionsText: "A|一\nB|二" });
+    if (trueFalseWithOptions.ok) throw new Error("判断题不能保存选项。");
+    const subjectiveWithOptions = await savePracticeQuestion({ ...input, type: "SHORT_ANSWER", answer: "参考", optionsText: "A|一\nB|二" });
+    if (subjectiveWithOptions.ok) throw new Error("主观题不能保存选项。");
 
     const created = await savePracticeQuestion(input);
     if (!created.ok) throw new Error(`创建题失败：${created.error}`);
@@ -52,7 +61,13 @@ async function runCase() {
     if (!right.ok || !right.isCorrect) throw new Error("单选大小写归一化判分失败。");
     if ((await getWrongAnswerQuestions()).some((item) => item.id === id)) throw new Error("最近答对后错题本未移除。");
     if ((await prisma.practiceAttempt.count({ where: { practiceQuestionId: id } })) !== 2) throw new Error("历史作答被覆盖。");
-    if ((await getPracticeQuestion(id))?.attempts.length !== 2) throw new Error("题目页历史作答缺失。");
+    const attemptsAfterRight = await prisma.practiceAttempt.findMany({ where: { practiceQuestionId: id }, orderBy: [{ attemptedAt: "desc" }, { id: "desc" }] });
+    if (!attemptsAfterRight[0]?.attemptedAt || !attemptsAfterRight[0]?.submittedAnswer) throw new Error("作答时间或答案未保存。");
+    const wrongAgain = await recordPracticeAttempt({ practiceQuestionId: id, submittedAnswer: "A" });
+    if (!wrongAgain.ok || wrongAgain.isCorrect) throw new Error("重新答错失败。");
+    if (!(await getWrongAnswerQuestions()).some((item) => item.id === id)) throw new Error("答对后再次答错未回到错题本。");
+    if ((await prisma.practiceAttempt.count({ where: { practiceQuestionId: id } })) !== 3) throw new Error("再次作答历史未追加。");
+    if ((await getPracticeQuestion(id))?.attempts.length !== 3) throw new Error("题目页历史作答缺失。");
     if ((await savePracticeQuestion({ ...input, id, question: "篡改题干" })).ok) throw new Error("有作答后修改题干应拒绝。");
     if ((await savePracticeQuestion({ ...input, id, optionsText: "A|更改\nB|正确" })).ok) throw new Error("有作答后修改选项应拒绝。");
     if ((await savePracticeQuestion({ ...input, id, answer: "A" })).ok) throw new Error("有作答后修改标准答案应拒绝。");
@@ -62,11 +77,17 @@ async function runCase() {
 
     const multi = await savePracticeQuestion({ ...input, type: "MULTIPLE_CHOICE", question: "多选验证", answer: "A,C", optionsText: "A|一\nB|二\nC|三" });
     if (!multi.ok) throw new Error(`多选题创建失败：${multi.error}`);
+    const multiCount = await prisma.practiceAttempt.count({ where: { practiceQuestionId: multi.id } });
+    const invalidMulti = await recordPracticeAttempt({ practiceQuestionId: multi.id, submittedAnswer: "A,Z" });
+    if (invalidMulti.ok || (await prisma.practiceAttempt.count({ where: { practiceQuestionId: multi.id } })) !== multiCount) throw new Error("多选非法 key 应拒绝且不写 Attempt。");
     if (!(await recordPracticeAttempt({ practiceQuestionId: multi.id, submittedAnswer: "c,a,a" })).isCorrect) throw new Error("多选顺序和重复归一化失败。");
     if ((await recordPracticeAttempt({ practiceQuestionId: multi.id, submittedAnswer: "A" })).isCorrect) throw new Error("多选漏选应判错。");
 
     const tf = await savePracticeQuestion({ ...input, type: "TRUE_FALSE", question: "判断验证", answer: "TRUE", optionsText: "" });
     if (!tf.ok) throw new Error(`判断题创建失败：${tf.error}`);
+    const invalidTfCount = await prisma.practiceAttempt.count({ where: { practiceQuestionId: tf.id } });
+    const invalidTf = await recordPracticeAttempt({ practiceQuestionId: tf.id, submittedAnswer: "abc" });
+    if (invalidTf.ok || (await prisma.practiceAttempt.count({ where: { practiceQuestionId: tf.id } })) !== invalidTfCount) throw new Error("判断题非法答案应拒绝且不写 Attempt。");
     if (!(await recordPracticeAttempt({ practiceQuestionId: tf.id, submittedAnswer: "TRUE" })).isCorrect) throw new Error("判断正确应判对。");
     if ((await recordPracticeAttempt({ practiceQuestionId: tf.id, submittedAnswer: "FALSE" })).isCorrect) throw new Error("判断错误应判错。");
 
@@ -75,6 +96,7 @@ async function runCase() {
     if ((await recordPracticeAttempt({ practiceQuestionId: subjective.id, submittedAnswer: "我的答案" })).ok) throw new Error("主观题缺少自评应拒绝。");
     if (!(await recordPracticeAttempt({ practiceQuestionId: subjective.id, submittedAnswer: "我的答案", subjectiveAssessment: true })).isCorrect) throw new Error("主观题自评正确失败。");
     if ((await recordPracticeAttempt({ practiceQuestionId: subjective.id, submittedAnswer: "再答", subjectiveAssessment: false })).isCorrect) throw new Error("主观题自评错误失败。");
+    if ((await prisma.practiceAttempt.findMany({ where: { submittedAnswer: "" } })).length !== 0) throw new Error("不应存在空 submittedAnswer。");
     if ((await prisma.studyProgress.count({ where: { knowledgePointId: point.id } })) !== 0) throw new Error("练习不应修改学习状态。");
     if ((await prisma.reviewRecord.count({ where: { knowledgePointId: point.id } })) !== 0) throw new Error("练习不应创建复习记录。");
     console.log("Practice verification passed (grading, latest wrong, history, ownership, semantic lock, deletion guards, demo data)");

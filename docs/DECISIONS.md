@@ -193,3 +193,5 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 状态：Accepted
 
 题目已有 PracticeAttempt 后，题型、题干、标准答案和选择项不可修改，也不可删除；解析和难度仍可调整。这样可以保证历史判定在内容变更后仍可解释。
+
+客观题提交必须由 Server Action 验证合法选项；最近一次作答统一使用 `attemptedAt DESC, id DESC` 排序，避免相同时间戳导致错题本结果不确定。

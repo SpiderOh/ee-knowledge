@@ -120,6 +120,8 @@ REVIEWED
 VERIFIED
 ```
 
+练习题客观答案由 Server Action 根据题目选项空间独立验证，客户端控件不构成数据边界。PracticeAttempt 的最近记录按 `attemptedAt DESC, id DESC` 确定性排序。
+
 ## 3. 数据迁移原则
 
 优先：
