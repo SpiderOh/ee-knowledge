@@ -38,6 +38,12 @@
 ### PracticeQuestion
 练习题。
 
+### PracticeQuestionOption
+选择题选项，按题目和 key 唯一。
+
+### PracticeAttempt
+不可变的用户作答记录，保存提交答案、服务端判定和时间。
+
 ### StudyProgress
 学习状态与掌握程度。
 
@@ -87,6 +93,8 @@ Chapter B ↔ 傅里叶变换
 - Formula
 - Relation
 - InterviewQuestion
+- PracticeQuestion
+- PracticeQuestionOption
 
 用户学习数据：
 
@@ -94,10 +102,11 @@ Chapter B ↔ 傅里叶变换
 - ReviewRecord
 - Note
 - Favorite
+- PracticeAttempt
 
 后续导入导出也建议分开。
 
-Knowledge Bundle 不是数据库备份。它只交换 SubjectArea、Course、KnowledgePoint、Formula、Example 和 KnowledgeRelation，不包含 Book、Chapter 或 ChapterKnowledgePoint，也不包含 StudyProgress、ReviewRecord、Note、Favorite。导入采用 Merge / Upsert，不会因为缺失项删除现有内容。
+Knowledge Bundle 不是数据库备份。它只交换 SubjectArea、Course、KnowledgePoint、Formula、Example 和 KnowledgeRelation，不包含 Book、Chapter、ChapterKnowledgePoint、PracticeQuestion、PracticeQuestionOption，也不包含 StudyProgress、ReviewRecord、PracticeAttempt、Note、Favorite。导入采用 Merge / Upsert，不会因为缺失项删除现有内容。
 
 结构管理采用应用层保守删除规则：有 Course 的 SubjectArea 禁删；有 Book 或 KnowledgePoint 的 Course 禁删；有 Chapter 的 Book 禁删；有子章节或 KnowledgePoint 关联的 Chapter 禁删。虽然部分 Prisma 关系使用 Cascade 或 SetNull，Admin 不直接利用这些删除行为。Book 更换 Course 或建立 ChapterKnowledgePoint 关联时，应用层要求 Book、Chapter 与 KnowledgePoint 属于同一 Course。
 

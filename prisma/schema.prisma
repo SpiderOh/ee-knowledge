@@ -261,8 +261,36 @@ model PracticeQuestion {
   difficulty       Int                  @default(3)
 
   knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id], onDelete: Cascade)
+  options         PracticeQuestionOption[]
+  attempts        PracticeAttempt[]
 
   @@index([knowledgePointId])
+}
+
+model PracticeQuestionOption {
+  id                 String           @id @default(cuid())
+  practiceQuestionId String
+  key                String
+  content            String
+  sortOrder          Int              @default(0)
+
+  question PracticeQuestion @relation(fields: [practiceQuestionId], references: [id], onDelete: Cascade)
+
+  @@unique([practiceQuestionId, key])
+  @@index([practiceQuestionId])
+}
+
+model PracticeAttempt {
+  id                 String           @id @default(cuid())
+  practiceQuestionId String
+  submittedAnswer    String
+  isCorrect          Boolean
+  attemptedAt        DateTime         @default(now())
+
+  question PracticeQuestion @relation(fields: [practiceQuestionId], references: [id], onDelete: Cascade)
+
+  @@index([practiceQuestionId, attemptedAt])
+  @@index([isCorrect, attemptedAt])
 }
 
 model StudyProgress {

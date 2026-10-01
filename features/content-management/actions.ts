@@ -37,9 +37,9 @@ export async function updateKnowledgePoint(input: KnowledgePointInput & { id: st
 
 export async function deleteKnowledgePoint(input: { id: string }) {
   if (!input.id?.trim()) return { ok: false, error: "知识点参数无效。" } as const;
-  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.id }, select: { slug: true, _count: { select: { formulas: true, examples: true, outgoingRelations: true, incomingRelations: true, chapters: true, notes: true, reviewRecords: true } }, studyProgress: { select: { id: true } }, favorite: { select: { id: true } } } });
+  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.id }, select: { slug: true, _count: { select: { formulas: true, examples: true, outgoingRelations: true, incomingRelations: true, chapters: true, notes: true, reviewRecords: true } }, practiceQuestions: { select: { _count: { select: { attempts: true } } } }, studyProgress: { select: { id: true } }, favorite: { select: { id: true } } } });
   if (!point) return { ok: true } as const;
-  if (point.studyProgress || point.favorite || point._count.notes > 0 || point._count.reviewRecords > 0) return { ok: false, error: "该知识点存在学习记录、收藏、笔记或复习记录，不能直接删除。" } as const;
+  if (point.studyProgress || point.favorite || point._count.notes > 0 || point._count.reviewRecords > 0 || point.practiceQuestions.some((question) => question._count.attempts > 0)) return { ok: false, error: "该知识点存在学习记录、收藏、笔记、复习记录或练习作答记录，不能直接删除。" } as const;
   try { await prisma.knowledgePoint.delete({ where: { id: input.id } }); } catch { return { ok: false, error: "知识点删除失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }

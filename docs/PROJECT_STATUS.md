@@ -2,7 +2,7 @@
 
 ## 当前版本
 
-`v0.2.0-alpha.1`
+`v0.2.0-alpha.2`
 
 ## 当前阶段
 
@@ -64,14 +64,18 @@
 - ReviewRecord 写入、结果校验、学习状态同步和单一有效复习计划约束
 - 简单间隔调度：忘记/模糊 1 天，记得按连续熟练次数 1/3/7/14/30 天，熟练推进间隔
 - 隔离数据库复习验证 `npm run verify:review`，并纳入 `npm run verify:mvp`
+- 练习中心 `/practice`、练习会话、客观题服务端判分和主观题自评
+- PracticeAttempt 历史记录、最近一次错题本 `/wrong-answers` 与 PracticeQuestion 管理
+- PracticeQuestionOption、作答后的题目语义锁、删除保护与 5 道固定 ID Demo 题
+- `npm run verify:practice` 隔离数据库验证
 
 ## 部分完成
 
-- ReviewRecord 数据层和复习中心已完成；练习题 UI、做题记录、错题本和学习统计尚未开始
+- ReviewRecord 数据层和复习中心已完成；练习统计、图表、每日时长和复习/练习联动尚未开始
 
 ## 未完成
 
-- v0.2.0-alpha.2：练习题、做题记录和错题本
+- v0.2.0-alpha.3：学习统计、练习统计与复习/练习联动
 - v0.3.0：复试训练
 - v0.4.0：AI Provider、知识生成与 AI 学习能力
 - v0.5.0：PDF / Word 等资料自动化
@@ -89,7 +93,7 @@
 
 ## 下一步
 
-- v0.2.0：复习中心、简单间隔复习、练习题和学习统计
+- v0.2.0-alpha.3：学习统计、练习统计与复习/练习联动
 
 ## 已知问题
 
@@ -100,4 +104,4 @@
 
 ## 数据库
 
-本轮未修改 `prisma/schema.prisma`，没有新增 migration。Knowledge Bundle 不包含 Book、Chapter 或用户学习数据。
+本轮新增 PracticeQuestionOption、PracticeAttempt 两张表及 additive migration。Knowledge Bundle 不包含 Book、Chapter、PracticeQuestion、PracticeQuestionOption、PracticeAttempt 或用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。

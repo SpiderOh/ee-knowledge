@@ -33,6 +33,7 @@ export async function getKnowledgePointAdmin(id: string) {
     outgoingRelations: { include: { target: { select: { id: true, title: true, slug: true } } } },
     incomingRelations: { include: { source: { select: { id: true, title: true, slug: true } } } },
     chapters: { include: { chapter: { include: { book: { select: { id: true, title: true } } } } }, orderBy: { sortOrder: "asc" } },
+    practiceQuestions: { orderBy: { id: "asc" }, include: { options: { orderBy: { sortOrder: "asc" } }, _count: { select: { attempts: true } } } },
   } });
 }
 
