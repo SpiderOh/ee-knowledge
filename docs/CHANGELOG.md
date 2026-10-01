@@ -24,6 +24,10 @@
 - 加固 Formula、Example、Relation 和 ChapterKnowledgePoint 的 ownership 校验。
 - 加固 Formula、Example 的 `db:` key，禁止劫持其他知识点的记录。
 - 修复空 Course 导出，并按 sourceSlug、relationType、targetSlug 稳定排序关系。
+- 修复管理后台空 `reviewStatus` 清空 q/course 筛选的问题，非法状态也不会覆盖合法筛选条件。
+- 修复跨数据库 `db:` key 使用确定性 fallback 后预览 create/update 计数不一致的问题。
+- 加固 Formula、Example 确定性 fallback ID 的 ownership 校验，并保持原知识点归属。
+- 明确 Bundle 部分更新语义：字段省略保留原值，显式 null 清除可空字段，新增记录的 sortOrder 默认为 0。
 
 ## 0.1.0-alpha.4 - 2026-09-30
 

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { adminKnowledgeQuerySchema } from "./schemas";
+import { parseAdminKnowledgeQueryParams } from "./schemas";
 
 export const ADMIN_PAGE_SIZE = 20;
 
@@ -11,8 +11,7 @@ export async function getAdminStats() {
 }
 
 export async function getAdminKnowledgeList(input: Record<string, string | undefined>) {
-  const parsed = adminKnowledgeQuerySchema.safeParse(input);
-  const params = parsed.success ? parsed.data : adminKnowledgeQuerySchema.parse({});
+  const params = parseAdminKnowledgeQueryParams(input);
   const where = {
     ...(params.q ? { OR: [{ title: { contains: params.q } }, { summary: { contains: params.q } }, { definition: { contains: params.q } }] } : {}),
     ...(params.course ? { course: { slug: params.course } } : {}),

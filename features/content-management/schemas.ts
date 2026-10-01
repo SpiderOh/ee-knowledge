@@ -67,11 +67,26 @@ export const exampleDeleteSchema = z.object({ id: entityIdSchema, knowledgePoint
 export const relationDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
 export const chapterLinkDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
 
+const optionalReviewStatus = z.preprocess((value) => typeof value === "string" && value.trim() === "" ? undefined : value, z.nativeEnum(ReviewStatus).optional());
+
 export const adminKnowledgeQuerySchema = z.object({
   q: z.string().trim().max(100).optional().default(""),
   course: z.string().trim().max(100).optional().default(""),
-  reviewStatus: z.nativeEnum(ReviewStatus).optional(),
+  reviewStatus: optionalReviewStatus,
   page: z.coerce.number().int().min(1).optional().default(1),
 });
+
+export function parseAdminKnowledgeQueryParams(input: Record<string, string | undefined>) {
+  const q = z.string().trim().max(100).safeParse(input.q ?? "");
+  const course = z.string().trim().max(100).safeParse(input.course ?? "");
+  const reviewStatus = optionalReviewStatus.safeParse(input.reviewStatus);
+  const page = z.coerce.number().int().min(1).safeParse(input.page ?? 1);
+  return {
+    q: q.success ? q.data : "",
+    course: course.success ? course.data : "",
+    reviewStatus: reviewStatus.success ? reviewStatus.data : undefined,
+    page: page.success ? page.data : 1,
+  };
+}
 
 export type KnowledgePointInput = z.infer<typeof knowledgePointInputSchema>;

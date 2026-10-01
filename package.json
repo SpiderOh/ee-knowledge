@@ -13,7 +13,8 @@
     "db": "prisma migrate deploy && npm run db:seed",
     "db:seed": "tsx prisma/seed.ts",
     "verify:demo": "tsx scripts/verify-demo-data.ts",
-    "verify:content": "tsx scripts/verify-content-transfer.ts"
+    "verify:content": "tsx scripts/verify-content-transfer.ts",
+    "verify:admin-query": "tsx scripts/verify-admin-query.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

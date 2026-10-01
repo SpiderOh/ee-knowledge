@@ -24,7 +24,9 @@ Bundle 包含 SubjectArea、Course、KnowledgePoint、Formula、Example 和 Know
 - Formula 和 Example 在同一知识点内使用稳定 `key`。导出数据库原生记录时使用 `db:<record-id>`；其他 key 通过知识点 slug 和 key 生成确定性导入 ID。
 - Relation 使用 `sourceSlug`、`targetSlug` 和 `relationType`，不导出内部数据库 ID。
 - 导入只做 Merge / Upsert。Bundle 没有出现的旧数据保持不变，不执行 Replace 或 Delete Missing。
-- 更新时只覆盖 JSON 明确提供的字段；缺失字段保持原值，显式 `null` 才清空可空字段。
+- 更新时只覆盖 JSON 明确提供的字段；字段省略（`undefined`）表示保留原值，显式 `null` 表示清空可空字段，显式值表示更新该字段。
+- `sortOrder` 省略时更新记录保留原排序；新建 SubjectArea、Course、Formula、Example 的 `sortOrder` 默认为 `0`。
+- Course 的 `subjectAreaSlug` 省略时保留原专业方向，显式 `null` 清除关联，显式 slug 建立关联。
 - `reviewStatus` 缺失时默认为 `AI_DRAFT`，导入不会自动提升为 `VERIFIED`。
 - 对称关系 RELATED、SIMILAR、DIFFERENT 不创建镜像记录；自关联会被拒绝。
 

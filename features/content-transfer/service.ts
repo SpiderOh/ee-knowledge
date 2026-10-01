@@ -52,20 +52,23 @@ async function resolveBundleReferences(bundle: KnowledgeBundle, db: Pick<typeof 
   return { areaIds: new Map(areas.map((area) => [area.slug, area.id])), courseIds: new Map(courses.map((course) => [course.slug, course.id])), errors };
 }
 
-async function resolveFormulaImportIdentity(db: Prisma.TransactionClient, pointId: string, pointSlug: string, key: string) {
-  if (!key.startsWith("db:")) return formulaIdForImport(pointSlug, key);
-  const nativeId = key.slice(3);
-  const existing = await db.formula.findUnique({ where: { id: nativeId }, select: { id: true, knowledgePointId: true } });
-  if (existing && existing.knowledgePointId !== pointId) throw new Error(`${key}: db key 指向其他知识点的 Formula。`);
-  return existing ? nativeId : formulaIdForImport(pointSlug, key);
+type IdentityDb = Pick<typeof prisma, "formula" | "example"> | Prisma.TransactionClient;
+type ImportIdentity = { id: string; exists: boolean; ownershipValid: boolean };
+
+async function resolveFormulaIdentity(db: IdentityDb, pointId: string, pointSlug: string, key: string): Promise<ImportIdentity> {
+  const nativeId = key.startsWith("db:") ? key.slice(3) : null;
+  const native = nativeId ? await db.formula.findUnique({ where: { id: nativeId }, select: { id: true, knowledgePointId: true } }) : null;
+  const id = native?.id ?? formulaIdForImport(pointSlug, key);
+  const existing = native ?? await db.formula.findUnique({ where: { id }, select: { id: true, knowledgePointId: true } });
+  return { id, exists: Boolean(existing), ownershipValid: !existing || existing.knowledgePointId === pointId };
 }
 
-async function resolveExampleImportIdentity(db: Prisma.TransactionClient, pointId: string, pointSlug: string, key: string) {
-  if (!key.startsWith("db:")) return exampleIdForImport(pointSlug, key);
-  const nativeId = key.slice(3);
-  const existing = await db.example.findUnique({ where: { id: nativeId }, select: { id: true, knowledgePointId: true } });
-  if (existing && existing.knowledgePointId !== pointId) throw new Error(`${key}: db key 指向其他知识点的 Example。`);
-  return existing ? nativeId : exampleIdForImport(pointSlug, key);
+async function resolveExampleIdentity(db: IdentityDb, pointId: string, pointSlug: string, key: string): Promise<ImportIdentity> {
+  const nativeId = key.startsWith("db:") ? key.slice(3) : null;
+  const native = nativeId ? await db.example.findUnique({ where: { id: nativeId }, select: { id: true, knowledgePointId: true } }) : null;
+  const id = native?.id ?? exampleIdForImport(pointSlug, key);
+  const existing = native ?? await db.example.findUnique({ where: { id }, select: { id: true, knowledgePointId: true } });
+  return { id, exists: Boolean(existing), ownershipValid: !existing || existing.knowledgePointId === pointId };
 }
 
 export async function previewKnowledgeBundle(input: string | unknown) {
@@ -84,23 +87,25 @@ export async function previewKnowledgeBundle(input: string | unknown) {
     if (!pointSlugs.has(relation.targetSlug) && !bundle.knowledgePoints.some((point) => point.slug === relation.targetSlug)) errors.push(`relations[${index}].targetSlug: knowledge point "${relation.targetSlug}" 不存在。`);
   }
   const pointIds = new Map(points.map((point) => [point.slug, point.id]));
+  const resolvedFormulaIds: string[] = [];
+  const resolvedExampleIds: string[] = [];
   for (const [pointIndex, point] of bundle.knowledgePoints.entries()) {
-    const pointId = pointIds.get(point.slug);
-    for (const [index, formula] of (point.formulas ?? []).entries()) if (formula.key.startsWith("db:")) {
-      const existing = await prisma.formula.findUnique({ where: { id: formula.key.slice(3) }, select: { knowledgePointId: true } });
-      if (existing && (!pointId || existing.knowledgePointId !== pointId)) errors.push(`knowledgePoints[${pointIndex}].formulas[${index}].key: db key 指向其他知识点的 Formula。`);
+    const pointId = pointIds.get(point.slug) ?? "";
+    for (const [index, formula] of (point.formulas ?? []).entries()) {
+      const identity = await resolveFormulaIdentity(prisma, pointId, point.slug, formula.key);
+      resolvedFormulaIds.push(identity.id);
+      if (!identity.ownershipValid) errors.push(`knowledgePoints[${pointIndex}].formulas[${index}].key: Formula identity 指向其他知识点。`);
     }
-    for (const [index, example] of (point.examples ?? []).entries()) if (example.key.startsWith("db:")) {
-      const existing = await prisma.example.findUnique({ where: { id: example.key.slice(3) }, select: { knowledgePointId: true } });
-      if (existing && (!pointId || existing.knowledgePointId !== pointId)) errors.push(`knowledgePoints[${pointIndex}].examples[${index}].key: db key 指向其他知识点的 Example。`);
+    for (const [index, example] of (point.examples ?? []).entries()) {
+      const identity = await resolveExampleIdentity(prisma, pointId, point.slug, example.key);
+      resolvedExampleIds.push(identity.id);
+      if (!identity.ownershipValid) errors.push(`knowledgePoints[${pointIndex}].examples[${index}].key: Example identity 指向其他知识点。`);
     }
   }
   if (errors.length) return { ok: false as const, errors };
-  const formulaIds = bundle.knowledgePoints.flatMap((point) => (point.formulas ?? []).map((formula) => formula.key.startsWith("db:") ? formula.key.slice(3) : formulaIdForImport(point.slug, formula.key)));
-  const exampleIds = bundle.knowledgePoints.flatMap((point) => (point.examples ?? []).map((example) => example.key.startsWith("db:") ? example.key.slice(3) : exampleIdForImport(point.slug, example.key)));
   const [formulaCount, exampleCount, existingRelations] = await Promise.all([
-    prisma.formula.count({ where: { id: { in: formulaIds } } }),
-    prisma.example.count({ where: { id: { in: exampleIds } } }),
+    prisma.formula.count({ where: { id: { in: resolvedFormulaIds } } }),
+    prisma.example.count({ where: { id: { in: resolvedExampleIds } } }),
     prisma.knowledgeRelation.findMany({ where: { sourceKnowledgePointId: { in: [...pointIds.values()] }, targetKnowledgePointId: { in: [...pointIds.values()] }, relationType: { in: bundle.relations.map((relation) => relation.relationType) } }, select: { sourceKnowledgePointId: true, targetKnowledgePointId: true, relationType: true } }),
   ]);
   const existingRelationKeys = new Set(existingRelations.map((relation) => `${relation.sourceKnowledgePointId}:${relation.targetKnowledgePointId}:${relation.relationType}`));
@@ -117,14 +122,34 @@ export async function importKnowledgeBundle(input: string | unknown) {
   try {
     const result = await prisma.$transaction(async (tx) => {
       const areaIds = new Map<string, string>();
-      for (const area of bundle.subjectAreas) { const saved = await tx.subjectArea.upsert({ where: { slug: area.slug }, update: { name: area.name, description: area.description, sortOrder: area.sortOrder }, create: area }); areaIds.set(area.slug, saved.id); }
+      for (const area of bundle.subjectAreas) { const updateData: Prisma.SubjectAreaUncheckedUpdateInput = { name: area.name }; if (has(area, "description")) updateData.description = area.description; if (has(area, "sortOrder")) updateData.sortOrder = area.sortOrder; const saved = await tx.subjectArea.upsert({ where: { slug: area.slug }, update: updateData, create: { slug: area.slug, name: area.name, description: area.description ?? null, sortOrder: area.sortOrder ?? 0 } }); areaIds.set(area.slug, saved.id); }
       const references = await resolveBundleReferences(bundle, tx); if (references.errors.length) throw new Error(references.errors[0]);
       const courseIds = references.courseIds;
-      for (const course of bundle.courses) { const subjectAreaId = course.subjectAreaSlug ? areaIds.get(course.subjectAreaSlug) ?? references.areaIds.get(course.subjectAreaSlug) : undefined; if (course.subjectAreaSlug && !subjectAreaId) throw new Error(`课程 ${course.slug} 的专业方向不存在。`); const saved = await tx.course.upsert({ where: { slug: course.slug }, update: { name: course.name, description: course.description, sortOrder: course.sortOrder, subjectAreaId }, create: { slug: course.slug, name: course.name, description: course.description, sortOrder: course.sortOrder, subjectAreaId } }); courseIds.set(course.slug, saved.id); }
+       for (const course of bundle.courses) { const updateData: Prisma.CourseUncheckedUpdateInput = { name: course.name }; if (has(course, "description")) updateData.description = course.description; if (has(course, "sortOrder")) updateData.sortOrder = course.sortOrder; if (has(course, "subjectAreaSlug")) { if (course.subjectAreaSlug === null) updateData.subjectAreaId = null; else if (typeof course.subjectAreaSlug === "string") { const subjectAreaId = areaIds.get(course.subjectAreaSlug) ?? references.areaIds.get(course.subjectAreaSlug); if (!subjectAreaId) throw new Error(`课程 ${course.slug} 的专业方向不存在。`); updateData.subjectAreaId = subjectAreaId; } } const createSubjectAreaId = typeof course.subjectAreaSlug === "string" ? areaIds.get(course.subjectAreaSlug) ?? references.areaIds.get(course.subjectAreaSlug) ?? null : null; const saved = await tx.course.upsert({ where: { slug: course.slug }, update: updateData, create: { slug: course.slug, name: course.name, description: course.description ?? null, sortOrder: course.sortOrder ?? 0, subjectAreaId: createSubjectAreaId } }); courseIds.set(course.slug, saved.id); }
       for (const point of bundle.knowledgePoints) if (!courseIds.has(point.courseSlug)) { const existing = await tx.course.findUnique({ where: { slug: point.courseSlug }, select: { id: true } }); if (existing) courseIds.set(point.courseSlug, existing.id); }
       const pointIds = new Map<string, string>(); let createdKnowledgePoints = 0; let updatedKnowledgePoints = 0; let formulasChanged = 0; let examplesChanged = 0; let relationsChanged = 0;
       for (const point of bundle.knowledgePoints) { const courseId = courseIds.get(point.courseSlug); if (!courseId) throw new Error(`知识点 ${point.slug} 的课程不存在。`); const existing = await tx.knowledgePoint.findUnique({ where: { slug: point.slug }, select: { id: true } }); const fields: Prisma.KnowledgePointUncheckedCreateInput = { title: point.title, slug: point.slug, courseId, category: point.category ?? "CONCEPT", summary: point.summary ?? null, definition: point.definition ?? null, plainExplanation: point.plainExplanation ?? null, principle: point.principle ?? null, physicalMeaning: point.physicalMeaning ?? null, engineeringMeaning: point.engineeringMeaning ?? null, importance: point.importance ?? 3, interviewImportance: point.interviewImportance ?? 3, difficulty: point.difficulty ?? 3, reviewStatus: point.reviewStatus ?? "AI_DRAFT", source: point.source ?? null, sourceBook: point.sourceBook ?? null, sourceChapter: point.sourceChapter ?? null, sourcePage: point.sourcePage ?? null, confidence: point.confidence ?? null }; const updateData: Prisma.KnowledgePointUncheckedUpdateInput = { title: point.title, courseId }; for (const key of ["category", "summary", "definition", "plainExplanation", "principle", "physicalMeaning", "engineeringMeaning", "importance", "interviewImportance", "difficulty", "reviewStatus", "source", "sourceBook", "sourceChapter", "sourcePage", "confidence"] as const) if (has(point, key)) Object.assign(updateData, { [key]: point[key] }); const saved = existing ? await tx.knowledgePoint.update({ where: { id: existing.id }, data: updateData }) : await tx.knowledgePoint.create({ data: fields }); pointIds.set(point.slug, saved.id); if (existing) updatedKnowledgePoints++; else createdKnowledgePoints++; }
-      for (const point of bundle.knowledgePoints) { const pointId = pointIds.get(point.slug); if (!pointId) throw new Error(`知识点 ${point.slug} 导入失败。`); for (const formula of point.formulas ?? []) { const id = await resolveFormulaImportIdentity(tx, pointId, point.slug, formula.key); const existed = await tx.formula.findUnique({ where: { id }, select: { id: true } }); await tx.formula.upsert({ where: { id }, update: { knowledgePointId: pointId, name: formula.name, latex: formula.latex, description: formula.description, conditions: formula.conditions, sortOrder: formula.sortOrder }, create: { id, knowledgePointId: pointId, name: formula.name, latex: formula.latex, description: formula.description, conditions: formula.conditions, sortOrder: formula.sortOrder } }); formulasChanged += existed ? 1 : 1; } for (const example of point.examples ?? []) { const id = await resolveExampleImportIdentity(tx, pointId, point.slug, example.key); const existed = await tx.example.findUnique({ where: { id }, select: { id: true } }); await tx.example.upsert({ where: { id }, update: { knowledgePointId: pointId, title: example.title, content: example.content, solution: example.solution, type: example.type, sortOrder: example.sortOrder }, create: { id, knowledgePointId: pointId, title: example.title, content: example.content, solution: example.solution, type: example.type, sortOrder: example.sortOrder } }); examplesChanged += existed ? 1 : 1; } }
+      for (const point of bundle.knowledgePoints) {
+        const pointId = pointIds.get(point.slug); if (!pointId) throw new Error(`知识点 ${point.slug} 导入失败。`);
+        for (const formula of point.formulas ?? []) {
+          const identity = await resolveFormulaIdentity(tx, pointId, point.slug, formula.key); if (!identity.ownershipValid) throw new Error(`${formula.key}: Formula identity 指向其他知识点。`);
+          const updateData: Prisma.FormulaUncheckedUpdateInput = {};
+          for (const key of ["name", "latex", "description", "conditions", "sortOrder"] as const) if (has(formula, key)) Object.assign(updateData, { [key]: formula[key] });
+          const createData: Prisma.FormulaUncheckedCreateInput = { id: identity.id, knowledgePointId: pointId, name: formula.name ?? null, latex: formula.latex, description: formula.description ?? null, conditions: formula.conditions ?? null, sortOrder: formula.sortOrder ?? 0 };
+          const existed = await tx.formula.findUnique({ where: { id: identity.id }, select: { id: true } });
+          if (existed) await tx.formula.update({ where: { id: identity.id }, data: updateData }); else await tx.formula.create({ data: createData });
+          formulasChanged++;
+        }
+        for (const example of point.examples ?? []) {
+          const identity = await resolveExampleIdentity(tx, pointId, point.slug, example.key); if (!identity.ownershipValid) throw new Error(`${example.key}: Example identity 指向其他知识点。`);
+          const updateData: Prisma.ExampleUncheckedUpdateInput = {};
+          for (const key of ["title", "type", "content", "solution", "sortOrder"] as const) if (has(example, key)) Object.assign(updateData, { [key]: example[key] });
+          const createData: Prisma.ExampleUncheckedCreateInput = { id: identity.id, knowledgePointId: pointId, title: example.title ?? null, type: example.type ?? null, content: example.content, solution: example.solution ?? null, sortOrder: example.sortOrder ?? 0 };
+          const existed = await tx.example.findUnique({ where: { id: identity.id }, select: { id: true } });
+          if (existed) await tx.example.update({ where: { id: identity.id }, data: updateData }); else await tx.example.create({ data: createData });
+          examplesChanged++;
+        }
+      }
       for (const relation of bundle.relations) { const sourceId = pointIds.get(relation.sourceSlug) ?? (await tx.knowledgePoint.findUnique({ where: { slug: relation.sourceSlug }, select: { id: true } }))?.id; const targetId = pointIds.get(relation.targetSlug) ?? (await tx.knowledgePoint.findUnique({ where: { slug: relation.targetSlug }, select: { id: true } }))?.id; if (!sourceId || !targetId) throw new Error(`关系 ${relation.sourceSlug} → ${relation.targetSlug} 的知识点不存在。`); if (sourceId === targetId) throw new Error("知识点不能关联自身。"); const reverse = symmetricTypes.has(relation.relationType) ? await tx.knowledgeRelation.findUnique({ where: { sourceKnowledgePointId_targetKnowledgePointId_relationType: { sourceKnowledgePointId: targetId, targetKnowledgePointId: sourceId, relationType: relation.relationType } }, select: { id: true } }) : null; if (reverse) { await tx.knowledgeRelation.update({ where: { id: reverse.id }, data: { description: relation.description } }); } else { await tx.knowledgeRelation.upsert({ where: { sourceKnowledgePointId_targetKnowledgePointId_relationType: { sourceKnowledgePointId: sourceId, targetKnowledgePointId: targetId, relationType: relation.relationType } }, update: { description: relation.description }, create: { sourceKnowledgePointId: sourceId, targetKnowledgePointId: targetId, relationType: relation.relationType, description: relation.description } }); } relationsChanged++; }
       return { createdKnowledgePoints, updatedKnowledgePoints, formulas: formulasChanged, examples: examplesChanged, relations: relationsChanged };
     });

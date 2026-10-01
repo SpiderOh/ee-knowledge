@@ -41,6 +41,7 @@
 - Knowledge Bundle v1 的 Zod 校验、预览、Merge/Upsert 导入和稳定导出
 - `npm run verify:content` 内容传输验证
 - PR #4 稳定性修复：Markdown Preview 保存保护、Import Preview 内容绑定、已有 Course/SubjectArea 引用导入、子实体 ownership、`db:` key 防劫持、空 Course 导出和关系稳定排序
+- PR #4 本轮修复：管理后台空 reviewStatus 参数归一化、跨数据库 identity 预览计数、确定性 Formula/Example ownership、Bundle 部分更新与 sortOrder 默认语义
 
 ## 部分完成
 
