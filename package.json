@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0-rc.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,12 +10,18 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
-    "db": "prisma migrate deploy && npm run db:seed",
+    "db": "prisma migrate deploy",
+    "db:setup": "prisma migrate deploy && npm run db:seed",
     "db:seed": "tsx prisma/seed.ts",
+    "db:check": "tsx scripts/check-db-integrity.ts",
+    "db:backup": "tsx scripts/backup-db.ts",
+    "db:restore": "tsx scripts/restore-db.ts",
     "verify:demo": "tsx scripts/verify-demo-data.ts",
     "verify:content": "tsx scripts/verify-content-transfer.ts",
     "verify:admin-query": "tsx scripts/verify-admin-query.ts",
-    "verify:structure": "tsx scripts/verify-structure.ts"
+    "verify:structure": "tsx scripts/verify-structure.ts",
+    "verify:mvp": "tsx scripts/verify-mvp.ts",
+    "release:check": "tsx scripts/release-check.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",
