@@ -65,8 +65,12 @@
 
 - v0.2.0：复习中心、简单间隔复习、练习题和学习统计
 - v0.3.0：复试训练
-- v0.4.0：AI 与 RAG
-- 后续版本：图片上传、MediaAsset、对象存储、Authentication、多用户和云同步
+- v0.4.0：AI Provider、知识生成与 AI 学习能力
+- v0.5.0：PDF / Word 等资料自动化
+- v0.6.0：RAG
+- v0.7.0：知识图谱
+- v0.8.0：院校复试资料
+- 后续能力：图片上传、MediaAsset、对象存储、Authentication、多用户和云同步
 
 ## 依赖状态
 

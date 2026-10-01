@@ -15,7 +15,7 @@
 
 ## 本地安装
 
-```bash
+```powershell
 npm ci
 Copy-Item .env.example .env
 npm run db:setup
