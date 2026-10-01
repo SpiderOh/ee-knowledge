@@ -173,7 +173,7 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 
 - 复习中心从 `ReviewRecord.nextReviewAt` 和 `StudyProgress.status=REVIEW` 生成到期与手动队列。
 - 每次复习写入一条 `ReviewRecord`，并清空同一知识点旧的有效计划，保证只有一个有效计划。
-- 结果使用 0 忘记、1 模糊、2 记得、3 熟练；间隔使用 1/3/7/14/30 天，连续熟练结果推进间隔，忘记或模糊重置为 1 天。
+- 结果使用 0 忘记、1 模糊、2 记得、3 熟练；GOOD/EASY 都属于连续成功结果并推进阶段，EASY 比 GOOD 快一档；AGAIN/HARD 重置为 1 天。
 - 复习结果同步 `StudyProgress`，但不改变 `ReviewRecord`、`PracticeQuestion` 或用户数据的核心关系。
 
 原因：

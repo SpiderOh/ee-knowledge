@@ -1,5 +1,6 @@
 import { StudyStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { addLocalDays } from "./date";
 
 export type ReviewQueueItem = {
   id: string;
@@ -36,14 +37,25 @@ function toQueueItem(candidate: Awaited<ReturnType<typeof getReviewCandidates>>[
   return { id: candidate.id, slug: candidate.slug, title: candidate.title, category: candidate.category, importance: candidate.importance, course: candidate.course, nextReviewAt: active, source: active ? "scheduled" : "manual" };
 }
 
+export function compareReviewQueueItems(a: ReviewQueueItem, b: ReviewQueueItem) {
+  if (a.source !== b.source) return a.source === "scheduled" ? -1 : 1;
+  if (a.source === "scheduled" && b.source === "scheduled") {
+    const dateDifference = (a.nextReviewAt?.getTime() ?? Number.MAX_SAFE_INTEGER) - (b.nextReviewAt?.getTime() ?? Number.MAX_SAFE_INTEGER);
+    if (dateDifference !== 0) return dateDifference;
+  }
+  const importanceDifference = b.importance - a.importance;
+  return importanceDifference !== 0 ? importanceDifference : a.title.localeCompare(b.title, "zh-CN");
+}
+
 export async function getReviewOverview(now = new Date()) {
   const candidates = (await getReviewCandidates()).map(toQueueItem);
-  const dueItems = candidates.filter((item) => item.nextReviewAt ? item.nextReviewAt <= now : item.source === "manual");
-  const upcomingItems = candidates.filter((item) => item.nextReviewAt && item.nextReviewAt > now && item.nextReviewAt <= new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)).sort((a, b) => a.nextReviewAt!.getTime() - b.nextReviewAt!.getTime()).slice(0, 20);
+  const dueItems = candidates.filter((item) => item.nextReviewAt ? item.nextReviewAt <= now : item.source === "manual").sort(compareReviewQueueItems);
+  const upcomingAll = candidates.filter((item) => item.nextReviewAt && item.nextReviewAt > now && item.nextReviewAt <= addLocalDays(now, 7)).sort((a, b) => a.nextReviewAt!.getTime() - b.nextReviewAt!.getTime());
+  const upcomingItems = upcomingAll.slice(0, 20);
   const today = startOfToday(now);
   const overdueCount = dueItems.filter((item) => item.nextReviewAt && item.nextReviewAt < today).length;
   const manualCount = dueItems.filter((item) => item.source === "manual").length;
-  return { dueItems, dueCount: dueItems.length, overdueCount, upcoming7DaysCount: upcomingItems.length, manualCount, upcomingItems };
+  return { dueItems, dueCount: dueItems.length, overdueCount, upcoming7DaysCount: upcomingAll.length, manualCount, upcomingItems };
 }
 
 export async function getKnowledgeReviewHistory(slug: string) {

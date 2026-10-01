@@ -1,4 +1,7 @@
 import { REVIEW_INTERVAL_DAYS, type ReviewResult } from "./constants";
+import { addLocalDays } from "./date";
+
+export { addLocalDays } from "./date";
 
 export function calculateSuccessStreak(previousResults: number[]) {
   let streak = 0;
@@ -15,7 +18,7 @@ export function calculateNextReview({ result, previousResults, now = new Date() 
   const intervalDays = REVIEW_INTERVAL_DAYS[Math.min(intervalIndex, REVIEW_INTERVAL_DAYS.length - 1)];
   return {
     intervalDays,
-    nextReviewAt: new Date(now.getTime() + intervalDays * 24 * 60 * 60 * 1000),
+    nextReviewAt: addLocalDays(now, intervalDays),
     successStreak: result >= 2 ? previousStreak + 1 : 0,
   };
 }
