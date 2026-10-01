@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.1.0-rc.1`
+`v0.1.0`
 
 已完成：
 
@@ -22,9 +22,9 @@
 - 内容管理后台、KnowledgePoint 及结构化内容 CRUD
 - Knowledge Bundle v1 的 JSON 校验、预览、导入和导出
 - 结构管理、Chapter 树形管理和保守删除保护
+- SQLite Backup / Restore、`db:check`、`verify:mvp` 和 `release:check`
 
 下一步：
 
-- v0.1.0 Release Candidate 回归、审查与合并
-- v0.2.0 学习记录与复习中心
-- 图片上传和媒体库
+- v0.2.0：复习中心、简单间隔复习、练习题和学习统计
+- 后续版本：图片上传、媒体库、复试训练、AI 与 RAG
