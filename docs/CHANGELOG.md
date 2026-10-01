@@ -16,6 +16,15 @@
 - Knowledge Bundle 不包含用户学习数据，不删除 Bundle 缺失内容。
 - 导入内容默认保留 AI 草稿审核状态，不自动标记为 VERIFIED。
 
+### Fixed
+
+- 修复 Markdown Preview 状态下保存导致五个 Markdown 字段被清空的问题。
+- 将 Import Confirmation 绑定到已成功预览的 JSON 内容，JSON 改变后必须重新预览。
+- 修复已有 Course、SubjectArea 未在 Bundle 中重复声明时的引用导入。
+- 加固 Formula、Example、Relation 和 ChapterKnowledgePoint 的 ownership 校验。
+- 加固 Formula、Example 的 `db:` key，禁止劫持其他知识点的记录。
+- 修复空 Course 导出，并按 sourceSlug、relationType、targetSlug 稳定排序关系。
+
 ## 0.1.0-alpha.4 - 2026-09-30
 
 ### Added

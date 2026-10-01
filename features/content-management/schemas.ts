@@ -61,6 +61,12 @@ export const chapterLinkInputSchema = z.object({
   sortOrder: z.preprocess((value) => typeof value === "string" ? Number(value) : value, z.number().int().min(0)),
 });
 
+export const entityIdSchema = z.string().trim().min(1, "记录 ID 不能为空。");
+export const formulaDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
+export const exampleDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
+export const relationDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
+export const chapterLinkDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
+
 export const adminKnowledgeQuerySchema = z.object({
   q: z.string().trim().max(100).optional().default(""),
   course: z.string().trim().max(100).optional().default(""),

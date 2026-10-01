@@ -2,10 +2,9 @@
 
 import { Prisma, RelationType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { chapterLinkInputSchema, exampleInputSchema, formulaInputSchema, knowledgePointInputSchema, relationInputSchema, type KnowledgePointInput } from "./schemas";
+import { chapterLinkDeleteSchema, chapterLinkInputSchema, exampleDeleteSchema, exampleInputSchema, formulaDeleteSchema, formulaInputSchema, knowledgePointInputSchema, relationDeleteSchema, relationInputSchema, type KnowledgePointInput } from "./schemas";
 
 const symmetricTypes = new Set<RelationType>([RelationType.RELATED, RelationType.SIMILAR, RelationType.DIFFERENT]);
 const firstError = (error: unknown, fallback: string) => error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002" ? "该 slug 已存在。" : fallback;
@@ -45,26 +44,30 @@ export async function deleteKnowledgePoint(input: { id: string }) {
 export async function saveFormula(input: z.infer<typeof formulaInputSchema>) {
   const parsed = formulaInputSchema.safeParse(input); if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "公式参数无效。" } as const;
   const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
-  try { if (parsed.data.id) await prisma.formula.update({ where: { id: parsed.data.id }, data: { name: parsed.data.name, latex: parsed.data.latex, description: parsed.data.description, conditions: parsed.data.conditions, sortOrder: parsed.data.sortOrder } }); else await prisma.formula.create({ data: parsed.data }); } catch { return { ok: false, error: "公式保存失败，请稍后重试。" } as const; }
+  try { if (parsed.data.id) { const existing = await prisma.formula.findUnique({ where: { id: parsed.data.id }, select: { knowledgePointId: true } }); if (!existing) return { ok: false, error: "公式不存在。" } as const; if (existing.knowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "公式不属于当前知识点。" } as const; await prisma.formula.update({ where: { id: parsed.data.id }, data: { name: parsed.data.name, latex: parsed.data.latex, description: parsed.data.description, conditions: parsed.data.conditions, sortOrder: parsed.data.sortOrder } }); } else await prisma.formula.create({ data: parsed.data }); } catch { return { ok: false, error: "公式保存失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
 
 export async function deleteFormula(input: { id: string; knowledgePointId: string }) {
-  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: true } as const;
-  try { await prisma.formula.delete({ where: { id: input.id } }); } catch { return { ok: false, error: "公式删除失败，请稍后重试。" } as const; }
+  const parsed = formulaDeleteSchema.safeParse(input); if (!parsed.success) return { ok: false, error: "公式删除参数无效。" } as const;
+  const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
+  const formula = await prisma.formula.findUnique({ where: { id: parsed.data.id }, select: { knowledgePointId: true } }); if (!formula) return { ok: false, error: "公式不存在。" } as const; if (formula.knowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "公式不属于当前知识点。" } as const;
+  try { await prisma.formula.delete({ where: { id: parsed.data.id } }); } catch { return { ok: false, error: "公式删除失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
 
 export async function saveExample(input: z.infer<typeof exampleInputSchema>) {
   const parsed = exampleInputSchema.safeParse(input); if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "案例参数无效。" } as const;
   const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
-  try { if (parsed.data.id) await prisma.example.update({ where: { id: parsed.data.id }, data: { title: parsed.data.title, content: parsed.data.content, solution: parsed.data.solution, type: parsed.data.type, sortOrder: parsed.data.sortOrder } }); else await prisma.example.create({ data: parsed.data }); } catch { return { ok: false, error: "案例保存失败，请稍后重试。" } as const; }
+  try { if (parsed.data.id) { const existing = await prisma.example.findUnique({ where: { id: parsed.data.id }, select: { knowledgePointId: true } }); if (!existing) return { ok: false, error: "案例不存在。" } as const; if (existing.knowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "案例不属于当前知识点。" } as const; await prisma.example.update({ where: { id: parsed.data.id }, data: { title: parsed.data.title, content: parsed.data.content, solution: parsed.data.solution, type: parsed.data.type, sortOrder: parsed.data.sortOrder } }); } else await prisma.example.create({ data: parsed.data }); } catch { return { ok: false, error: "案例保存失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
 
 export async function deleteExample(input: { id: string; knowledgePointId: string }) {
-  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: true } as const;
-  try { await prisma.example.delete({ where: { id: input.id } }); } catch { return { ok: false, error: "案例删除失败，请稍后重试。" } as const; }
+  const parsed = exampleDeleteSchema.safeParse(input); if (!parsed.success) return { ok: false, error: "案例删除参数无效。" } as const;
+  const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
+  const example = await prisma.example.findUnique({ where: { id: parsed.data.id }, select: { knowledgePointId: true } }); if (!example) return { ok: false, error: "案例不存在。" } as const; if (example.knowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "案例不属于当前知识点。" } as const;
+  try { await prisma.example.delete({ where: { id: parsed.data.id } }); } catch { return { ok: false, error: "案例删除失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
 
@@ -75,7 +78,7 @@ export async function saveRelation(input: z.infer<typeof relationInputSchema>) {
   if (!source || !target) return { ok: false, error: "目标知识点不存在。" } as const;
   if (source.id === target.id) return { ok: false, error: "知识点不能关联自身。" } as const;
   try {
-    if (parsed.data.id) await prisma.knowledgeRelation.update({ where: { id: parsed.data.id }, data: { description: parsed.data.description } });
+    if (parsed.data.id) { const existing = await prisma.knowledgeRelation.findUnique({ where: { id: parsed.data.id }, select: { sourceKnowledgePointId: true, targetKnowledgePointId: true } }); if (!existing) return { ok: false, error: "关系不存在。" } as const; if (existing.sourceKnowledgePointId !== source.id && existing.targetKnowledgePointId !== source.id) return { ok: false, error: "关系不属于当前知识点。" } as const; await prisma.knowledgeRelation.update({ where: { id: parsed.data.id }, data: { description: parsed.data.description } }); }
     else {
       const reverse = symmetricTypes.has(parsed.data.relationType) ? await prisma.knowledgeRelation.findUnique({ where: { sourceKnowledgePointId_targetKnowledgePointId_relationType: { sourceKnowledgePointId: target.id, targetKnowledgePointId: source.id, relationType: parsed.data.relationType } } }) : null;
       if (reverse) return { ok: false, error: "该对称关系已存在，不能创建镜像记录。" } as const;
@@ -86,8 +89,10 @@ export async function saveRelation(input: z.infer<typeof relationInputSchema>) {
 }
 
 export async function deleteRelation(input: { id: string; knowledgePointId: string }) {
-  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: true } as const;
-  try { await prisma.knowledgeRelation.delete({ where: { id: input.id } }); } catch { return { ok: false, error: "关系删除失败，请稍后重试。" } as const; }
+  const parsed = relationDeleteSchema.safeParse(input); if (!parsed.success) return { ok: false, error: "关系删除参数无效。" } as const;
+  const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
+  const relation = await prisma.knowledgeRelation.findUnique({ where: { id: parsed.data.id }, select: { sourceKnowledgePointId: true, targetKnowledgePointId: true } }); if (!relation) return { ok: false, error: "关系不存在。" } as const; if (relation.sourceKnowledgePointId !== parsed.data.knowledgePointId && relation.targetKnowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "关系不属于当前知识点。" } as const;
+  try { await prisma.knowledgeRelation.delete({ where: { id: parsed.data.id } }); } catch { return { ok: false, error: "关系删除失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
 
@@ -100,7 +105,9 @@ export async function linkKnowledgePointToChapter(input: z.infer<typeof chapterL
 }
 
 export async function unlinkKnowledgePointFromChapter(input: { id: string; knowledgePointId: string }) {
-  const point = await prisma.knowledgePoint.findUnique({ where: { id: input.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: true } as const;
-  try { await prisma.chapterKnowledgePoint.delete({ where: { id: input.id } }); } catch { return { ok: false, error: "章节关联删除失败，请稍后重试。" } as const; }
+  const parsed = chapterLinkDeleteSchema.safeParse(input); if (!parsed.success) return { ok: false, error: "章节关联删除参数无效。" } as const;
+  const point = await prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true } }); if (!point) return { ok: false, error: "知识点不存在。" } as const;
+  const link = await prisma.chapterKnowledgePoint.findUnique({ where: { id: parsed.data.id }, select: { knowledgePointId: true } }); if (!link) return { ok: false, error: "章节关联不存在。" } as const; if (link.knowledgePointId !== parsed.data.knowledgePointId) return { ok: false, error: "章节关联不属于当前知识点。" } as const;
+  try { await prisma.chapterKnowledgePoint.delete({ where: { id: parsed.data.id } }); } catch { return { ok: false, error: "章节关联删除失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }
