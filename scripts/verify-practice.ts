@@ -42,6 +42,9 @@ async function runCase() {
     if (missingKey.ok) throw new Error("缺失答案 key 应拒绝。");
     const tooFew = await savePracticeQuestion({ ...input, optionsText: "A|一" });
     if (tooFew.ok) throw new Error("单选少于两项应拒绝。");
+    const beforeInvalidSingle = await prisma.practiceQuestion.count({ where: { knowledgePointId: point.id } });
+    const multiAnswerSingle = await savePracticeQuestion({ ...input, optionsText: "A|一\nB|二\nC|三", answer: "A,B" });
+    if (multiAnswerSingle.ok || (await prisma.practiceQuestion.count({ where: { knowledgePointId: point.id } })) !== beforeInvalidSingle) throw new Error("单选题多标准答案必须拒绝且不写题目。");
     const invalidKey = await savePracticeQuestion({ ...input, optionsText: "A,B|一\nC|二" });
     if (invalidKey.ok) throw new Error("非法选项 key 应拒绝。");
     const trueFalseWithOptions = await savePracticeQuestion({ ...input, type: "TRUE_FALSE", answer: "TRUE", optionsText: "A|一\nB|二" });
@@ -52,6 +55,10 @@ async function runCase() {
     const created = await savePracticeQuestion(input);
     if (!created.ok) throw new Error(`创建题失败：${created.error}`);
     const id = created.id;
+    const canonical = await savePracticeQuestion({ ...input, question: "选项规范化验证", answer: "a", optionsText: "a|一\nb|二" });
+    if (!canonical.ok) throw new Error(`小写选项保存失败：${canonical.error}`);
+    const canonicalOptions = await prisma.practiceQuestionOption.findMany({ where: { practiceQuestionId: canonical.id }, select: { key: true } });
+    if (canonicalOptions.some((option) => !["A", "B"].includes(option.key))) throw new Error("选项 key 未规范化为大写。");
     if ((await savePracticeQuestion({ ...input, id, knowledgePointId: other.id })).ok) throw new Error("跨知识点修改应拒绝。");
     if ((await deletePracticeQuestion({ id, knowledgePointId: other.id })).ok) throw new Error("跨知识点删除应拒绝。");
     const wrong = await recordPracticeAttempt({ practiceQuestionId: id, submittedAnswer: "A" });

@@ -37,7 +37,9 @@ function validateQuestionContent(type: PracticeQuestionType, answer: string, opt
     if (options.length < 2) return "单选题和多选题至少需要 2 个选项。";
     const keys = new Set(options.map((option) => option.key));
     const normalizedAnswer = normalizeQuestionAnswer(type, answer);
-    if (!normalizedAnswer || normalizedAnswer.split(",").some((key) => !keys.has(key))) return "标准答案必须指向已有选项。";
+    const answerKeys = normalizedAnswer ? normalizedAnswer.split(",") : [];
+    if (type === PracticeQuestionType.SINGLE_CHOICE && answerKeys.length !== 1) return "单选题标准答案必须且只能包含一个选项。";
+    if (answerKeys.length === 0 || answerKeys.some((key) => !keys.has(key))) return "标准答案必须指向已有选项。";
   }
   if (type === PracticeQuestionType.TRUE_FALSE && !normalizeTrueFalse(answer)) return "判断题标准答案只能是正确或错误。";
   if (type === PracticeQuestionType.TRUE_FALSE && options.length > 0) return "判断题不能包含选项记录。";
@@ -48,33 +50,37 @@ function validateQuestionContent(type: PracticeQuestionType, answer: string, opt
 export async function recordPracticeAttempt(input: { practiceQuestionId: string; submittedAnswer: string; subjectiveAssessment?: boolean }) {
   const parsed = practiceAttemptInputSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "作答参数无效。" } as const;
-  const question = await prisma.practiceQuestion.findUnique({ where: { id: parsed.data.practiceQuestionId }, select: { id: true, type: true, answer: true, options: { select: { key: true } }, knowledgePoint: { select: { slug: true } } } });
-  if (!question) return { ok: false, error: "练习题不存在。" } as const;
-  let isCorrect: boolean;
-  const submittedAnswer = parsed.data.submittedAnswer.trim();
-  let normalizedSubmittedAnswer = submittedAnswer;
-  if (question.type === PracticeQuestionType.SINGLE_CHOICE) {
-    normalizedSubmittedAnswer = normalizeSingleChoice(submittedAnswer);
-    if (!normalizedSubmittedAnswer || normalizedSubmittedAnswer.includes(",") || !question.options.some((option) => option.key === normalizedSubmittedAnswer)) return { ok: false, error: "提交的选项无效。" } as const;
-  } else if (question.type === PracticeQuestionType.MULTIPLE_CHOICE) {
-    normalizedSubmittedAnswer = normalizeMultipleChoice(submittedAnswer);
-    const keys = normalizedSubmittedAnswer ? normalizedSubmittedAnswer.split(",") : [];
-    if (!keys.length || keys.some((key) => !question.options.some((option) => option.key === key))) return { ok: false, error: "提交的选项无效。" } as const;
-  } else if (question.type === PracticeQuestionType.TRUE_FALSE) {
-    const normalized = normalizeTrueFalse(submittedAnswer);
-    if (!normalized) return { ok: false, error: "提交的选项无效。" } as const;
-    normalizedSubmittedAnswer = normalized;
-  }
-  if (isObjectiveQuestionType(question.type)) isCorrect = gradeObjectiveAnswer(question.type, normalizedSubmittedAnswer, question.answer);
-  else {
-    if (typeof parsed.data.subjectiveAssessment !== "boolean") return { ok: false, error: "请先完成自评。" } as const;
-    isCorrect = parsed.data.subjectiveAssessment;
-  }
   try {
-    const attemptedAt = new Date();
-    const attempt = await prisma.practiceAttempt.create({ data: { practiceQuestionId: question.id, submittedAnswer: normalizedSubmittedAnswer, isCorrect, attemptedAt } });
-    safeRevalidate(["/practice", `/practice/${question.id}`, "/wrong-answers", `/knowledge/${question.knowledgePoint.slug}`]);
-    return { ok: true, attemptId: attempt.id, isCorrect: attempt.isCorrect, attemptedAt: attempt.attemptedAt.toISOString() } as const;
+    const result = await prisma.$transaction(async (tx) => {
+      const question = await tx.practiceQuestion.findUnique({ where: { id: parsed.data.practiceQuestionId }, select: { id: true, type: true, answer: true, options: { select: { key: true } }, knowledgePoint: { select: { slug: true } } } });
+      if (!question) return { ok: false as const, error: "练习题不存在。" };
+      let isCorrect: boolean;
+      const submittedAnswer = parsed.data.submittedAnswer.trim();
+      let normalizedSubmittedAnswer = submittedAnswer;
+      if (question.type === PracticeQuestionType.SINGLE_CHOICE) {
+        normalizedSubmittedAnswer = normalizeSingleChoice(submittedAnswer);
+        if (!normalizedSubmittedAnswer || normalizedSubmittedAnswer.includes(",") || !question.options.some((option) => option.key === normalizedSubmittedAnswer)) return { ok: false as const, error: "提交的选项无效。" };
+      } else if (question.type === PracticeQuestionType.MULTIPLE_CHOICE) {
+        normalizedSubmittedAnswer = normalizeMultipleChoice(submittedAnswer);
+        const keys = normalizedSubmittedAnswer ? normalizedSubmittedAnswer.split(",") : [];
+        if (!keys.length || keys.some((key) => !question.options.some((option) => option.key === key))) return { ok: false as const, error: "提交的选项无效。" };
+      } else if (question.type === PracticeQuestionType.TRUE_FALSE) {
+        const normalized = normalizeTrueFalse(submittedAnswer);
+        if (!normalized) return { ok: false as const, error: "提交的选项无效。" };
+        normalizedSubmittedAnswer = normalized;
+      }
+      if (isObjectiveQuestionType(question.type)) isCorrect = gradeObjectiveAnswer(question.type, normalizedSubmittedAnswer, question.answer);
+      else {
+        if (typeof parsed.data.subjectiveAssessment !== "boolean") return { ok: false as const, error: "请先完成自评。" };
+        isCorrect = parsed.data.subjectiveAssessment;
+      }
+      const attemptedAt = new Date();
+      const attempt = await tx.practiceAttempt.create({ data: { practiceQuestionId: question.id, submittedAnswer: normalizedSubmittedAnswer, isCorrect, attemptedAt } });
+      return { ok: true as const, attemptId: attempt.id, isCorrect: attempt.isCorrect, attemptedAt: attempt.attemptedAt.toISOString(), questionId: question.id, knowledgePointSlug: question.knowledgePoint.slug };
+    });
+    if (!result.ok) return result;
+    safeRevalidate(["/practice", `/practice/${result.questionId}`, "/wrong-answers", `/knowledge/${result.knowledgePointSlug}`]);
+    return { ok: true, attemptId: result.attemptId, isCorrect: result.isCorrect, attemptedAt: result.attemptedAt } as const;
   } catch { return { ok: false, error: "作答记录保存失败。" } as const; }
 }
 

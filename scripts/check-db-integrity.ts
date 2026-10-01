@@ -37,7 +37,7 @@ async function main() {
   for (const question of practiceQuestions) {
     if (!Number.isInteger(question.difficulty) || question.difficulty < 1 || question.difficulty > 5) errors.push(`PracticeQuestion ${question.id} 的 difficulty 必须为 1～5。`);
     const normalizedOptionKeys = question.options.map((option) => option.key.trim().toUpperCase());
-    if (question.options.some((option) => !option.key.trim() || !option.content.trim() || !/^[A-Z0-9]+$/.test(option.key.trim().toUpperCase()))) errors.push(`PracticeQuestion ${question.id} 的选项 key 或内容不合法。`);
+    if (question.options.some((option) => !option.content.trim() || option.key !== option.key.trim().toUpperCase() || !/^[A-Z0-9]+$/.test(option.key))) errors.push(`PracticeQuestion ${question.id} 的选项 key 或内容不合法。`);
     if (new Set(normalizedOptionKeys).size !== normalizedOptionKeys.length) errors.push(`PracticeQuestion ${question.id} 的选项 key 规范化后重复。`);
     if (question.type === PracticeQuestionType.SINGLE_CHOICE || question.type === PracticeQuestionType.MULTIPLE_CHOICE) {
       const keys = new Set(normalizedOptionKeys);
