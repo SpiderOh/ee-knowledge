@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0-rc.1`
+`v0.1.0`
 
 ## 当前阶段
 
-第八轮 Release Candidate 完成 MVP 全链路稳定性、SQLite 安全工具和发布检查。正式 `v0.1.0` 还需要代码审查、合并和最终版本确认。
+第一阶段 Knowledge Base MVP 已完成。系统已经具备课程、教材、章节、知识点阅读，学习工具，内容与结构管理，Knowledge Bundle、SQLite 数据保护和正式发布验证能力。下一阶段进入 `v0.2.0` 复习与练习。
 
 ## 已完成
 
@@ -59,24 +59,18 @@
 - 统一 KnowledgeCategory 与 ReviewStatus 标签，并补充键盘焦点和树形控件 ARIA
 - AppShell 与知识点页移动端导航
 - 中文 KnowledgeCategory 展示、稳定 sibling 排序和主要空状态
-- `docs/BACKUP_RESTORE.md`、`docs/RELEASE_CHECKLIST.md`
-
-## 部分完成
-
-- 搜索课程与教材过滤已提供基础 UI
-- 章节树支持递归和折叠，移动端使用顶部上下文导航，教材目录仍以内容区域展示
-- 学习工具为单用户本地数据，尚未接入登录和云同步
-- 当前版本继续限定在 MVP 结构与内容管理，不扩展复习中心或 AI 功能
-- 图片仅支持 Markdown 引用和显示接口，尚未接入上传与媒体库
-- `/admin` 当前没有身份认证，仅适合本地使用或可信网络；公网部署前必须增加 Authentication
+- `docs/BACKUP_RESTORE.md`、`docs/RELEASE_CHECKLIST.md`、`docs/RELEASE_NOTES.md`
 
 ## 未完成
 
-- v0.1.0 RC 代码审查、阻塞问题修复、合并和最终版本确认
-- 真正图片上传、MediaAsset 数据模型和对象存储
-- 复习中心、间隔复习和学习统计（v0.2.0）
-- Tailwind CSS、shadcn/ui（当前项目使用原生 CSS，尚未初始化）
-- AI、RAG、复试训练和多用户能力
+- v0.2.0：复习中心、简单间隔复习、练习题和学习统计
+- v0.3.0：复试训练
+- v0.4.0：AI Provider、知识生成与 AI 学习能力
+- v0.5.0：PDF / Word 等资料自动化
+- v0.6.0：RAG
+- v0.7.0：知识图谱
+- v0.8.0：院校复试资料
+- 后续能力：图片上传、MediaAsset、对象存储、Authentication、多用户和云同步
 
 ## 依赖状态
 
@@ -87,13 +81,12 @@
 
 ## 下一步
 
-- RC 代码审查、阻塞问题修复、合并和最终版本确认
-- v0.2.0 再构建复习中心和更完整的学习统计
+- v0.2.0：复习中心、简单间隔复习、练习题和学习统计
 
 ## 已知问题
 
 - Windows 环境可能出现 Next.js SWC 原生模块 fallback 警告；只要 build 最终退出码为 0，不影响本轮发布检查。
-- `/admin` 尚未接入 Authentication，仅适合本地使用或可信网络。
+- `/admin` 尚未接入 Authentication，仅适合本地使用或可信网络；这是当前版本的产品边界。
 - 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
 

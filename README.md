@@ -42,9 +42,15 @@
 - Markdown
 - KaTeX
 
+## 当前版本
+
+`v0.1.0`
+
+第一阶段知识库 MVP 已完成。
+
 ## 第一阶段 MVP
 
-v0.1.0 目标：
+v0.1.0 已完成的第一阶段 MVP：
 
 > 打开网页 → 选择课程 → 选择教材 → 浏览树形目录 → 阅读知识点 → 搜索 → 收藏 → 做笔记 → 标记学习状态 → 查看学习进度。
 
@@ -65,7 +71,7 @@ v0.1.0 目标：
 
 ## 本地初始化与数据库安全
 
-```bash
+```powershell
 npm ci
 Copy-Item .env.example .env
 npm run db:setup
@@ -75,3 +81,7 @@ npm run dev
 已有数据库升级时运行 `npm run db`，它只执行 Prisma migration，不会自动同步 Demo Fixture。需要明确初始化或刷新 Demo 数据时才运行 `npm run db:seed`。
 
 Knowledge Bundle 是知识内容交换格式，不是个人完整备份。SQLite 完整备份和恢复流程见 [`docs/BACKUP_RESTORE.md`](docs/BACKUP_RESTORE.md)。
+
+## 管理后台安全提示
+
+`/admin` 当前没有 Authentication，仅用于本机或可信网络。不要将未加认证的管理后台直接暴露到公网。

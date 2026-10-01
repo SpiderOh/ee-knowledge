@@ -1,5 +1,47 @@
 # Changelog
 
+## 0.1.0 - 2026-10-01
+
+### Highlights
+
+- 完成电子信息专业本地优先知识库 MVP，覆盖 Course → Book → Chapter → KnowledgePoint 阅读链。
+- 提供搜索、收藏、笔记、学习状态和课程进度，以及内容管理和结构管理。
+
+### Knowledge System
+
+- 支持 SubjectArea、Course、Book、递归 Chapter Tree、KnowledgePoint、Formula、Example、KnowledgeRelation 和 ChapterKnowledgePoint。
+- 提供稳定教材阅读顺序和上一/下一知识点导航，正文支持 Markdown、GFM 和 KaTeX。
+
+### Learning Tools
+
+- 支持 StudyStatus、Favorite、Note、Course Progress 和 Recent Study。
+- 完整复习中心、练习题和学习统计规划在 `v0.2.0`。
+
+### Administration
+
+- 支持 KnowledgePoint、Formula、Example、Relation、教材章节关联，以及 SubjectArea、Course、Book、Chapter Tree 管理。
+- 提供安全删除和 Course consistency invariant。
+
+### Data Portability
+
+- 提供 Knowledge Bundle v1 的校验、Preview、Merge/Upsert 和稳定导入导出。
+
+### Data Safety
+
+- `npm run db` 仅执行 Migration，Demo Seed 显式执行。
+- 提供 `db:check`、`db:backup`、`db:restore`、恢复前备份和隔离验证数据库。
+- Knowledge Bundle 不包含用户学习数据，也不替代完整 SQLite 备份。
+
+### Release Quality
+
+- 提供统一 404、Error Boundary、移动端导航、主要空状态、中文 Enum 和基础 Accessibility。
+- 保持 local-first，不依赖运行时 Google Fonts。
+
+### Known Limitations
+
+- `/admin` 当前无 Authentication，仅用于本机或可信网络。
+- 暂无图片上传、MediaAsset、复习中心、AI 和 RAG；这些属于后续产品路线。
+
 ## 0.1.0-rc.1 - 2026-10-01
 
 ### Added
