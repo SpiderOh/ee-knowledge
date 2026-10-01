@@ -28,8 +28,10 @@ async function main() {
   for (const point of points) for (const [field, value] of [["importance", point.importance], ["interviewImportance", point.interviewImportance], ["difficulty", point.difficulty]] as const) if (value < 1 || value > 5) errors.push(`KnowledgePoint ${point.id}（${point.title}）的 ${field} 超出 1～5。`); else if (field === "difficulty" && !Number.isInteger(value)) errors.push(`KnowledgePoint ${point.id}（${point.title}）的 ${field} 不是整数。`);
   for (const point of points) if (point.confidence !== null && (point.confidence < 0 || point.confidence > 1)) errors.push(`KnowledgePoint ${point.id}（${point.title}）的 confidence 超出 0～1。`);
   const [courses, books, chapterCount, knowledgePoints, relationCount, notes, favorites, studyProgress] = await Promise.all([prisma.course.count(), prisma.book.count(), prisma.chapter.count(), prisma.knowledgePoint.count(), prisma.knowledgeRelation.count(), prisma.note.count(), prisma.favorite.count(), prisma.studyProgress.count()]);
+  const activeSchedules = await prisma.reviewRecord.groupBy({ by: ["knowledgePointId"], where: { nextReviewAt: { not: null } }, _count: { _all: true } });
+  for (const schedule of activeSchedules) if (schedule._count._all > 1) errors.push(`KnowledgePoint ${schedule.knowledgePointId} 存在多个有效复习计划。`);
   if (errors.length) { console.error("Database integrity check failed"); for (const error of errors) console.error(`- ${error}`); process.exitCode = 1; return; }
-  console.log("Database integrity check passed", { courses, books, chapters: chapterCount, knowledgePoints, relations: relationCount, notes, favorites, studyProgress });
+  console.log("Database integrity check passed", { courses, books, chapters: chapterCount, knowledgePoints, relations: relationCount, notes, favorites, studyProgress, activeSchedules: activeSchedules.length });
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; }).finally(() => prisma.$disconnect());

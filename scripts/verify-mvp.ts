@@ -5,7 +5,7 @@ import { runNpmScript } from "./lib/run-command";
 
 const verifyPath = path.join(repoRoot, "prisma", "verify-mvp.db");
 const verifyUrl = "file:./verify-mvp.db";
-const steps = ["db", "db:seed", "verify:demo", "verify:content", "verify:admin-query", "verify:structure"];
+const steps = ["db", "db:seed", "verify:demo", "verify:content", "verify:admin-query", "verify:structure", "verify:review"];
 
 function removeVerifyDatabase() {
   for (const filePath of [verifyPath, ...sidecarPaths(verifyPath)]) {

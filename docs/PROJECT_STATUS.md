@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0`
+`v0.2.0-alpha.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。系统已经具备课程、教材、章节、知识点阅读，学习工具，内容与结构管理，Knowledge Bundle、SQLite 数据保护和正式发布验证能力。下一阶段进入 `v0.2.0` 复习与练习。
+第一阶段 Knowledge Base MVP 已完成。系统已经具备课程、教材、章节、知识点阅读，学习工具，内容与结构管理，Knowledge Bundle、SQLite 数据保护和正式发布验证能力。当前进入 `v0.2.0` 复习与练习第一阶段。
 
 ## 已完成
 
@@ -60,10 +60,18 @@
 - AppShell 与知识点页移动端导航
 - 中文 KnowledgeCategory 展示、稳定 sibling 排序和主要空状态
 - `docs/BACKUP_RESTORE.md`、`docs/RELEASE_CHECKLIST.md`、`docs/RELEASE_NOTES.md`
+- 复习中心 `/review`、到期和手动复习队列、复习会话与知识点复习历史
+- ReviewRecord 写入、结果校验、学习状态同步和单一有效复习计划约束
+- 简单间隔调度：忘记/模糊 1 天，记得按连续熟练次数 1/3/7/14/30 天，熟练推进间隔
+- 隔离数据库复习验证 `npm run verify:review`，并纳入 `npm run verify:mvp`
+
+## 部分完成
+
+- ReviewRecord 数据层和复习中心已完成；练习题 UI、做题记录、错题本和学习统计尚未开始
 
 ## 未完成
 
-- v0.2.0：复习中心、简单间隔复习、练习题和学习统计
+- v0.2.0-alpha.2：练习题、做题记录和错题本
 - v0.3.0：复试训练
 - v0.4.0：AI Provider、知识生成与 AI 学习能力
 - v0.5.0：PDF / Word 等资料自动化
