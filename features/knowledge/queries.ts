@@ -25,6 +25,7 @@ export async function getKnowledgePointBySlug(slug: string) {
       studyProgress: true,
       favorite: true,
       notes: { orderBy: { updatedAt: "desc" } },
+      practiceQuestions: { select: { id: true } },
     },
   });
 }

@@ -4,10 +4,10 @@ import { parseAdminKnowledgeQueryParams } from "./schemas";
 export const ADMIN_PAGE_SIZE = 20;
 
 export async function getAdminStats() {
-  const [knowledgePoints, formulas, examples, relations, courses, books] = await Promise.all([
-    prisma.knowledgePoint.count(), prisma.formula.count(), prisma.example.count(), prisma.knowledgeRelation.count(), prisma.course.count(), prisma.book.count(),
+  const [knowledgePoints, formulas, examples, relations, courses, books, practiceQuestions] = await Promise.all([
+    prisma.knowledgePoint.count(), prisma.formula.count(), prisma.example.count(), prisma.knowledgeRelation.count(), prisma.course.count(), prisma.book.count(), prisma.practiceQuestion.count(),
   ]);
-  return { knowledgePoints, formulas, examples, relations, courses, books };
+  return { knowledgePoints, formulas, examples, relations, courses, books, practiceQuestions };
 }
 
 export async function getAdminKnowledgeList(input: Record<string, string | undefined>) {
@@ -33,6 +33,7 @@ export async function getKnowledgePointAdmin(id: string) {
     outgoingRelations: { include: { target: { select: { id: true, title: true, slug: true } } } },
     incomingRelations: { include: { source: { select: { id: true, title: true, slug: true } } } },
     chapters: { include: { chapter: { include: { book: { select: { id: true, title: true } } } } }, orderBy: { sortOrder: "asc" } },
+    practiceQuestions: { orderBy: { id: "asc" }, include: { options: { orderBy: { sortOrder: "asc" } }, _count: { select: { attempts: true } } } },
   } });
 }
 

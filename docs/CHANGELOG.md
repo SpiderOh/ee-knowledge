@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.0-alpha.2 - 2026-10-01
+
+### Added
+
+- 新增 `/practice`、`/practice/[id]` 和 `/wrong-answers`，支持课程、题型、难度和知识点筛选。
+- 新增 PracticeAttempt、PracticeQuestionOption、客观题服务端判分、主观题自评、作答历史和最近一次错题判定。
+- 新增 KnowledgePoint 管理页练习题编辑、作答后的题目语义锁和删除保护。
+- 新增 5 道稳定 ID Demo 题与 `verify:practice` 隔离数据库验证。
+
+### Database
+
+- 仅新增 PracticeQuestionOption、PracticeAttempt 两张表及索引，保留现有 PracticeQuestion 字段和 Knowledge Bundle v1 边界。
+
+### Safety
+
+- PracticeAttempt 只追加不覆盖，错题本依据同一题最近一次作答；练习不会写入 StudyProgress 或 ReviewRecord。
+
 ## 0.2.0-alpha.1 - 2026-10-01
 
 ### Added

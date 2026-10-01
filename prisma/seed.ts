@@ -1,4 +1,4 @@
-import { PrismaClient, KnowledgeCategory, RelationType, ReviewStatus } from "@prisma/client";
+import { PrismaClient, KnowledgeCategory, PracticeQuestionType, RelationType, ReviewStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -70,7 +70,24 @@ async function main() {
       await prisma.chapterKnowledgePoint.upsert({ where: { chapterId_knowledgePointId: { chapterId: record.id, knowledgePointId: knowledgePoint.id } }, update: { sortOrder: index }, create: { chapterId: record.id, knowledgePointId: knowledgePoint.id, sortOrder: index } });
     }
   }
-  console.log("Seed complete: 6 courses, 1 book, 4 chapters, 10 knowledge points");
+  const demoQuestions = [
+    { id: "demo-practice-kcl-true-false", slug: "kirchhoff-current-law", type: PracticeQuestionType.TRUE_FALSE, question: "在集总参数电路中，任一节点的电流代数和为零。", answer: "TRUE", explanation: "这是基尔霍夫电流定律（KCL）的表述。", difficulty: 1, options: [] },
+    { id: "demo-practice-kvl-single", slug: "kirchhoff-voltage-law", type: PracticeQuestionType.SINGLE_CHOICE, question: "下列哪项符合基尔霍夫电压定律？", answer: "B", explanation: "沿闭合回路，各段电压的代数和为零。", difficulty: 2, options: [{ key: "A", content: "节点电流代数和为零" }, { key: "B", content: "闭合回路电压代数和为零" }, { key: "C", content: "支路电阻代数和为零" }] },
+    { id: "demo-practice-kvl-multiple", slug: "kirchhoff-voltage-law", type: PracticeQuestionType.MULTIPLE_CHOICE, question: "应用 KVL 分析电路时，哪些做法是正确的？", answer: "A,C", explanation: "先指定绕行方向，再按参考极性列写电压代数和。", difficulty: 3, options: [{ key: "A", content: "选定回路绕行方向" }, { key: "B", content: "忽略电压参考极性" }, { key: "C", content: "按参考极性确定各项符号" }] },
+    { id: "demo-practice-current-short", slug: "electric-current", type: PracticeQuestionType.SHORT_ANSWER, question: "请简述电流的定义，并写出其单位。", answer: "电流是单位时间内通过导体横截面的电荷量，单位是安培（A）。", explanation: "结合电荷量与时间说明电流。", difficulty: 2, options: [] },
+    { id: "demo-practice-power-calc", slug: "electric-power", type: PracticeQuestionType.CALCULATION, question: "某元件两端电压为 $10\\,V$，电流为 $2\\,A$，求吸收功率。", answer: "$P=UI=10\\times2=20\\,W$。", explanation: "按关联参考方向，吸收功率为正。", difficulty: 2, options: [] },
+  ];
+  for (const item of demoQuestions) {
+    const point = await prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: item.slug } });
+    const existing = await prisma.practiceQuestion.findUnique({ where: { id: item.id }, select: { _count: { select: { attempts: true } } } });
+    if (existing?._count.attempts) continue;
+    await prisma.$transaction(async (tx) => {
+      await tx.practiceQuestion.upsert({ where: { id: item.id }, update: { knowledgePointId: point.id, type: item.type, question: item.question, answer: item.answer, explanation: item.explanation, difficulty: item.difficulty }, create: { id: item.id, knowledgePointId: point.id, type: item.type, question: item.question, answer: item.answer, explanation: item.explanation, difficulty: item.difficulty } });
+      await tx.practiceQuestionOption.deleteMany({ where: { practiceQuestionId: item.id } });
+      if (item.options.length) await tx.practiceQuestionOption.createMany({ data: item.options.map((option, sortOrder) => ({ practiceQuestionId: item.id, ...option, sortOrder })) });
+    });
+  }
+  console.log("Seed complete: 6 courses, 1 book, 4 chapters, 10 knowledge points, 5 practice questions");
 }
 
 main().catch((error) => { console.error(error); process.exit(1); }).finally(() => prisma.$disconnect());
