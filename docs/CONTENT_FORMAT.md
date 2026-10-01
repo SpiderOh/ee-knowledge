@@ -18,6 +18,8 @@
 
 Bundle 包含 SubjectArea、Course、KnowledgePoint、Formula、Example 和 KnowledgeRelation。不包含 Book、Chapter、ChapterKnowledgePoint，也不包含 Note、Favorite、StudyProgress、ReviewRecord。教材结构未来由独立 Library Bundle 处理。
 
+Knowledge Bundle v1 的应用级输入上限为 **2 MB**。Server Action 的传输上限设置为 **3 MB**，仅用于容纳请求序列化和协议开销，不改变 2 MB 的业务限制。
+
 ## 标识与 Merge 语义
 
 - SubjectArea、Course 和 KnowledgePoint 使用 slug 作为跨系统业务标识。

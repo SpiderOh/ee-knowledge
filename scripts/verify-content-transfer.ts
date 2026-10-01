@@ -1,5 +1,5 @@
 import { PrismaClient, RelationType, StudyStatus } from "@prisma/client";
-import { exportKnowledgeBundle, importKnowledgeBundle, previewKnowledgeBundle } from "@/features/content-transfer/service";
+import { MAX_BUNDLE_BYTES, exportKnowledgeBundle, importKnowledgeBundle, parseKnowledgeBundle, previewKnowledgeBundle } from "@/features/content-transfer/service";
 import { exampleIdForImport, formulaIdForImport } from "@/features/content-transfer/ids";
 
 const prisma = new PrismaClient();
@@ -33,6 +33,9 @@ async function cleanup() {
 async function counts() { const [points, formulas, examples, relations] = await Promise.all([prisma.knowledgePoint.count({ where: { slug: { in: [pointSlug, relatedSlug] } } }), prisma.formula.count({ where: { knowledgePoint: { slug: pointSlug } } }), prisma.example.count({ where: { knowledgePoint: { slug: pointSlug } } }), prisma.knowledgeRelation.count({ where: { source: { slug: pointSlug }, target: { slug: relatedSlug } } })]); return { points, formulas, examples, relations }; }
 
 async function main() {
+  assert(MAX_BUNDLE_BYTES === 2 * 1024 * 1024, "应用级 Bundle 限制不应改变");
+  const oversized = parseKnowledgeBundle("x".repeat(MAX_BUNDLE_BYTES + 1));
+  assert(!oversized.ok && oversized.errors.includes("Knowledge Bundle 超过 2 MB 限制。"), "超过 2 MB 应显示应用级错误");
   await cleanup();
   try {
     const first = await importKnowledgeBundle(bundle()); assert(first.ok, "第一次导入失败");

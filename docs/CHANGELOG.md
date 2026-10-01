@@ -28,6 +28,8 @@
 - 修复跨数据库 `db:` key 使用确定性 fallback 后预览 create/update 计数不一致的问题。
 - 加固 Formula、Example 确定性 fallback ID 的 ownership 校验，并保持原知识点归属。
 - 明确 Bundle 部分更新语义：字段省略保留原值，显式 null 清除可空字段，新增记录的 sortOrder 默认为 0。
+- 配置 Server Action 传输上限为 3 MB，使 2 MB Knowledge Bundle 应用限制可以正常生效。
+- 修正 PROJECT_STATUS 中 v0.1.0 MVP 与 v0.2.0 复习阶段的边界。
 
 ## 0.1.0-alpha.4 - 2026-09-30
 
