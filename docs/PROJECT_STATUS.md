@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.1.0-alpha.5`
+`v0.1.0-alpha.6`
 
 ## 当前阶段
 
-第六轮开发完成内容管理后台和 Knowledge Bundle v1。正式 `v0.1.0` 仍等待课程、教材、章节结构管理以及 MVP 收尾。
+第七轮开发完成知识库结构管理。正式 `v0.1.0` 仅剩 MVP 最终稳定性和小范围收尾。
 
 ## 已完成
 
@@ -42,21 +42,27 @@
 - `npm run verify:content` 内容传输验证
 - PR #4 稳定性修复：Markdown Preview 保存保护、Import Preview 内容绑定、已有 Course/SubjectArea 引用导入、子实体 ownership、`db:` key 防劫持、空 Course 导出和关系稳定排序
 - PR #4 本轮修复：管理后台空 reviewStatus 参数归一化、跨数据库 identity 预览计数、确定性 Formula/Example ownership、Bundle 部分更新与 sortOrder 默认语义
+- SubjectArea、Course、Book CRUD 与 `/admin/structure`
+- Chapter 树形 CRUD、parent/level 一致性和循环防护
+- 结构实体保守删除保护
+- Book 与 KnowledgePoint 的 Course 一致性校验
+- 搜索课程与教材筛选 UI，未分类 Course 前台和后台可见
+- `npm run verify:structure` 结构验证脚本
 
 ## 部分完成
 
-- 搜索支持课程过滤，教材过滤参数和查询能力已保留，但当前界面未提供教材筛选入口
+- 搜索课程与教材过滤已提供基础 UI
 - 章节树支持递归和折叠，移动端暂时隐藏左侧目录
 - 学习工具为单用户本地数据，尚未接入登录和云同步
-- 当前 PR 修复已限定为状态一致性和笔记 CRUD 稳定性，不扩展新的学习功能
+- 当前版本继续限定在 MVP 结构与内容管理，不扩展复习中心或 AI 功能
 - 图片仅支持 Markdown 引用和显示接口，尚未接入上传与媒体库
 - `/admin` 当前没有身份认证，仅适合本地使用或可信网络；公网部署前必须增加 Authentication
 
 ## 未完成
 
-- 课程、教材、章节网页 CRUD
+- v0.1.0 MVP 全链路回归、空状态和文档版本收尾
 - 真正图片上传、MediaAsset 数据模型和对象存储
-- 复习中心、间隔复习和学习统计
+- 复习中心、间隔复习和学习统计（v0.2.0）
 - shadcn/ui
 - AI、RAG、复试训练和多用户能力
 
@@ -69,8 +75,10 @@
 
 ## 下一步
 
-- 完善搜索教材筛选 UI
-- 课程、教材、章节结构管理
+- 发布候选前的全链路回归
+- 数据库备份 / 恢复说明
+- 空状态、错误状态和文档版本检查
+- v0.2.0 再构建复习中心和更完整的学习统计
 - v0.2.0 再构建复习中心和更完整的学习统计
 
 ## 已知问题

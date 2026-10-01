@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.6 - 2026-10-01
+
+### Added
+
+- 新增 SubjectArea、Course、Book 管理和 `/admin/structure`。
+- 新增递归 Chapter 树形管理、创建、编辑、移动和删除。
+- 新增搜索课程与教材筛选 UI、未分类 Course 展示和 `verify:structure`。
+
+### Safety
+
+- SubjectArea 有 Course、Course 有 Book/KnowledgePoint、Book 有 Chapter、Chapter 有子章节或知识点关联时禁止删除。
+- 增加 Chapter parent cycle、跨 Book parent、descendant level 和 Book/KnowledgePoint Course 一致性校验。
+
 ## 0.1.0-alpha.5 - 2026-09-30
 
 ### Added

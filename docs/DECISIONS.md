@@ -144,3 +144,19 @@ Markdown 能支持公式、表格、代码和列表等专业内容；结构化�
 状态：Accepted
 
 当前教材和章节没有稳定的跨库自然标识。本轮 Bundle 只处理知识内容；教材结构未来由独立 Library Bundle 设计，不为导入格式修改 Book 或 Chapter Schema。
+
+---
+
+## ADR-012：结构实体后台采用保守删除策略
+
+状态：Accepted
+
+虽然数据库存在 Cascade 或 SetNull，Admin 删除结构实体前必须检查下游结构和业务内容。只有没有下游依赖的空结构实体才允许删除，避免误操作破坏教材树、知识关联或用户学习数据。
+
+---
+
+## ADR-013：Book 与章节知识点保持 Course 一致
+
+状态：Accepted
+
+ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层要求 KnowledgePoint.courseId 与 Chapter.book.courseId 一致。该规则不引入数据库约束，保证课程浏览、教材上下文和搜索筛选的语义一致。

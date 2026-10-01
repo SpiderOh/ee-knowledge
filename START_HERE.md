@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.1.0-alpha.5`
+`v0.1.0-alpha.6`
 
 已完成：
 
@@ -21,9 +21,10 @@
 - KnowledgeImage 与 MediaProvider 基础接口
 - 内容管理后台、KnowledgePoint 及结构化内容 CRUD
 - Knowledge Bundle v1 的 JSON 校验、预览、导入和导出
+- 结构管理、Chapter 树形管理和保守删除保护
 
 下一步：
 
-- 课程、教材、章节结构管理
-- 学习记录与复习中心
+- v0.1.0 MVP 最终稳定性和小范围收尾
+- v0.2.0 学习记录与复习中心
 - 图片上传和媒体库
