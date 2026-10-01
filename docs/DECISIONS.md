@@ -160,3 +160,5 @@ Markdown 能支持公式、表格、代码和列表等专业内容；结构化�
 状态：Accepted
 
 ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层要求 KnowledgePoint.courseId 与 Chapter.book.courseId 一致。该规则不引入数据库约束，保证课程浏览、教材上下文和搜索筛选的语义一致。
+
+该一致性是应用层 invariant，而不是某个页面或单一操作的 UI 规则。所有可修改 `Book.courseId`、`KnowledgePoint.courseId` 或 `ChapterKnowledgePoint` 的写路径都必须遵守它：章节关联、教材换课、知识点换课和 Knowledge Bundle 更新已有知识点课程时统一查询该知识点的全部章节关联；任一关联教材属于其他课程时拒绝写入。Bundle 预览可以按课程 slug 提前检查，真正导入必须在事务内再次检查；任何路径都不得自动解除章节关联或自动移动教材。

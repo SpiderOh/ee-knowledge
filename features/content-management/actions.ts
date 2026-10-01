@@ -5,10 +5,11 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { chapterLinkDeleteSchema, chapterLinkInputSchema, exampleDeleteSchema, exampleInputSchema, formulaDeleteSchema, formulaInputSchema, knowledgePointInputSchema, relationDeleteSchema, relationInputSchema, type KnowledgePointInput } from "./schemas";
+import { validateKnowledgePointCourseChange } from "@/features/structure-management/consistency";
 
 const symmetricTypes = new Set<RelationType>([RelationType.RELATED, RelationType.SIMILAR, RelationType.DIFFERENT]);
 const firstError = (error: unknown, fallback: string) => error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002" ? "该 slug 已存在。" : fallback;
-const revalidateKnowledge = (oldSlug?: string, newSlug?: string) => { for (const path of [...(oldSlug ? [`/knowledge/${oldSlug}`] : []), ...(newSlug ? [`/knowledge/${newSlug}`] : []), "/courses", "/search", "/admin", "/admin/knowledge"]) { try { revalidatePath(path); } catch { /* Server Action tests may run without a request context. */ } } };
+const revalidateKnowledge = (oldSlug?: string, newSlug?: string, courseSlugs: string[] = []) => { for (const path of [...(oldSlug ? [`/knowledge/${oldSlug}`] : []), ...(newSlug ? [`/knowledge/${newSlug}`] : []), ...courseSlugs.map((slug) => `/courses/${slug}`), "/courses", "/search", "/admin", "/admin/knowledge"]) { try { revalidatePath(path); } catch { /* Server Action tests may run without a request context. */ } } };
 
 export async function createKnowledgePoint(input: KnowledgePointInput) {
   const parsed = knowledgePointInputSchema.safeParse(input);
@@ -23,11 +24,13 @@ export async function createKnowledgePoint(input: KnowledgePointInput) {
 export async function updateKnowledgePoint(input: KnowledgePointInput & { id: string; oldSlug: string }) {
   const parsed = knowledgePointInputSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "知识点参数无效。" } as const;
-  const existing = await prisma.knowledgePoint.findUnique({ where: { id: input.id }, select: { id: true } });
+  const existing = await prisma.knowledgePoint.findUnique({ where: { id: input.id }, select: { id: true, courseId: true, course: { select: { slug: true } } } });
   if (!existing) return { ok: false, error: "知识点不存在。" } as const;
+  if (existing.courseId !== parsed.data.courseId && !await validateKnowledgePointCourseChange(prisma, existing.id, parsed.data.courseId)) return { ok: false, error: "该知识点仍关联到其他课程教材的章节，请先解除或调整教材章节关联后再更换课程。" } as const;
   try {
     const point = await prisma.knowledgePoint.update({ where: { id: input.id }, data: parsed.data });
-    revalidateKnowledge(input.oldSlug, point.slug);
+    const newCourse = await prisma.course.findUnique({ where: { id: point.courseId }, select: { slug: true } });
+    revalidateKnowledge(input.oldSlug, point.slug, [existing.course.slug, ...(newCourse ? [newCourse.slug] : [])]);
     return { ok: true, id: point.id, slug: point.slug } as const;
   } catch (error) { return { ok: false, error: firstError(error, "知识点更新失败，请稍后重试。") } as const; }
 }
@@ -100,7 +103,7 @@ export async function linkKnowledgePointToChapter(input: z.infer<typeof chapterL
   const parsed = chapterLinkInputSchema.safeParse(input); if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "章节关联参数无效。" } as const;
   const [point, chapter] = await Promise.all([prisma.knowledgePoint.findUnique({ where: { id: parsed.data.knowledgePointId }, select: { slug: true, courseId: true } }), prisma.chapter.findUnique({ where: { id: parsed.data.chapterId }, select: { id: true, book: { select: { courseId: true } } } })]);
   if (!point || !chapter) return { ok: false, error: "知识点或章节不存在。" } as const;
-  if (point.courseId !== chapter.book.courseId) return { ok: false, error: "知识点课程与教材课程不一致。" } as const;
+  if (point.courseId !== chapter.book.courseId || !await validateKnowledgePointCourseChange(prisma, parsed.data.knowledgePointId, chapter.book.courseId)) return { ok: false, error: "知识点课程与教材课程不一致。" } as const;
   try { await prisma.chapterKnowledgePoint.upsert({ where: { chapterId_knowledgePointId: { chapterId: parsed.data.chapterId, knowledgePointId: parsed.data.knowledgePointId } }, update: { sortOrder: parsed.data.sortOrder }, create: parsed.data }); } catch { return { ok: false, error: "章节关联保存失败，请稍后重试。" } as const; }
   revalidateKnowledge(point.slug); return { ok: true } as const;
 }

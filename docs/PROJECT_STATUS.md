@@ -46,6 +46,8 @@
 - Chapter 树形 CRUD、parent/level 一致性和循环防护
 - 结构实体保守删除保护
 - Book 与 KnowledgePoint 的 Course 一致性校验
+- KnowledgePoint 换课、教材换课、章节关联和 Knowledge Bundle 预览/导入共用 Course 一致性校验，并在导入事务内二次复核
+- StructureForm 使用结构化输入类型，ChapterAdminTree 增加循环数据兜底
 - 搜索课程与教材筛选 UI，未分类 Course 前台和后台可见
 - `npm run verify:structure` 结构验证脚本
 
