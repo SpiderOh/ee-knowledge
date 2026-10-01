@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0-alpha.1 - 2026-10-01
+
+### Added
+
+- 新增复习中心 `/review`、到期复习队列、手动加入队列和未来 7 天安排。
+- 新增复习会话 `/review/[slug]`、主动回忆、复习结果按钮和复习历史。
+- 新增 ReviewRecord 写入与简单 1/3/7/14/30 天间隔调度，连续记忆结果推进间隔，忘记后重置。
+- 新增 `verify:review` 隔离数据库验证，并纳入 `verify:mvp`。
+
+### Safety
+
+- 不修改 Prisma Schema 或 migration；每个知识点只保留一个有效 `nextReviewAt` 计划。
+- 复习结果写入同时更新 StudyProgress，真实数据库检查保持只读。
+
 ## 0.1.0 - 2026-10-01
 
 ### Highlights

@@ -131,3 +131,9 @@ VERIFIED
 - 旧数据如何迁移
 - 如何回滚
 - 如何验证
+
+## ReviewRecord 复习计划
+
+`ReviewRecord` 保存每次复习结果（0 忘记、1 模糊、2 记得、3 熟练）和下一次复习时间。产品交互中的 GOOD/EASY 都属于成功结果，AGAIN/HARD 都会重置成功 streak。`StudyProgress.status=REVIEW` 表示用户手动加入复习中心或当前需要复习；复习结果保存后会同步为 `MASTERED`（记得/熟练）或 `REVIEW`（忘记/模糊）。
+
+同一知识点只允许一个有效复习计划，即 `nextReviewAt IS NOT NULL` 的记录最多一条。新结果写入前会清空旧计划，再创建新的 `ReviewRecord`。简单调度使用 1、3、7、14、30 天间隔，不改变核心数据模型，也不引入 FSRS 或 SM-2。

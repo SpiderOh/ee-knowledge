@@ -162,3 +162,20 @@ Markdown 能支持公式、表格、代码和列表等专业内容；结构化�
 ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层要求 KnowledgePoint.courseId 与 Chapter.book.courseId 一致。该规则不引入数据库约束，保证课程浏览、教材上下文和搜索筛选的语义一致。
 
 该一致性是应用层 invariant，而不是某个页面或单一操作的 UI 规则。所有可修改 `Book.courseId`、`KnowledgePoint.courseId` 或 `ChapterKnowledgePoint` 的写路径都必须遵守它：章节关联、教材换课、知识点换课和 Knowledge Bundle 更新已有知识点课程时统一查询该知识点的全部章节关联；任一关联教材属于其他课程时拒绝写入。Bundle 预览可以按课程 slug 提前检查，真正导入必须在事务内再次检查；任何路径都不得自动解除章节关联或自动移动教材。
+
+---
+
+## ADR-014：v0.2 复习中心采用 ReviewRecord 加简单间隔调度
+
+状态：Accepted
+
+规则：
+
+- 复习中心从 `ReviewRecord.nextReviewAt` 和 `StudyProgress.status=REVIEW` 生成到期与手动队列。
+- 每次复习写入一条 `ReviewRecord`，并清空同一知识点旧的有效计划，保证只有一个有效计划。
+- 结果使用 0 忘记、1 模糊、2 记得、3 熟练；GOOD/EASY 都属于连续成功结果并推进阶段，EASY 比 GOOD 快一档；AGAIN/HARD 重置为 1 天。
+- 复习结果同步 `StudyProgress`，但不改变 `ReviewRecord`、`PracticeQuestion` 或用户数据的核心关系。
+
+原因：
+
+先提供可验证的 Review Center 基础闭环，保持数据模型稳定，待后续版本再评估 FSRS、SM-2、练习题和统计需求。
