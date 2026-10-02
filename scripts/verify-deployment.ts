@@ -14,6 +14,8 @@ function assert(condition: boolean, message: string): asserts condition {
 
 function main() {
   const service = read("deploy/systemd/ee-knowledge.service");
+  const backupService = read("deploy/systemd/ee-knowledge-backup.service");
+  const backupTimer = read("deploy/systemd/ee-knowledge-backup.timer");
   const caddy = read("deploy/Caddyfile.example");
   const env = read("deploy/ee-knowledge.env.example");
   const selfHost = read("docs/SELF_HOST.md");
@@ -34,6 +36,17 @@ function main() {
   assert(service.includes("ExecStartPre=/usr/bin/npm run db:check"), "systemd must run db:check before start");
   assert(/ExecStart=.*npm run start:prod/.test(service), "systemd must start the production server");
   assert(!service.includes("db:seed") && !service.includes("db:setup") && !service.includes("migrate reset"), "systemd must not seed, db:setup, or reset the database");
+  assert(/User=ee-knowledge\r?\nGroup=ee-knowledge/.test(backupService), "backup systemd must use the non-root ee-knowledge user and group");
+  assert(backupService.includes("EnvironmentFile=/etc/ee-knowledge/ee-knowledge.env"), "backup systemd EnvironmentFile is missing");
+  assert(backupService.includes("ExecStartPre=/usr/bin/npm run backup:check"), "backup systemd must check configuration first");
+  assert(backupService.includes("ExecStart=/usr/bin/npm run backup:scheduled"), "backup systemd must run scheduled backup");
+  assert(!backupService.includes("Requires=ee-knowledge.service") && !backupService.includes("systemctl stop"), "backup systemd must not depend on or stop the main service");
+  assert(backupTimer.includes("OnCalendar=*-*-* 03:30:00"), "backup timer must run daily");
+  assert(backupTimer.includes("Persistent=true"), "backup timer must be persistent");
+  assert(backupTimer.includes("RandomizedDelaySec=10m"), "backup timer must randomize daily execution");
+  assert(env.includes('EE_BACKUP_DIR="/var/backups/ee-knowledge"'), "production env must define Primary backup directory");
+  assert(env.includes('EE_BACKUP_SECONDARY_DIR=""'), "production env must make Secondary optional");
+  assert(env.includes('EE_BACKUP_RETENTION_COUNT="14"'), "production env must define backup retention");
   assert(caddy.includes("reverse_proxy 127.0.0.1:3000"), "Caddy must reverse proxy to localhost:3000");
   assert(env.includes('NODE_ENV="production"'), "production env template must set NODE_ENV");
   assert(env.includes('DATABASE_URL="file:/var/lib/ee-knowledge/ee-knowledge.db"'), "production env must use absolute server SQLite path");

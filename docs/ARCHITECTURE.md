@@ -225,6 +225,6 @@ Cloud Server / Orange Pi
 Scheduled Backup
 ```
 
-服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。当前 alpha.3 完成 single-user Authentication、Native Node + systemd + Caddy 的 self-host deployment、HTTPS reverse proxy 和 server-side SQLite 生产路径；scheduled backup 属于 alpha.4。部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
+服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。当前 alpha.4 完成 single-user Authentication、Native Node + systemd + Caddy 的 self-host deployment、HTTPS reverse proxy、server-side SQLite 和 online scheduled backup；部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
 
 生产拓扑使用 `/opt/ee-knowledge` 保存应用代码、`/var/lib/ee-knowledge/ee-knowledge.db` 保存 SQLite、`/etc/ee-knowledge/ee-knowledge.env` 保存凭证。Next.js 只监听 `127.0.0.1:3000`，公网 HTTPS 由 Caddy 终止并反向代理到本机服务。

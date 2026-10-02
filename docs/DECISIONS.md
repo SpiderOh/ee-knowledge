@@ -301,3 +301,22 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 原因：
 
 Native Node + systemd + Caddy 能覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 和 x86_64 VPS，同时保持 single-user personal system 的低维护成本和服务器 SQLite 单一数据源。
+
+---
+
+## ADR-023：Scheduled backup 使用 SQLite online backup 与 mounted secondary filesystem
+
+状态：Accepted
+
+规则：
+
+- 现有 `db:backup` 保持 cold manual backup 语义；scheduled backup 使用系统 `sqlite3` CLI 的 online backup 能力，不直接复制正在使用的生产数据库。
+- scheduled backup 先写入 `.partial`，通过 SQLite `integrity_check` 后再原子重命名为 Primary final backup。
+- Primary 可以与生产 SQLite 位于同一主盘，用于误删、逻辑损坏和错误更新前恢复。
+- `EE_BACKUP_SECONDARY_DIR` 为空时只执行 Primary；配置后必须存在、可写且位于不同 filesystem，复制后同时验证 SHA-256 和 SQLite integrity。
+- Secondary 使用 Linux mounted filesystem 作为外部存储抽象，不内置 S3、WebDAV、rclone、SSH 或其他云协议。
+- retention 只删除严格匹配的 scheduled backup 文件；任何失败都不自动 restore、替换生产库或停止主应用。
+
+原因：
+
+个人 single-user self-host 需要每日可靠备份和可选独立存储，但不需要备份数据库模型或远程存储协议。systemd service/timer 将备份故障与主服务故障隔离，同时让失败进入 journal。

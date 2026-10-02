@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0-alpha.3`
+`v0.3.0-alpha.4`
 
 已完成：
 
@@ -31,7 +31,9 @@
 - 环境变量密码 hash、签名 HttpOnly session 和 `verify:auth`
 - Linux self-host deployment、systemd、Caddy HTTPS 和 server-side SQLite
 - `deploy:check`、`verify:deploy` 和自托管部署文档
+- SQLite online scheduled backup、daily systemd timer、Primary retention 和可选独立 Secondary backup
+- Secondary same-filesystem fail-closed、SHA-256 与 SQLite integrity_check 验证
 
 下一步：
 
-- v0.3.0-alpha.4：Scheduled Backup + Secondary Backup Destination
+- v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression

@@ -6,7 +6,7 @@ Knowledge Bundle v1 用于知识内容交换、AI 生成内容导入和跨环境
 
 SQLite Full Database Backup 是当前 MVP 的完整本地数据备份，包含知识内容、教材结构和用户学习数据。它适用于同一应用版本的灾难恢复，不是跨重大版本迁移格式。
 
-## 备份
+## Cold manual backup
 
 备份前停止 `npm run dev` 或其他会写入数据库的进程。然后运行：
 
@@ -16,6 +16,27 @@ npm run db:backup
 ```
 
 默认备份保存到 `backups/ee-knowledge-<timestamp>.db`。命令会检查 SQLite 文件头，并在检测到 `.db-journal`、`.db-wal` 或 `.db-shm` 时拒绝复制。已有同名备份不会被覆盖。
+
+## Live backup
+
+运行中的主应用可以使用系统 `sqlite3` CLI 执行 SQLite online backup：
+
+```bash
+npm run db:backup:live
+```
+
+该命令写入 `EE_BACKUP_DIR`，先创建 `.partial`，通过 `PRAGMA integrity_check` 返回严格的 `ok` 后再重命名为最终 `.db`。它不会通过 `fs.copyFile` 直接复制 live database，也不会停止主应用。没有 `sqlite3` CLI 时会失败并提示安装系统包。
+
+## Scheduled backup
+
+```bash
+npm run backup:check
+npm run backup:scheduled
+```
+
+`backup:check` 只读验证 `DATABASE_URL`、Primary 目录、retention、sqlite3 和可选 Secondary。`backup:scheduled` 每轮创建 Primary online backup，默认保留最新 14 个严格命名的 scheduled backup；`EE_BACKUP_SECONDARY_DIR` 为空时打印 `Secondary: disabled` 并成功结束。
+
+配置 Secondary 后，它必须是真正挂载的独立 filesystem，不能只是主盘上的普通目录。Secondary 使用与 Primary 相同的文件名，复制到 `.partial` 后比较 SHA-256，再运行 SQLite integrity check，最后原子重命名。Secondary 失败时保留 Primary 并返回非零状态；不会自动 restore。
 
 ## 恢复
 
