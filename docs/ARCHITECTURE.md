@@ -38,9 +38,11 @@ features/
   courses/
   search/
   review/
-  interview/
-  ai/
+  practice/
+  statistics/
 ```
+
+已有 `features/interview` / `features/ai` 目录若存在可以保留；它们不是 Personal v1.0 必需模块，不在当前主路线继续扩展。
 
 页面组件负责展示。
 
@@ -117,12 +119,12 @@ AI 不属于 Personal v1.0 必需能力。未来如产生真实需求，业务�
 ```ts
 export interface AIProvider {
   chat(input: ChatInput): Promise<ChatOutput>
-  generateKnowledgePoint(
-    input: KnowledgeGenerationInput
-  ): Promise<KnowledgePointDraft>
-  evaluateInterview(
-    input: InterviewEvaluationInput
-  ): Promise<InterviewEvaluation>
+  explainKnowledgePoint(
+    input: KnowledgePointExplanationInput
+  ): Promise<KnowledgePointExplanation>
+  generatePracticeQuestions(
+    input: PracticeQuestionGenerationInput
+  ): Promise<PracticeQuestionDraft[]>
 }
 ```
 

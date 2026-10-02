@@ -10,6 +10,8 @@
 
 - private-by-default middleware，页面未认证跳转登录，API 未认证返回 401。
 - safe `next` redirect，密码不写入明文存储、URL 或日志。
+- 修复认证成功后的 safe `next` redirect。
+- 修复 password hash CLI 的 Unicode 输入和 non-TTY 双行读取。
 
 ### Product Scope
 

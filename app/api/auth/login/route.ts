@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { authConfigErrorMessage, getAuthConfig } from "@/lib/auth/config";
 import { AUTH_PASSWORD_MAX_LENGTH, verifyPassword } from "@/lib/auth/password";
 import { getSafeNextPath } from "@/lib/auth/path-policy";
+import { getLoginRedirectPath, getSuccessRedirectPath } from "@/lib/auth/redirect";
 import { createSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 
 function loginRedirect(request: NextRequest, next: string, error?: "invalid" | "config") {
-  const url = new URL("/login", request.url);
-  if (error) url.searchParams.set("error", error);
-  if (next !== "/") url.searchParams.set("next", next);
-  return NextResponse.redirect(url, 303);
+  return NextResponse.redirect(new URL(getLoginRedirectPath(next, error), request.url), 303);
 }
 
 export async function POST(request: NextRequest) {
@@ -23,7 +21,7 @@ export async function POST(request: NextRequest) {
   if (password.length < 12 || password.length > AUTH_PASSWORD_MAX_LENGTH || !await verifyPassword(password, config.config.passwordHash)) return loginRedirect(request, next, "invalid");
 
   const token = await createSessionToken();
-  const response = loginRedirect(request, next);
+  const response = NextResponse.redirect(new URL(getSuccessRedirectPath(next), request.url), 303);
   response.cookies.set({ name: SESSION_COOKIE_NAME, value: token, httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: config.config.sessionTtlDays * 24 * 60 * 60 });
   return response;
 }
