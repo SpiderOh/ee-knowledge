@@ -1,4 +1,29 @@
 # Changelog
+## 0.3.0-alpha.2 - 2026-10-02
+
+### Added
+
+- single-user Authentication、登录/退出和 `verify:auth`。
+- 环境变量密码 hash、HMAC-SHA256 签名 HttpOnly session cookie 和认证配置脚本。
+
+### Security
+
+- private-by-default middleware，页面未认证跳转登录，API 未认证返回 401。
+- safe `next` redirect，密码不写入明文存储、URL 或日志。
+- 修复认证成功后的 safe `next` redirect。
+- 修复 password hash CLI 的 Unicode 输入和 non-TTY 双行读取。
+
+### Product Scope
+
+- v1.0 聚焦长期知识学习、复习、练习和个人自托管使用。
+- 独立复试题库、模拟复试和目标院校专区退出 v1.0 主路线。
+- AI Assistant 移到 Post-v1 / Optional Local AI。
+- KnowledgePoint 常见问法和标准回答保留为后续轻量内容增强。
+
+### Next
+
+- v0.3.0-alpha.3：Self-host Deployment + HTTPS + Server SQLite。
+
 ## 0.3.0-alpha.1 - 2026-10-02
 
 ### Added

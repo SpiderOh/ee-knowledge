@@ -2,7 +2,7 @@
 
 ## Current stage
 
-当前实现范围是 `v0.3.0-alpha.1`：PWA、Android 安装基础、移动端体验和部署前安全基线。
+当前实现范围是 `v0.3.0-alpha.2`：PWA、Android 安装基础、移动端体验和 single-user Authentication。
 
 ## Install model
 
@@ -30,4 +30,4 @@ alpha.1 不支持 offline writes、离线写入队列、业务数据镜像、Ind
 
 ## Scope boundaries
 
-本阶段不包含 Authentication、正式云端部署、HTTPS 部署、自动备份服务、Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0-alpha.2` single-user Authentication。
+本阶段已包含 single-user Authentication；不包含正式云端部署、HTTPS 部署、自动备份服务、Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0-alpha.3` self-host deployment + HTTPS + server SQLite。

@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0-alpha.1`
+`v0.3.0-alpha.2`
 
 已完成：
 
@@ -27,7 +27,9 @@
 - 练习中心、客观题判分、主观题自评、作答历史、错题本和练习题管理
 - 学习统计、课程进度统计、复习/练习成功率和最近 14 天活动
 - 复习与练习互相跳转，错题和知识点复习页可进入对应学习操作
+- 单用户 Authentication、登录/退出和私有默认路由保护
+- 环境变量密码 hash、签名 HttpOnly session 和 `verify:auth`
 
 下一步：
 
-- v0.3.0-alpha.2：Single-user Authentication
+- v0.3.0-alpha.3：Self-host Deployment + HTTPS + Server SQLite

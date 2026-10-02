@@ -38,9 +38,11 @@ features/
   courses/
   search/
   review/
-  interview/
-  ai/
+  practice/
+  statistics/
 ```
+
+已有 `features/interview` / `features/ai` 目录若存在可以保留；它们不是 Personal v1.0 必需模块，不在当前主路线继续扩展。
 
 页面组件负责展示。
 
@@ -74,7 +76,9 @@ Content Management Server Actions
 Prisma
 ```
 
-`/admin` 当前未配置身份认证，仅适合本地使用或可信网络。公开部署前需要增加 single-user Authentication。项目不设计注册、多人组织、RBAC 或商业 SaaS 权限体系。
+`/admin`、个人学习页面和管理 API 默认由 `middleware.ts` 保护。当前使用环境变量密码 hash 与签名 HttpOnly cookie 的 single-user Authentication；项目不设计注册、多人组织、RBAC 或商业 SaaS 权限体系。
+
+认证相关代码集中在 `lib/auth/`：密码 hash 使用 Node `crypto.scrypt`，session 校验使用 Edge-compatible Web Crypto。Authentication 不写入 Prisma 或 SQLite。
 
 ## 3.3 Content Transfer Layer
 
@@ -106,21 +110,21 @@ ChapterKnowledgePoint
 
 结构管理使用独立 Feature 边界。KnowledgePoint 仍是核心实体；结构层只维护课程、教材、章节和教材关联。
 
-## 4. AI 架构
+## 4. AI 架构（Post-v1 / Optional Local AI）
 
-业务层不得直接依赖 OpenAI、Anthropic 或 Google SDK。
+AI 不属于 Personal v1.0 必需能力。未来如产生真实需求，业务层不得直接依赖 OpenAI、Anthropic 或 Google SDK。
 
 统一定义：
 
 ```ts
 export interface AIProvider {
   chat(input: ChatInput): Promise<ChatOutput>
-  generateKnowledgePoint(
-    input: KnowledgeGenerationInput
-  ): Promise<KnowledgePointDraft>
-  evaluateInterview(
-    input: InterviewEvaluationInput
-  ): Promise<InterviewEvaluation>
+  explainKnowledgePoint(
+    input: KnowledgePointExplanationInput
+  ): Promise<KnowledgePointExplanation>
+  generatePracticeQuestions(
+    input: PracticeQuestionGenerationInput
+  ): Promise<PracticeQuestionDraft[]>
 }
 ```
 
@@ -130,7 +134,7 @@ export interface AIProvider {
 lib/ai/providers/
 ```
 
-示例：
+示例（未来参考）：
 
 - openai.ts
 - anthropic.ts
@@ -208,6 +212,8 @@ Browser / Android PWA
           ↓
         HTTPS
           ↓
+       Single-user Authentication
+          ↓
        Next.js
           ↓
        Prisma
@@ -219,4 +225,4 @@ Cloud Server / Orange Pi
 Scheduled Backup
 ```
 
-服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
+服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。当前 alpha.2 完成 single-user Authentication；HTTPS、self-host deployment、server SQLite 和 backup 属于后续 alpha。部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
