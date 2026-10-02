@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.2.0`
+`v0.3.0-alpha.1`
 
 已完成：
 
@@ -30,4 +30,4 @@
 
 下一步：
 
-- v0.3.0：Mobile & Personal Cloud（PWA、Android 安装体验、单用户 Authentication、自托管与自动备份）
+- v0.3.0-alpha.2：Single-user Authentication

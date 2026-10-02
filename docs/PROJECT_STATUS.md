@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.2.0`
+`v0.3.0-alpha.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式完成并进入稳定状态。
+第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前进入 `v0.3.0-alpha.1` Mobile & Personal Cloud 的 PWA / Mobile Foundation 阶段。
 
 ## 已完成
 
@@ -72,10 +72,15 @@
 - 学习统计查询与聚合工具，零分母比例返回 null，课程进度沿用学习状态算法
 - 复习中心与练习中心互相联动，知识点复习页显示练习入口，错题和错误结果可回到复习
 - `npm run verify:statistics` 隔离数据库统计验证，并纳入 `npm run verify:mvp`
+- PWA manifest、Android 安装元数据和 192/512/maskable 图标
+- 移动端 safe-area、standalone spacing、触摸区域和动态内容溢出保护
+- `npm run verify:pwa` PWA manifest 与 PNG 资源验证
+- Next.js `15.5.26` → `15.5.27` Maintenance LTS patch
 
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
+- v0.3.0-alpha.1 只完成 PWA / Mobile Foundation，不包含公网部署或 Authentication
 
 ## 未完成
 
@@ -95,7 +100,7 @@
 
 ## 下一步
 
-- v0.3.0：Mobile & Personal Cloud
+- v0.3.0-alpha.2：Single-user Authentication
 
 ## 已知问题
 
@@ -103,7 +108,7 @@
 - `/admin` 尚未接入 Authentication，仅适合本地使用或可信网络；这是当前版本的产品边界。
 - 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
-- v0.3.0 尚未开始：PWA、Android、单用户 Authentication、云端部署、自动备份和离线写入均属于下一阶段范围。
+- v0.3.0 后续仍未完成：Single-user Authentication、HTTPS self-host deployment、server SQLite deployment、scheduled backup、secondary backup destination 和 Android 远程安装验收。
 
 ## 数据库
 

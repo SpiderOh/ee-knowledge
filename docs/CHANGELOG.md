@@ -1,4 +1,24 @@
 # Changelog
+## 0.3.0-alpha.1 - 2026-10-02
+
+### Added
+
+- App Router PWA manifest 和 Android 安装图标资源（192x192、512x512、maskable）。
+- 移动端 / PWA metadata、standalone display 和 `verify:pwa` 验证脚本。
+- `docs/PWA_ANDROID.md`，说明 Web PWA、Android 安装、服务器数据和离线边界。
+
+### Changed
+
+- 增加移动端 safe-area、standalone spacing、触摸区域和动态内容溢出保护。
+- Next.js 从 15.5.26 更新到 15.5.27 Maintenance LTS patch。
+
+### Not included
+
+- Authentication、server deployment、scheduled backup、offline writes、Capacitor / APK 和多用户。
+
+### Next
+
+- v0.3.0-alpha.2：Single-user Authentication。
 
 ## 0.2.0 - 2026-10-02
 

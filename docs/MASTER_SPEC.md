@@ -176,6 +176,7 @@ Book
 
 ## 7. v0.3.0 Mobile & Personal Cloud
 
+- alpha.1 已完成 PWA manifest、Android 安装基础和移动端体验基线
 - PWA 和 mobile UX
 - Android 安装体验，稳定后再评估 Capacitor wrapper / APK
 - single-user Authentication
