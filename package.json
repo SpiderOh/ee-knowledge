@@ -27,7 +27,7 @@
     "verify:mvp": "tsx scripts/verify-mvp.ts",
     "release:check": "tsx scripts/release-check.ts",
     "verify:pwa": "tsx scripts/verify-pwa.ts",
-    "auth:hash-password": "tsx scripts/hash-auth-password.ts",
+    "auth:hash-password": "tsx scripts/hash-auth-password.ts --",
     "auth:generate-secret": "tsx scripts/generate-auth-secret.ts",
     "verify:auth": "tsx scripts/verify-auth.ts",
     "deploy:check": "tsx scripts/check-production-env.ts",

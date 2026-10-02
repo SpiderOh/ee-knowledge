@@ -13,6 +13,22 @@ npm run auth:hash-password
 npm run auth:generate-secret
 ```
 
+默认 `auth:hash-password` 输出 raw `scrypt$...`，适合 production systemd EnvironmentFile：
+
+```text
+EE_AUTH_PASSWORD_HASH="scrypt$16384$8$1$..."
+```
+
+本地 Next.js `.env` / `.env.local` 会处理 `$VARIABLE` expansion，请使用 dotenv-safe 输出：
+
+```powershell
+npm run auth:hash-password -- --dotenv
+```
+
+它输出 `scrypt\$16384\$8\$1\$...`，Next.js 加载后得到原始 `scrypt$...`。两种输出只改变环境文件转义，不改变密码或 hash 语义；CLI 从不输出明文密码。
+
+如果 Windows PowerShell 的 `npm.ps1` 没有把脚本参数转发给 npm，可使用等价的 `npm.cmd run auth:hash-password -- --dotenv`；Linux/macOS 继续使用上面的命令。
+
 将命令输出填入本机 `.env`：
 
 ```env
@@ -31,7 +47,7 @@ EE_AUTH_SESSION_TTL_DAYS="30"
 
 ## Password Change
 
-重新运行 `npm run auth:hash-password`，再更新 `.env` 中的 `EE_AUTH_PASSWORD_HASH`。Session 签名同时依赖密码 hash 和 `EE_AUTH_SESSION_SECRET`，更新任一配置会使旧 session 自动失效。
+重新运行 `npm run auth:hash-password -- --dotenv`，再更新本地 `.env` 中的 `EE_AUTH_PASSWORD_HASH`；production systemd 环境继续使用不转义 `$` 的 `npm run auth:hash-password` 输出。Session 签名同时依赖密码 hash 和 `EE_AUTH_SESSION_SECRET`，更新任一配置会使旧 session 自动失效。
 
 ## Production
 
@@ -41,4 +57,4 @@ Remote deployment uses Caddy HTTPS in the `v0.3.0-alpha.3` self-host foundation.
 
 ## Recovery
 
-忘记密码时，在服务器上重新运行 `npm run auth:hash-password` 并更新 `.env`，重启应用后使用新密码登录。项目没有邮箱找回流程。
+忘记密码时，在服务器上重新运行 `npm run auth:hash-password` 并更新 `/etc/ee-knowledge/ee-knowledge.env`，重启 systemd 服务后使用新密码登录。项目没有邮箱找回流程。

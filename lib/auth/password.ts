@@ -59,4 +59,8 @@ export async function verifyPassword(password: string, encoded: string) {
   }
 }
 
+export function formatPasswordHashForDotenv(encoded: string) {
+  return encoded.replaceAll("$", "\\$");
+}
+
 export const AUTH_PASSWORD_MAX_LENGTH = MAX_PASSWORD_LENGTH;

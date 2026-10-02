@@ -7,6 +7,8 @@
 - Caddy HTTPS reverse proxy 模板，Next.js 生产服务只监听 `127.0.0.1:3000`。
 - production environment template、absolute server SQLite 路径和 `deploy:check` / `verify:deploy`。
 - `docs/SELF_HOST.md`，覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 和 x86_64 VPS。
+- 修复 production EnvironmentFile 与手动命令边界，补齐 `/var/backups/ee-knowledge` 权限说明。
+- 明确 Next dotenv literal `$` 与 systemd raw password hash 的区别，并增加 `--dotenv` 输出。
 
 ### Database
 

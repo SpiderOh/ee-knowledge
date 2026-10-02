@@ -1,4 +1,4 @@
-import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { formatPasswordHashForDotenv, hashPassword, verifyPassword } from "@/lib/auth/password";
 import { getSafeNextPath, isPublicPath } from "@/lib/auth/path-policy";
 import { getLoginRedirectPath, getSuccessRedirectPath } from "@/lib/auth/redirect";
 import { createSessionToken, verifySessionToken } from "@/lib/auth/session";
@@ -20,6 +20,8 @@ async function main() {
   process.env.EE_AUTH_SESSION_TTL_DAYS = "30";
   try {
     assert(await verifyPassword(password, hash), "correct password should verify");
+    const dotenvHash = formatPasswordHashForDotenv(hash);
+    assert(dotenvHash !== hash && dotenvHash.replaceAll("\\$", "$") === hash, "dotenv password hash escaping should be reversible");
     const unicodePassword = "学习电子信息-安全密码2026";
     const unicodeHash = await hashPassword(unicodePassword);
     assert(await verifyPassword(unicodePassword, unicodeHash), "Unicode password should round-trip");

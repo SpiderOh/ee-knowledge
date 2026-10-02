@@ -30,10 +30,12 @@
 sudo useradd --system --home /opt/ee-knowledge --shell /usr/sbin/nologin ee-knowledge
 sudo install -d -o ee-knowledge -g ee-knowledge /opt/ee-knowledge
 sudo install -d -o ee-knowledge -g ee-knowledge /var/lib/ee-knowledge
+sudo install -d -o ee-knowledge -g ee-knowledge /var/backups/ee-knowledge
 sudo install -d -o root -g ee-knowledge -m 0750 /etc/ee-knowledge
 sudo -u ee-knowledge git clone <repository-url> /opt/ee-knowledge
 cd /opt/ee-knowledge
 sudo -u ee-knowledge npm ci
+# Fresh-server build does not require production secrets or DATABASE_URL.
 sudo -u ee-knowledge npm run build
 sudo cp deploy/ee-knowledge.env.example /etc/ee-knowledge/ee-knowledge.env
 sudo chown root:ee-knowledge /etc/ee-knowledge/ee-knowledge.env
@@ -50,7 +52,7 @@ EE_AUTH_SESSION_SECRET="..."
 EE_AUTH_SESSION_TTL_DAYS="30"
 ```
 
-在安全的交互式终端生成认证值：
+在安全的交互式终端生成认证值。systemd EnvironmentFile 使用 raw hash；如果只是配置本地 Next.js `.env`，请使用 dotenv-safe 输出，见 [`docs/AUTH.md`](AUTH.md)：
 
 ```bash
 cd /opt/ee-knowledge
@@ -58,15 +60,7 @@ sudo -u ee-knowledge npm run auth:hash-password
 sudo -u ee-knowledge npm run auth:generate-secret
 ```
 
-首次部署默认不运行 Demo Seed。应用只使用仓库已有 migration 初始化生产库：
-
-```bash
-sudo -u ee-knowledge npm run deploy:check
-sudo -u ee-knowledge npm run db
-sudo -u ee-knowledge npm run db:check
-```
-
-`deploy:check` 只验证环境，不创建数据库、不运行 migration。首次运行 `npm run db` 会通过 Prisma `migrate deploy` 应用已有 migration；它不会执行 `db:seed`、`db:setup`、`db push` 或 `migrate reset`。
+首次部署默认不运行 Demo Seed。安装 systemd unit 后，首次启动会由 `EnvironmentFile=/etc/ee-knowledge/ee-knowledge.env` 注入全部生产变量，并依次执行 `deploy:check`、`db`、`db:check` 和 `start:prod`：
 
 ## systemd
 
@@ -87,6 +81,8 @@ sudo journalctl -u ee-knowledge -f
 ```
 
 启动顺序是 `deploy:check`、`db`、`db:check`、`start:prod`。Next.js 只监听 `127.0.0.1:3000`；公网流量应由 Caddy 终止 HTTPS 后转发。unit 使用 `NoNewPrivileges`、`PrivateTmp`、`ProtectHome` 和 `ProtectSystem`，并只允许生产数据目录写入。
+
+`deploy:check` 只验证环境，不创建数据库；`db` 通过 Prisma `migrate deploy` 应用已有 migration，不会执行 `db:seed`、`db:setup`、`db push` 或 `migrate reset`。不要在未加载 production EnvironmentFile 的普通 shell 中运行这些生产检查命令。
 
 ## Caddy HTTPS
 
@@ -116,17 +112,14 @@ sudo ufw allow 443/tcp
 ```bash
 sudo systemctl stop ee-knowledge
 cd /opt/ee-knowledge
-sudo -u ee-knowledge npm run db:backup -- --output=/var/backups/ee-knowledge
+sudo -u ee-knowledge env DATABASE_URL="file:/var/lib/ee-knowledge/ee-knowledge.db" npm run db:backup -- --output=/var/backups/ee-knowledge
 sudo -u ee-knowledge git pull --ff-only
 sudo -u ee-knowledge npm ci
 sudo -u ee-knowledge npm run build
-sudo -u ee-knowledge npm run deploy:check
-sudo -u ee-knowledge npm run db
-sudo -u ee-knowledge npm run db:check
 sudo systemctl start ee-knowledge
 ```
 
-备份脚本会检查 SQLite 文件头并拒绝带有 `.db-journal`、`.db-wal` 或 `.db-shm` sidecar 的数据库。不要绕过这些检查，也不要在应用仍写入数据库时复制文件。升级后通过 HTTPS 页面、登录、课程页面和管理 API 做基本 smoke test。
+备份命令只注入不含 secret 的 `DATABASE_URL`；服务重新启动时由 systemd EnvironmentFile 读取全部 production env，并自动执行 deploy:check、migration deploy 和 db:check。备份脚本会检查 SQLite 文件头并拒绝带有 `.db-journal`、`.db-wal` 或 `.db-shm` sidecar 的数据库。不要绕过这些检查，也不要在应用仍写入数据库时复制文件。升级后通过 HTTPS 页面、登录、课程页面和管理 API 做基本 smoke test。
 
 本 alpha 只记录手动升级前备份流程，不实现 scheduled backup 或 secondary backup destination。
 
@@ -154,6 +147,6 @@ npm run verify:deploy
 npm run deploy:check
 ```
 
-本仓库验证不能替代目标机器上的真实 systemd、Caddy 公网 HTTPS 或 Android 安装验收。部署完成后应记录服务日志、HTTPS 登录和数据库读写结果。
+该命令应在 systemd 已加载 `/etc/ee-knowledge/ee-knowledge.env` 的服务上下文中运行；本地开发 `.env` 不应被当作 production env。直接在普通 shell 中运行而没有显式加载 production EnvironmentFile，不能代表生产检查结果。本仓库验证不能替代目标机器上的真实 systemd、Caddy 公网 HTTPS 或 Android 安装验收。部署完成后应记录服务日志、HTTPS 登录和数据库读写结果。
 
 本轮未实现：scheduled backup、secondary backup destination、Docker/Kubernetes/PM2、PostgreSQL、offline writes、业务 service-worker cache、Local AI 和 v0.4 学习体验增强。
