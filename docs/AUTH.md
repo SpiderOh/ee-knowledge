@@ -35,7 +35,7 @@ EE_AUTH_SESSION_TTL_DAYS="30"
 
 ## Production
 
-Remote deployment requires HTTPS. `Secure` cookie 只在 production 环境开启；本地 HTTP 开发环境使用 `Secure=false`。正式 HTTPS/self-host 部署属于 `v0.3.0-alpha.3`。
+Remote deployment uses Caddy HTTPS in the `v0.3.0-alpha.3` self-host foundation. `Secure` cookie 只在 production 环境开启；本地 HTTP 开发环境使用 `Secure=false`。部署目录、systemd 和 Caddy 配置见 [`docs/SELF_HOST.md`](SELF_HOST.md)。
 
 当前认证不把密码、Session 或个人数据写入 Prisma/SQLite。PWA 与桌面浏览器访问同一台服务时仍使用服务器端数据源；本阶段不提供 offline writes 或同步。
 

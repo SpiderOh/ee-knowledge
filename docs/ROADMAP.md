@@ -15,11 +15,13 @@
 ## v0.3.0：Mobile & Personal Cloud
 
 - alpha.1：PWA、Android 安装基础、Mobile UX 和部署前安全基线
+- alpha.2：single-user Authentication、私有默认路由和登录/退出
+- alpha.3：Linux self-host deployment、HTTPS reverse proxy 和 server-side SQLite
+- alpha.4：scheduled backup 与 secondary backup destination
 - PWA 与 mobile UX
 - Android 安装体验，后续再评估 Capacitor wrapper / APK
 - 单用户 Authentication
 - self-hosted deployment、HTTPS 和 server-side SQLite
-- scheduled backup 与 secondary backup destination
 - 桌面和手机访问同一个服务器 canonical data source
 
 本阶段不承诺 offline-first edits、双向 SQLite synchronization、multi-user、RBAC 或 PostgreSQL migration。

@@ -1,4 +1,26 @@
 # Changelog
+## 0.3.0-alpha.3 - 2026-10-02
+
+### Added
+
+- Native Node + systemd self-host deployment template，使用非 root `ee-knowledge` 服务用户。
+- Caddy HTTPS reverse proxy 模板，Next.js 生产服务只监听 `127.0.0.1:3000`。
+- production environment template、absolute server SQLite 路径和 `deploy:check` / `verify:deploy`。
+- `docs/SELF_HOST.md`，覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 和 x86_64 VPS。
+
+### Database
+
+- 生产 SQLite 位于仓库外的 `/var/lib/ee-knowledge/ee-knowledge.db`。
+- 未修改 Prisma Schema 或 migration；生产启动不自动 seed。
+
+### Not included
+
+- scheduled backup、secondary backup destination、Docker、Kubernetes、PM2、PostgreSQL 和 Local AI。
+
+### Next
+
+- v0.3.0-alpha.4：Scheduled Backup + Secondary Backup Destination。
+
 ## 0.3.0-alpha.2 - 2026-10-02
 
 ### Added

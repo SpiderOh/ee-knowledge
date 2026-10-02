@@ -2,7 +2,7 @@
 
 ## Current stage
 
-当前实现范围是 `v0.3.0-alpha.2`：PWA、Android 安装基础、移动端体验和 single-user Authentication。
+当前实现范围是 `v0.3.0-alpha.3`：PWA、Android 安装基础、移动端体验、single-user Authentication 和 Linux self-host deployment 基础。
 
 ## Install model
 
@@ -16,7 +16,7 @@ EE Knowledge 使用 Web PWA，不是原生 APK。App Router manifest、静态图
 2. 选择浏览器的 Install app / 添加到主屏幕入口。
 3. 从桌面图标以 standalone window 启动，默认进入 `/`。
 
-本 alpha 未声称已经完成公网 HTTPS 或远程 Android 安装验收。
+本 alpha 提供 Caddy HTTPS 部署模板，但未声称已经完成目标服务器上的公网 HTTPS 或远程 Android 安装验收。
 
 ## Data
 
@@ -30,4 +30,4 @@ alpha.1 不支持 offline writes、离线写入队列、业务数据镜像、Ind
 
 ## Scope boundaries
 
-本阶段已包含 single-user Authentication；不包含正式云端部署、HTTPS 部署、自动备份服务、Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0-alpha.3` self-host deployment + HTTPS + server SQLite。
+本阶段已包含 single-user Authentication 和 self-host deployment 基础；不包含 scheduled backup、secondary backup destination、Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0-alpha.4` scheduled backup + secondary backup destination。

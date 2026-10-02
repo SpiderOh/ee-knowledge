@@ -283,3 +283,21 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 原因：
 
 单用户 self-hosted 场景不需要注册、多用户、OAuth 或数据库 session。环境变量凭证和无状态 cookie 能保持部署简单，并且不改变现有个人数据模型。
+
+---
+
+## ADR-022：Personal self-host 使用 Native Node、systemd 与 Caddy
+
+状态：Accepted
+
+规则：
+
+- 应用代码部署到 `/opt/ee-knowledge`，由非 root `ee-knowledge` 用户运行。
+- 生产环境变量放在 `/etc/ee-knowledge/ee-knowledge.env`，生产 SQLite 放在 `/var/lib/ee-knowledge/ee-knowledge.db`，数据库不进入仓库。
+- Next.js 只监听 `127.0.0.1:3000`，Caddy 负责公网 HTTPS 和反向代理。
+- systemd 启动前依次执行 `deploy:check`、`db` 和 `db:check`，禁止自动执行 `db:seed`、`db:setup` 或 `migrate reset`。
+- 本轮不引入 Docker、Kubernetes、PM2、PostgreSQL 或云厂商 SDK；scheduled backup 属于下一 alpha。
+
+原因：
+
+Native Node + systemd + Caddy 能覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 和 x86_64 VPS，同时保持 single-user personal system 的低维护成本和服务器 SQLite 单一数据源。

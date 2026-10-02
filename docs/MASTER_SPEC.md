@@ -173,10 +173,11 @@ Book
 
 - alpha.1 已完成 PWA manifest、Android 安装基础和移动端体验基线
 - alpha.2 已完成 single-user Authentication、私有默认路由和登录/退出
+- alpha.3 已完成 Native Node + systemd + Caddy 的 self-host deployment 基础、HTTPS reverse proxy 和 server-side SQLite 生产路径
 - PWA 和 mobile UX
 - Android 安装体验，稳定后再评估 Capacitor wrapper / APK
 - single-user Authentication
-- self-hosted deployment、HTTPS、server-side SQLite 和 scheduled backup
+- scheduled backup 与 secondary backup destination（alpha.4）
 - 桌面与手机访问同一个服务器 canonical data source
 
 第一版个人云端不维护手机 SQLite，不实现双向离线数据库合并同步，也不承诺 offline-first edits。

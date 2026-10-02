@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0-alpha.2`
+`v0.3.0-alpha.3`
 
 已完成：
 
@@ -29,7 +29,9 @@
 - 复习与练习互相跳转，错题和知识点复习页可进入对应学习操作
 - 单用户 Authentication、登录/退出和私有默认路由保护
 - 环境变量密码 hash、签名 HttpOnly session 和 `verify:auth`
+- Linux self-host deployment、systemd、Caddy HTTPS 和 server-side SQLite
+- `deploy:check`、`verify:deploy` 和自托管部署文档
 
 下一步：
 
-- v0.3.0-alpha.3：Self-host Deployment + HTTPS + Server SQLite
+- v0.3.0-alpha.4：Scheduled Backup + Secondary Backup Destination
