@@ -14,6 +14,7 @@
 
 ## v0.3.0：Mobile & Personal Cloud
 
+- alpha.1：PWA、Android 安装基础、Mobile UX 和部署前安全基线
 - PWA 与 mobile UX
 - Android 安装体验，后续再评估 Capacitor wrapper / APK
 - 单用户 Authentication
