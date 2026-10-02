@@ -1,4 +1,4 @@
-import { hashPassword } from "@/lib/auth/password";
+import { formatPasswordHashForDotenv, hashPassword } from "@/lib/auth/password";
 import { StringDecoder } from "node:string_decoder";
 
 async function readAllStdin() {
@@ -35,7 +35,8 @@ async function readHidden(prompt: string) {
 async function main() {
   const [password, confirmation] = !process.stdin.isTTY || typeof process.stdin.setRawMode !== "function" ? await readNonTtyPair() : [await readHidden("Password (12-128 characters): "), await readHidden("Confirm password: ")];
   if (password !== confirmation) throw new Error("Passwords do not match.");
-  process.stdout.write(`${await hashPassword(password)}\n`);
+  const hash = await hashPassword(password);
+  process.stdout.write(`${process.argv.includes("--dotenv") ? formatPasswordHashForDotenv(hash) : hash}\n`);
 }
 
 main().catch((error) => { process.stderr.write(`${error instanceof Error ? error.message : "Unable to generate password hash."}\n`); process.exitCode = 1; });

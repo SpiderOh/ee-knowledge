@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v0.3.0-alpha.2`
+`v0.3.0-alpha.3`
 
-v0.2.0 已正式发布。v0.3.0-alpha.2 已加入 PWA、Android 安装基础、移动端体验和单用户 Authentication。
+v0.2.0 已正式发布。v0.3.0-alpha.3 已加入 PWA、Android 安装基础、移动端体验、单用户 Authentication 和 Linux self-host deployment 基础。
 
 ## 第一阶段 MVP
 
@@ -91,11 +91,11 @@ Knowledge Bundle 是知识内容交换格式，不是个人完整备份。SQLite
 
 ## 管理后台安全提示
 
-single-user Authentication 已加入，个人页面、管理后台和管理 API 默认需要登录。远程公网部署仍需 HTTPS；HTTPS 属于 `v0.3.0-alpha.3`。
+single-user Authentication 已加入，个人页面、管理后台和管理 API 默认需要登录。远程公网部署通过 Caddy 提供 HTTPS。Linux self-host deployment 的完整流程见 [`docs/SELF_HOST.md`](docs/SELF_HOST.md)。
 
 ## 长期路线
 
-下一阶段是 v0.3.0 Mobile & Personal Cloud，继续建设自托管部署、HTTPS、服务器端 SQLite 和自动备份。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+下一阶段是 v0.3.0 Mobile & Personal Cloud，继续建设 scheduled backup 与 secondary backup destination。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
 v0.4.0 聚焦 KnowledgePoint 学习内容增强，包括常见问法、标准回答、易错点和移动端学习流程；不建设独立复试题库、模拟复试或目标院校专区。v0.5.0 处理个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 

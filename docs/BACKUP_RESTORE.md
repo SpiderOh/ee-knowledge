@@ -33,6 +33,8 @@ npm run dev
 
 CLI 按 Prisma 语义解析 `DATABASE_URL`。例如 `DATABASE_URL="file:./dev.db"` 对应 `<repo>/prisma/dev.db`。当前 CLI 只支持 `file:` SQLite URL；未来使用 PostgreSQL 时必须使用对应的数据库工具。
 
+生产自托管使用绝对 Linux 路径，例如 `DATABASE_URL="file:/var/lib/ee-knowledge/ee-knowledge.db"`。生产数据库位于仓库外，由 `/etc/ee-knowledge/ee-knowledge.env` 提供路径；`npm run deploy:check` 会验证路径、凭证和目录权限。完整部署流程见 [`docs/SELF_HOST.md`](SELF_HOST.md)。
+
 ## Demo Seed 边界
 
 `npm run db` 只执行 migration。新开发环境需要 Demo 数据时运行 `npm run db:setup`，它等价于 migration 加 `npm run db:seed`。`db:seed` 会同步 Demo 课程、知识点、Demo 教材章节和章节关联；如果这些 Demo 记录已被改成正式内容，不要随意再次执行 Seed。

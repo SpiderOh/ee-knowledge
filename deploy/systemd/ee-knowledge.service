@@ -1,0 +1,25 @@
+[Unit]
+Description=EE Knowledge single-user self-hosted service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ee-knowledge
+Group=ee-knowledge
+WorkingDirectory=/opt/ee-knowledge
+EnvironmentFile=/etc/ee-knowledge/ee-knowledge.env
+ExecStartPre=/usr/bin/npm run deploy:check
+ExecStartPre=/usr/bin/npm run db
+ExecStartPre=/usr/bin/npm run db:check
+ExecStart=/usr/bin/npm run start:prod
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/lib/ee-knowledge
+
+[Install]
+WantedBy=multi-user.target

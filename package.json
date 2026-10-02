@@ -1,11 +1,12 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.3.0-alpha.2",
+  "version": "0.3.0-alpha.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
+    "start:prod": "next start -H 127.0.0.1 -p 3000",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
@@ -26,9 +27,11 @@
     "verify:mvp": "tsx scripts/verify-mvp.ts",
     "release:check": "tsx scripts/release-check.ts",
     "verify:pwa": "tsx scripts/verify-pwa.ts",
-    "auth:hash-password": "tsx scripts/hash-auth-password.ts",
+    "auth:hash-password": "tsx scripts/hash-auth-password.ts --",
     "auth:generate-secret": "tsx scripts/generate-auth-secret.ts",
-    "verify:auth": "tsx scripts/verify-auth.ts"
+    "verify:auth": "tsx scripts/verify-auth.ts",
+    "deploy:check": "tsx scripts/check-production-env.ts",
+    "verify:deploy": "tsx scripts/verify-deployment.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

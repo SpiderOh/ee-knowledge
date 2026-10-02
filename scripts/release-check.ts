@@ -1,7 +1,7 @@
 import { runNpmScript } from "./lib/run-command";
 
 function main() {
-  for (const step of ["verify:pwa", "verify:auth", "verify:mvp", "typecheck", "lint", "build"]) {
+  for (const step of ["verify:pwa", "verify:auth", "verify:deploy", "verify:mvp", "typecheck", "lint", "build"]) {
     console.log(`\n[release:check] ${step}`);
     const result = runNpmScript(step);
     if (result.error || result.status !== 0) {

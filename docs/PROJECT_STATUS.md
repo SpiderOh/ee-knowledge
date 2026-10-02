@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.3.0-alpha.2`
+`v0.3.0-alpha.3`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前进入 `v0.3.0-alpha.2` Mobile & Personal Cloud 的 Single-user Authentication 阶段。
+第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前完成 `v0.3.0-alpha.3` Mobile & Personal Cloud 的 Single-user Authentication、Linux self-host deployment、HTTPS reverse proxy 和 server-side SQLite 基础。
 
 ## 已完成
 
@@ -81,15 +81,20 @@
 - `/login`、`/api/auth/login`、`/api/auth/logout` 和 AppShell 退出登录
 - `crypto.scrypt` 密码 hash、认证 secret 生成脚本和 `verify:auth`
 - PWA manifest、图标和 Next 静态资源保持公开
+- Native Node + systemd + Caddy 的 Linux self-host deployment 基础
+- `start:prod` 只监听 `127.0.0.1:3000`
+- 生产环境模板 `/etc/ee-knowledge/ee-knowledge.env` 与绝对 SQLite 路径 `/var/lib/ee-knowledge/ee-knowledge.db`
+- 只读生产环境检查 `npm run deploy:check` 和静态部署验证 `npm run verify:deploy`
+- `docs/SELF_HOST.md`：Debian/Ubuntu、ARM64 Orange Pi/RK3588 和 x86_64 VPS 部署流程
 
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
-- v0.3.0-alpha.2 已完成 Authentication；仍不包含 HTTPS、公网部署、自动备份或 server-side SQLite 部署
+- v0.3.0-alpha.3 已完成 Authentication、HTTPS reverse proxy、self-host deployment 和 server-side SQLite；仍不包含 scheduled backup 或 secondary backup destination
 
 ## 未完成
 
-- v0.3.0-alpha.3：Self-host Deployment + HTTPS + Server SQLite
+- v0.3.0-alpha.4：Scheduled Backup + Secondary Backup Destination
 - v0.4.0：KnowledgePoint 常见问法、标准回答、易错点和移动端学习流程优化
 - v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
@@ -105,15 +110,15 @@
 
 ## 下一步
 
-- v0.3.0-alpha.2：Single-user Authentication
+- v0.3.0-alpha.4：Scheduled Backup + Secondary Backup Destination
 
 ## 已知问题
 
 - Windows 环境可能出现 Next.js SWC 原生模块 fallback 警告；只要 build 最终退出码为 0，不影响本轮发布检查。
-- 远程公网部署仍需 HTTPS；HTTPS/self-host 属于 `v0.3.0-alpha.3`。
+- 真实公网 HTTPS、systemd 服务和 Android 安装仍需在目标服务器上分别验收；本仓库只提供模板和静态检查。
 - 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
-- v0.3.0 后续仍未完成：HTTPS self-host deployment、server SQLite deployment、scheduled backup、secondary backup destination 和 Android 远程安装验收。
+- v0.3.0 后续仍未完成：scheduled backup、secondary backup destination 和 Android 远程安装验收。
 
 ## 数据库
 
