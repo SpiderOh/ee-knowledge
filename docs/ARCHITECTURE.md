@@ -74,7 +74,7 @@ Content Management Server Actions
 Prisma
 ```
 
-`/admin` 当前未配置身份认证，仅适合本地使用或可信网络。公开部署前必须增加 Authentication。
+`/admin` 当前未配置身份认证，仅适合本地使用或可信网络。公开部署前需要增加 single-user Authentication。项目不设计注册、多人组织、RBAC 或商业 SaaS 权限体系。
 
 ## 3.3 Content Transfer Layer
 
@@ -199,3 +199,25 @@ KnowledgePoint 仍是正式数据源。
 - 学习数据与知识数据可独立备份。
 - SQLite 路径由 `DATABASE_URL` 解析，验证、备份和恢复脚本不硬编码 `prisma/dev.db`。
 - 重大结构调整要求 Migration 和 Decision Record。
+## 9. v0.3.0 Mobile & Personal Cloud 方向
+
+v0.3 的推荐拓扑：
+
+```text
+Browser / Android PWA
+          ↓
+        HTTPS
+          ↓
+       Next.js
+          ↓
+       Prisma
+          ↓
+       SQLite
+          ↓
+Cloud Server / Orange Pi
+          ↓
+Scheduled Backup
+```
+
+服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
+

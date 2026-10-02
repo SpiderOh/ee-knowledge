@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.2.0-rc.1 - 2026-10-02
+
+### Changed
+
+- 冻结 v0.2.0 功能范围，完成 RC 全量回归与发布文档更新。
+- 将长期 Roadmap 收敛为 single-user personal system，定义 v0.3.0 Mobile & Personal Cloud。
+- 明确 SQLite 继续适用于 single-user self-hosting，不因部署自动引入 PostgreSQL。
+
+### Verified
+
+- 完成 v0.1 知识库工作流、Review、Practice、错题本、Statistics、数据库安全和移动端回归检查。
+
+### Database
+
+- 无新的 Schema 变更。
+- 无新的 migration，现有 PracticeQuestionOption / PracticeAttempt additive migration 保持不变。
+
 ## 0.2.0-alpha.3 - 2026-10-02
 
 ### Added

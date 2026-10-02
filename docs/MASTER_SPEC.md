@@ -4,7 +4,7 @@
 
 项目名称暂定：**研电 · EE Knowledge**
 
-这是一个面向电子信息专业学生的长期个人专业知识系统。
+这是一个面向个人长期使用的电子信息专业知识与学习系统。项目定位为 single-user personal system，优先简单、稳定、数据安全和低维护成本，不以 SaaS、多人平台或商业知识管理系统为目标。
 
 核心用途：
 
@@ -168,55 +168,50 @@ Book
 - 多用户
 - 云同步
 
-## 6. 第二阶段
+## 6. v0.2.0 学习闭环
 
-- 复习系统
-- 错题本
-- 复试问题
-- 30 秒 / 1 分钟答案
-- 追问树
-- 随机抽题
-- 模拟复试
+- 复习中心、简单间隔复习和复习历史
+- 练习题、客观题服务端判分、主观题自评和错题本
+- 学习统计、课程统计与复习/练习联动
 
-## 7. 第三阶段
+## 7. v0.3.0 Mobile & Personal Cloud
 
-- AI 问答
-- AI 生成知识卡
-- AI 生成追问
-- AI 面试评价
-- AI 章节总结
+- PWA 和 mobile UX
+- Android 安装体验，稳定后再评估 Capacitor wrapper / APK
+- single-user Authentication
+- self-hosted deployment、HTTPS、server-side SQLite 和 scheduled backup
+- 桌面与手机访问同一个服务器 canonical data source
 
-## 8. 第四阶段
+第一版个人云端不维护手机 SQLite，不实现双向离线数据库合并同步，也不承诺 offline-first edits。
 
-- PDF / Word 教材解析
-- RAG
-- Embedding
-- Vector DB
-- 知识图谱
-- 目标院校历年复试题
-- 语音面试
+## 8. v0.4.0 复试训练
 
-## 9. 长期目标
+- InterviewQuestion
+- 30 秒、1 分钟和深入回答
+- 追问链、随机抽题和简单模拟复试
 
-该系统应能在多年后继续扩充：
+## 9. v0.5.0 轻量 AI
 
-```text
-Linux
-ARM
-驱动开发
-RK3588
-NPU
-ONNX
-RKNN
-TensorRT
-模型量化
-模型剪枝
-端侧推理
-```
+- AIProvider
+- 当前知识点辅助、练习题生成和复试问题生成
+- 答案润色、追问和 AI Draft
 
-因此不能做成一次性考研小工具。
+## 10. v0.6.0 个人资料导入
 
-## 10. 跨 AI 原则
+- Markdown、TXT、PDF 文本提取和 Word 文本提取
+- 人工确认与来源记录
+
+## 11. v1.0.0 长期个人版
+
+目标是稳定的长期个人电子信息专业知识系统，继续积累 Linux、ARM、驱动开发、RK3588、NPU、ONNX、RKNN、TensorRT、模型量化、模型剪枝和端侧推理等知识。
+
+v1.0 不要求多用户、商业 SaaS、RAG、Vector DB、复杂知识图谱、语音面试或全国院校数据库。
+
+## 12. Post-v1 / Only if Needed
+
+以下能力只有在产生真实需求后再评估：RAG、Embedding、Vector DB、复杂知识图谱、多用户、注册与 RBAC、商业云同步、复杂对象存储、实时同步协议、语音面试、全国院校数据库、FSRS 和复杂推荐算法。
+
+## 13. 跨 AI 原则
 
 项目必须能由不同 AI 继续开发。
 

@@ -34,7 +34,7 @@
 
 未来：
 
-部署或多用户后迁移 PostgreSQL。
+SQLite 继续适合 single-user self-hosted deployment。只有真实并发、multi-user 或 SQLite 成为瓶颈时才考虑 PostgreSQL。
 
 ---
 
@@ -228,3 +228,22 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 原因：
 
 保持 ReviewRecord、PracticeQuestion、PracticeAttempt 和 KnowledgePoint 的现有关系，先完成基础学习闭环，再由后续版本评估更复杂的推荐和历史模型。
+
+---
+
+## ADR-019：个人版采用服务器单一数据源
+
+状态：Accepted
+
+规则：
+
+- EE Knowledge 定位为 single-user personal system，不为假想 SaaS 增加多用户、注册、组织或 RBAC 复杂度。
+- v0.3 的个人云端使用服务器端 SQLite 作为 canonical data source，桌面浏览器和 Android PWA 作为客户端。
+- 远程访问通过 single-user Authentication 保护个人服务器；Android 应用卸载不会删除服务器数据。
+- 第一版个人云端不是手机 SQLite 与服务器 SQLite 的双向离线合并同步；offline-first edits 不是强制目标。
+- 部署到服务器不自动引入 PostgreSQL，只有真实并发、multi-user 或 SQLite 瓶颈出现时才重新评估。
+
+原因：
+
+这是个人长期维护项目。优先保持简单、稳定、可备份和低维护成本，把 PWA、Android 安装体验、自托管和自动备份放入 v0.3，避免提前建设商业平台基础设施。
+
