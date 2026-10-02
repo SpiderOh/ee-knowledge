@@ -173,7 +173,7 @@ VERIFIED
 - 语义搜索
 - 向量搜索
 
-## 7. RAG
+## 7. RAG（Post-v1 / Only if Needed）
 
 RAG 只能作为知识检索层，不得替代正式知识实体。
 
@@ -220,4 +220,3 @@ Scheduled Backup
 ```
 
 服务器端 SQLite 是 canonical data source。桌面浏览器和 Android PWA 都是客户端，不维护独立的业务数据库；手机卸载或清除本地数据不会删除服务器数据。PWA 可以缓存 shell 和静态资源，但 offline write sync 不是 v0.3 的强制需求。部署到服务器不自动要求 PostgreSQL，只有真实并发、多用户或 SQLite 成为瓶颈时才重新评估。
-

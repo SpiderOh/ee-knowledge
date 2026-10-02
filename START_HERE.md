@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.2.0-rc.1`
+`v0.2.0`
 
 已完成：
 
@@ -30,5 +30,4 @@
 
 下一步：
 
-- v0.2.0：正式发布
 - v0.3.0：Mobile & Personal Cloud（PWA、Android 安装体验、单用户 Authentication、自托管与自动备份）
