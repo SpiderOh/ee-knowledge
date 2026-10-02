@@ -78,7 +78,15 @@ npm run db:setup
 npm run dev
 ```
 
-已有数据库升级时运行 `npm run db`，它只执行 Prisma migration，不会自动同步 Demo Fixture。需要明确初始化或刷新 Demo 数据时才运行 `npm run db:seed`。
+已有个人数据库按以下顺序升级：
+
+```powershell
+npm run db:backup
+npm run db
+npm run db:check
+```
+
+`npm run db` 只执行 Prisma migration，不会自动同步 Demo Fixture。`db:setup` 只用于新数据库初始化；需要明确初始化或刷新 Demo 数据时才运行 `npm run db:seed`。
 
 Knowledge Bundle 是知识内容交换格式，不是个人完整备份。SQLite 完整备份和恢复流程见 [`docs/BACKUP_RESTORE.md`](docs/BACKUP_RESTORE.md)。
 

@@ -74,7 +74,16 @@ npm run db
 npm run db:check
 ```
 
-不要使用 `db:setup` 升级已有个人数据库，也不要使用 `prisma migrate reset`。`db:setup` 只用于初始化新数据库。restore 只能对 disposable SQLite 使用，并需要明确的 `--confirm`。
+不要使用 `db:setup` 升级已有个人数据库，也不要使用 `prisma migrate reset`。`db:setup` 只用于初始化新数据库。
+
+正常版本升级不需要执行 restore。发布验证中的 restore round-trip 仅使用 disposable SQLite。若真实个人数据库需要灾难恢复，请先停止 Next.js、Prisma 等写入进程，按照 [`BACKUP_RESTORE.md`](BACKUP_RESTORE.md) 运行：
+
+```powershell
+npm run db:restore -- 'backups/<backup>.db' --confirm
+npm run db:check
+```
+
+请将 `<backup>` 替换为实际备份文件名。恢复前工具会自动创建 pre-restore backup。
 
 ## 数据库变更
 

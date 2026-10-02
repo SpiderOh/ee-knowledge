@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.2.0 - 2026-10-02
 
 ### Highlights
@@ -36,7 +38,6 @@
 ### Next
 
 - v0.3.0 Mobile & Personal Cloud。
-# Changelog
 
 ## 0.2.0-rc.1 - 2026-10-02
 

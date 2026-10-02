@@ -29,8 +29,8 @@ npm run db:check
 - `npm run db` 只执行 `prisma migrate deploy`。
 - `db:setup` 只用于初始化新数据库（migration + Demo Seed）。
 - 禁止使用 `prisma migrate reset` 升级真实数据库。
-- 不对真实数据库执行 seed 或 restore。
-- restore round-trip 只能使用 disposable SQLite，恢复前自动备份并要求 `--confirm`。
+- 本轮发布验证不对真实数据库执行 seed 或 restore；真实灾难恢复按 `docs/BACKUP_RESTORE.md` 操作。
+- 发布验证中的 restore round-trip 只能使用 disposable SQLite，恢复前自动备份并要求 `--confirm`。
 - `db:check` 只读，不修复、删除或更新数据。
 
 ## 4. Automated verification
