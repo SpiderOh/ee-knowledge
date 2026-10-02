@@ -17,12 +17,17 @@ async function runCase() {
   const { buildStatusDistribution } = await import("@/features/statistics/aggregate");
   const { getReviewOverview, getReviewPoint } = await import("@/features/review/queries");
   const { calculateProgress } = await import("@/features/courses/queries");
-  const now = new Date("2026-01-20T12:00:00.000Z");
+  const now = new Date(2026, 0, 20, 12, 0, 0);
   const before = await getLearningStatistics(now);
   assert(before.totalReviewRecords === 0 && before.totalPracticeAttempts === 0, "空数据库不应有学习历史。");
   assert(before.reviewSuccessRate === null && before.practiceAccuracy === null, "零分母比例必须为 null。");
   assert(before.statusDistribution.every((item) => Number.isFinite(item.percentage)), "状态比例不应出现 NaN 或 Infinity。");
   assert(buildStatusDistribution({ notStarted: 0, learning: 0, mastered: 0, review: 0 }, 0).every((item) => item.percentage === 0), "零分母状态比例必须为 0。");
+  const historyPoint = await prisma.knowledgePoint.findFirst({ select: { id: true } });
+  assert(historyPoint, "Seed 未创建知识点。");
+  await prisma.studyProgress.create({ data: { knowledgePointId: historyPoint.id, status: "NOT_STARTED", studyCount: 2, lastStudiedAt: new Date(2026, 0, 19, 9, 0, 0) } });
+  assert((await getLearningStatistics(now)).hasStudyHistory, "曾经学习过但切回 NOT_STARTED 仍应识别为有学习历史。");
+  await prisma.studyProgress.delete({ where: { knowledgePointId: historyPoint.id } });
 
   const suffix = Date.now().toString();
   const courseA = await prisma.course.create({ data: { slug: `verify-statistics-a-${suffix}`, name: "统计验证课程 A", sortOrder: 900 } });
@@ -36,19 +41,21 @@ async function runCase() {
     const questionA = await prisma.practiceQuestion.create({ data: { knowledgePointId: pointA.id, type: "TRUE_FALSE", question: "统计题 A", answer: "TRUE" } });
     const questionB = await prisma.practiceQuestion.create({ data: { knowledgePointId: pointC.id, type: "TRUE_FALSE", question: "统计题 B", answer: "TRUE" } });
     await prisma.practiceAttempt.createMany({ data: [
-      { practiceQuestionId: questionA.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date("2026-01-20T08:00:00.000Z") },
-      { practiceQuestionId: questionA.id, submittedAnswer: "TRUE", isCorrect: true, attemptedAt: new Date("2026-01-20T09:00:00.000Z") },
-      { practiceQuestionId: questionA.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date("2026-01-20T10:00:00.000Z") },
-      { practiceQuestionId: questionB.id, submittedAnswer: "TRUE", isCorrect: true, attemptedAt: new Date("2026-01-19T10:00:00.000Z") },
-      { practiceQuestionId: questionB.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date("2026-01-20T11:00:00.000Z") },
+      { practiceQuestionId: questionA.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date(2026, 0, 20, 8, 0, 0) },
+      { practiceQuestionId: questionA.id, submittedAnswer: "TRUE", isCorrect: true, attemptedAt: new Date(2026, 0, 20, 9, 0, 0) },
+      { practiceQuestionId: questionA.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date(2026, 0, 20, 10, 0, 0) },
+      { practiceQuestionId: questionB.id, submittedAnswer: "TRUE", isCorrect: true, attemptedAt: new Date(2026, 0, 19, 10, 0, 0) },
+      { practiceQuestionId: questionB.id, submittedAnswer: "FALSE", isCorrect: false, attemptedAt: new Date(2026, 0, 20, 11, 0, 0) },
     ] });
     await prisma.reviewRecord.createMany({ data: [
-      { knowledgePointId: pointA.id, result: 0, reviewedAt: new Date("2026-01-20T07:00:00.000Z"), nextReviewAt: new Date("2026-01-20T11:00:00.000Z") },
-      { knowledgePointId: pointA.id, result: 1, reviewedAt: new Date("2026-01-20T07:30:00.000Z"), nextReviewAt: new Date("2026-01-20T11:30:00.000Z") },
-      { knowledgePointId: pointA.id, result: 2, reviewedAt: new Date("2026-01-19T07:00:00.000Z"), nextReviewAt: new Date("2026-01-21T12:00:00.000Z") },
-      { knowledgePointId: pointA.id, result: 3, reviewedAt: new Date("2026-01-05T07:00:00.000Z"), nextReviewAt: null },
-      { knowledgePointId: pointD.id, result: 2, reviewedAt: new Date("2026-01-20T06:00:00.000Z"), nextReviewAt: new Date("2026-01-19T12:00:00.000Z") },
+      { knowledgePointId: pointA.id, result: 0, reviewedAt: new Date(2026, 0, 20, 7, 0, 0), nextReviewAt: null },
+      { knowledgePointId: pointA.id, result: 1, reviewedAt: new Date(2026, 0, 20, 7, 30, 0), nextReviewAt: null },
+      { knowledgePointId: pointA.id, result: 2, reviewedAt: new Date(2026, 0, 19, 7, 0, 0), nextReviewAt: new Date(2026, 0, 20, 11, 0, 0) },
+      { knowledgePointId: pointA.id, result: 3, reviewedAt: new Date(2026, 0, 5, 7, 0, 0), nextReviewAt: null },
+      { knowledgePointId: pointD.id, result: 2, reviewedAt: new Date(2026, 0, 20, 6, 0, 0), nextReviewAt: new Date(2026, 0, 19, 12, 0, 0) },
     ] });
+    const activeSchedules = await prisma.reviewRecord.groupBy({ by: ["knowledgePointId"], where: { nextReviewAt: { not: null } }, _count: { _all: true } });
+    assert(activeSchedules.every((item) => item._count._all <= 1), "每个知识点最多只能有一个 active review schedule。");
     const statistics = await getLearningStatistics(now);
     assert(statistics.startedKnowledgePoints - before.startedKnowledgePoints === 3, "已开始知识点应只统计三种非 NOT_STARTED 状态。");
     assert(statistics.totalReviewRecords === 5 && statistics.successfulReviewRecords === 3 && statistics.reviewSuccessRate === 60, "复习次数或成功率错误。");

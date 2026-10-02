@@ -6,10 +6,6 @@ export function percentage(numerator: number, denominator: number) {
   return denominator > 0 ? Math.round((numerator / denominator) * 100) : null;
 }
 
-export function progressPercent(started: number, total: number) {
-  return total > 0 ? Math.round((started / total) * 100) : 0;
-}
-
 export function buildStatusDistribution(counts: { notStarted: number; learning: number; mastered: number; review: number }, total: number) {
   return [
     { key: "NOT_STARTED", label: "未学习", count: counts.notStarted },

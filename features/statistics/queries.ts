@@ -2,7 +2,7 @@ import { StudyStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { calculateProgress } from "@/features/courses/queries";
 import { getReviewOverview } from "@/features/review/queries";
-import { buildDailyActivity, buildStatusDistribution, percentage, progressPercent } from "./aggregate";
+import { buildDailyActivity, buildStatusDistribution, percentage } from "./aggregate";
 import { type CourseStatistics } from "./types";
 
 function sortAttempts<T extends { attemptedAt: Date; id: string }>(items: T[]) {
@@ -12,7 +12,7 @@ function sortAttempts<T extends { attemptedAt: Date; id: string }>(items: T[]) {
 export async function getLearningStatistics(now = new Date()) {
   const [courses, points, reviewRecords, questions, attempts, reviewOverview] = await Promise.all([
     prisma.course.findMany({ orderBy: [{ sortOrder: "asc" }, { slug: "asc" }], select: { id: true, slug: true, name: true } }),
-    prisma.knowledgePoint.findMany({ select: { id: true, title: true, slug: true, courseId: true, studyProgress: { select: { status: true } } } }),
+    prisma.knowledgePoint.findMany({ select: { id: true, title: true, slug: true, courseId: true, studyProgress: { select: { status: true, studyCount: true, lastStudiedAt: true } } } }),
     prisma.reviewRecord.findMany({ orderBy: [{ reviewedAt: "desc" }, { id: "desc" }], select: { id: true, result: true, reviewedAt: true, nextReviewAt: true, knowledgePoint: { select: { id: true, title: true, slug: true, course: { select: { id: true, name: true } } } } } }),
     prisma.practiceQuestion.findMany({ select: { id: true, question: true, type: true, knowledgePoint: { select: { id: true, title: true, slug: true, course: { select: { id: true, name: true } } } } } }),
     prisma.practiceAttempt.findMany({ orderBy: [{ attemptedAt: "desc" }, { id: "desc" }], select: { id: true, isCorrect: true, attemptedAt: true, practiceQuestionId: true, question: { select: { id: true, question: true, type: true, knowledgePoint: { select: { id: true, title: true, slug: true, course: { select: { id: true, name: true } } } } } } } }),
@@ -54,6 +54,7 @@ export async function getLearningStatistics(now = new Date()) {
     statusDistribution: buildStatusDistribution(statusCounts, points.length),
     activity: buildDailyActivity(reviewRecords.map((record) => ({ occurredAt: record.reviewedAt })), attempts.map((attempt) => ({ occurredAt: attempt.attemptedAt })), now),
     courses: courseStats,
+    hasStudyHistory: points.some((point) => (point.studyProgress?.studyCount ?? 0) > 0 || point.studyProgress !== null && point.studyProgress.lastStudiedAt !== null),
     recentReviews: reviewRecords.slice(0, 5),
     recentPractice: attempts.slice(0, 5),
   };
