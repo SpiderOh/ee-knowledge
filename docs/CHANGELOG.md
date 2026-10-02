@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.2.0 - 2026-10-02
+
+### Highlights
+
+- 完成复习、练习、错题和统计组成的个人学习闭环。
+- 保持 single-user / local-first 产品边界。
+- 完成 v0.2 数据安全与发布验证。
+
+### Review
+
+- Review Center 支持到期、手动、逾期和未来 7 天复习队列。
+- 支持忘记、模糊、记得、熟练结果与 1/3/7/14/30 天简单间隔。
+- 保留 ReviewRecord 历史，并保持单一有效 schedule。
+
+### Practice
+
+- Practice Center 支持 SINGLE_CHOICE、MULTIPLE_CHOICE、TRUE_FALSE、FILL、SHORT_ANSWER、CALCULATION 和 COMPREHENSIVE。
+- 客观题服务端判分，主观题用户自评。
+- PracticeAttempt 采用 append-only 历史。
+
+### Wrong Answers
+
+- 当前错题按最新 PracticeAttempt 判断。
+- 答对后自动移出当前错题本，历史错误记录保留。
+
+### Statistics
+
+- 提供学习状态、复习统计、练习统计、当前错题、最近 14 天活动和课程统计。
+
+### Data Safety
+
+- 保持 PracticeQuestionOption / PracticeAttempt additive migration。
+- 提供 db:backup、db:restore、db:check 和隔离验证。
+- Knowledge Bundle 边界保持不变。
+
+### Next
+
+- v0.3.0 Mobile & Personal Cloud。
+
 ## 0.2.0-rc.1 - 2026-10-02
 
 ### Changed
