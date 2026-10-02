@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.0-alpha.3 - 2026-10-02
+
+### Added
+
+- 新增学习统计页 `/statistics`，展示知识点状态、复习/练习次数与成功率、当前错题、最近 14 天活动和课程统计。
+- 新增统计聚合与隔离数据库验证 `verify:statistics`，并纳入 `verify:mvp`。
+
+### Changed
+
+- AppShell 增加学习统计导航，首页增加统计、练习和错题本快捷入口。
+- 复习知识点页显示对应练习题数量和练习入口；错误练习结果与错题本增加返回知识点复习入口。
+
+### Safety
+
+- 不修改 Prisma Schema、migration 或用户学习数据结构。统计历史只使用 ReviewRecord.reviewedAt 与 PracticeAttempt.attemptedAt，当前错题使用最新作答确定性排序。
+
 ## 0.2.0-alpha.2 - 2026-10-01
 
 ### Added

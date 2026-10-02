@@ -148,3 +148,7 @@ VERIFIED
 `ReviewRecord` 保存每次复习结果（0 忘记、1 模糊、2 记得、3 熟练）和下一次复习时间。产品交互中的 GOOD/EASY 都属于成功结果，AGAIN/HARD 都会重置成功 streak。`StudyProgress.status=REVIEW` 表示用户手动加入复习中心或当前需要复习；复习结果保存后会同步为 `MASTERED`（记得/熟练）或 `REVIEW`（忘记/模糊）。
 
 同一知识点只允许一个有效复习计划，即 `nextReviewAt IS NOT NULL` 的记录最多一条。新结果写入前会清空旧计划，再创建新的 `ReviewRecord`。简单调度使用 1、3、7、14、30 天间隔，不改变核心数据模型，也不引入 FSRS 或 SM-2。
+
+## 学习统计数据语义
+
+学习统计不新增事件表。`StudyProgress` 只表示知识点当前状态，课程进度继续按 `status != NOT_STARTED` 计算；复习历史只读取 `ReviewRecord.reviewedAt`，练习历史只读取 `PracticeAttempt.attemptedAt`。最近 14 天活动不会把 `StudyProgress.lastStudiedAt` 当作历史事件。当前错题按每道 PracticeQuestion 最新一次作答（`attemptedAt DESC, id DESC`）判定，复习待办和逾期数量复用复习中心的 `getReviewOverview` 语义。

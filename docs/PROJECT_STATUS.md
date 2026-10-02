@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.2.0-alpha.2`
+`v0.2.0-alpha.3`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。系统已经具备课程、教材、章节、知识点阅读，学习工具，内容与结构管理，Knowledge Bundle、SQLite 数据保护和正式发布验证能力。当前进入 `v0.2.0` 复习与练习第一阶段。
+第一阶段 Knowledge Base MVP 已完成。系统已经具备课程、教材、章节、知识点阅读，学习工具，内容与结构管理，Knowledge Bundle、SQLite 数据保护和正式发布验证能力。`v0.2.0` 功能范围基本完成，当前处于 `alpha.3`，下一阶段进入 RC 稳定性与发布准备。
 
 ## 已完成
 
@@ -68,14 +68,17 @@
 - PracticeAttempt 历史记录、最近一次错题本 `/wrong-answers` 与 PracticeQuestion 管理
 - PracticeQuestionOption、作答后的题目语义锁、删除保护与 5 道固定 ID Demo 题
 - `npm run verify:practice` 隔离数据库验证
+- 学习统计页 `/statistics`：知识点状态、复习/练习次数与成功率、当前错题、最近 14 天活动和课程统计
+- 学习统计查询与聚合工具，零分母比例返回 null，课程进度沿用学习状态算法
+- 复习中心与练习中心互相联动，知识点复习页显示练习入口，错题和错误结果可回到复习
+- `npm run verify:statistics` 隔离数据库统计验证，并纳入 `npm run verify:mvp`
 
 ## 部分完成
 
-- ReviewRecord 数据层和复习中心已完成；练习统计、图表、每日时长和复习/练习联动尚未开始
+- ReviewRecord 数据层、复习中心、练习中心和学习统计已完成；图表、每日学习时长和更细粒度复习算法属于后续增强，不是当前 `v0.2.0` 必需项
 
 ## 未完成
 
-- v0.2.0-alpha.3：学习统计、练习统计与复习/练习联动
 - v0.3.0：复试训练
 - v0.4.0：AI Provider、知识生成与 AI 学习能力
 - v0.5.0：PDF / Word 等资料自动化
@@ -93,7 +96,7 @@
 
 ## 下一步
 
-- v0.2.0-alpha.3：学习统计、练习统计与复习/练习联动
+- v0.2.0-rc.1：回归验证、发布前文档与数据安全检查
 
 ## 已知问题
 
@@ -104,4 +107,4 @@
 
 ## 数据库
 
-本轮新增 PracticeQuestionOption、PracticeAttempt 两张表及 additive migration。Knowledge Bundle 不包含 Book、Chapter、PracticeQuestion、PracticeQuestionOption、PracticeAttempt 或用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+本轮未修改 Prisma Schema 或 migration。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。

@@ -51,3 +51,8 @@ export async function getWrongAnswerQuestions() {
   const questions = await getQuestionRows({});
   return questions.filter((question) => question.latestAttempt?.isCorrect === false);
 }
+
+export async function getCurrentWrongCount() {
+  const questions = await getQuestionRows({});
+  return questions.filter((question) => question.latestAttempt?.isCorrect === false).length;
+}

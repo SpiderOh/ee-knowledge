@@ -195,3 +195,36 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 题目已有 PracticeAttempt 后，题型、题干、标准答案和选择项不可修改，也不可删除；解析和难度仍可调整。这样可以保证历史判定在内容变更后仍可解释。
 
 客观题提交必须由 Server Action 验证合法选项；最近一次作答统一使用 `attemptedAt DESC, id DESC` 排序，避免相同时间戳导致错题本结果不确定。
+
+---
+
+## ADR-017：学习统计使用现有学习数据语义
+
+状态：Accepted
+
+规则：
+
+- `StudyProgress` 只用于当前状态与课程进度，不作为历史事件流。
+- 最近 14 天活动只统计 `ReviewRecord.reviewedAt` 与 `PracticeAttempt.attemptedAt`。
+- 当前错题按每道题最新一次 `PracticeAttempt`（`attemptedAt DESC, id DESC`）确定。
+- 复习待办与逾期数量复用 `getReviewOverview`，避免统计页和复习中心产生两套语义。
+
+原因：
+
+在不修改 Prisma Schema、不引入 StudyEvent/StudySession/LearningLog 的前提下，提供可解释且可验证的学习统计。
+
+---
+
+## ADR-018：复习与练习通过知识点上下文联动
+
+状态：Accepted
+
+规则：
+
+- 复习知识点页只在存在练习题时显示 `/practice?knowledgePoint=<slug>` 入口。
+- 练习错误结果和错题本回到 `/review/<knowledgePointSlug>`。
+- 统计页展示复习与练习汇总，但不写入额外学习事件。
+
+原因：
+
+保持 ReviewRecord、PracticeQuestion、PracticeAttempt 和 KnowledgePoint 的现有关系，先完成基础学习闭环，再由后续版本评估更复杂的推荐和历史模型。

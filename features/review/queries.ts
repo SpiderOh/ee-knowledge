@@ -70,6 +70,7 @@ export async function getReviewPoint(slug: string) {
       id: true, slug: true, title: true, summary: true, definition: true, plainExplanation: true, principle: true, physicalMeaning: true, engineeringMeaning: true,
       category: true, importance: true, interviewImportance: true,
       course: { select: { name: true } },
+      _count: { select: { practiceQuestions: true } },
       formulas: { orderBy: { sortOrder: "asc" }, select: { id: true, name: true, latex: true, description: true, conditions: true } },
       reviewRecords: { orderBy: { reviewedAt: "desc" }, take: 10, select: { id: true, reviewedAt: true, result: true, nextReviewAt: true } },
     },
