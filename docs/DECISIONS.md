@@ -247,3 +247,39 @@ ChapterKnowledgePoint 建立关联，以及 Book 更换 Course 时，应用层�
 
 这是个人长期维护项目。优先保持简单、稳定、可备份和低维护成本，把 PWA、Android 安装体验、自托管和自动备份放入 v0.3，避免提前建设商业平台基础设施。
 
+---
+
+## ADR-020：Personal v1.0 聚焦长期知识学习，不建设独立复试/AI 子系统
+
+状态：Accepted
+
+规则：
+
+- v1.0 目标是利用闲暇时间长期、全面地学习电子信息专业知识。
+- 常见问法、标准回答和易错点属于 KnowledgePoint 内容增强。
+- 不建设独立复试题库、模拟复试或目标院校专区作为 v1.0 主路线。
+- AI Assistant、AI Provider 和云端 AI API 移到 Post-v1 / Optional Local AI。
+- 已存在的 School / Interview 相关 Schema 暂时保留，避免无收益的破坏性 migration。
+
+原因：
+
+个人版应优先完成稳定的知识积累、复习、练习和学习统计闭环，避免把独立的复试与 AI 子系统提前变成长期维护负担。
+
+---
+
+## ADR-021：使用环境变量凭证与无状态签名 Session 实现单用户认证
+
+状态：Accepted
+
+规则：
+
+- 只支持一个个人账户，不建立 User、Account、Session、Role 或 Permission 表。
+- 密码使用 Node 内置 `crypto.scrypt` 生成 hash，服务端只读取 `EE_AUTH_PASSWORD_HASH`。
+- Session 使用 HMAC-SHA256 签名的 `ee_session` HttpOnly cookie，默认有效期 30 天。
+- Session 签名同时依赖 `EE_AUTH_SESSION_SECRET` 和密码 hash，任一配置改变都会使旧 session 失效。
+- middleware 只做 Edge-compatible path 与 session 校验，不查询 Prisma，不执行业务逻辑。
+- 缺少或无效配置时 fail closed；登录、退出和公开 PWA 资源保持最小公开例外。
+
+原因：
+
+单用户 self-hosted 场景不需要注册、多用户、OAuth 或数据库 session。环境变量凭证和无状态 cookie 能保持部署简单，并且不改变现有个人数据模型。

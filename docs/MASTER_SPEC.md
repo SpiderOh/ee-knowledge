@@ -96,7 +96,7 @@ Book
 方向 → 课程 → 概念关系 → 知识点
 ```
 
-### 3.5 面向复试设计
+### 3.5 知识点表达与问答训练
 
 每个知识点不仅有定义和公式，还要能包含：
 
@@ -109,11 +109,9 @@ Book
 - 核心公式
 - 易错点
 - 对比概念
-- 复试高频问题
-- 30 秒回答
-- 1 分钟回答
-- 深入回答
-- 追问链
+- 常见问法
+- 简短/标准回答
+- 深入理解（可选）
 - 自测题
 - 掌握标准
 
@@ -131,10 +129,7 @@ Book
 - 笔记
 - 复习中心
 - 错题本
-- 复试题库
-- 模拟复试
 - 学习统计
-- AI 助手
 - 管理后台
 - 设置
 
@@ -177,6 +172,7 @@ Book
 ## 7. v0.3.0 Mobile & Personal Cloud
 
 - alpha.1 已完成 PWA manifest、Android 安装基础和移动端体验基线
+- alpha.2 已完成 single-user Authentication、私有默认路由和登录/退出
 - PWA 和 mobile UX
 - Android 安装体验，稳定后再评估 Capacitor wrapper / APK
 - single-user Authentication
@@ -185,32 +181,31 @@ Book
 
 第一版个人云端不维护手机 SQLite，不实现双向离线数据库合并同步，也不承诺 offline-first edits。
 
-## 8. v0.4.0 复试训练
+## 8. v0.4.0 Knowledge Learning Polish
 
-- InterviewQuestion
-- 30 秒、1 分钟和深入回答
-- 追问链、随机抽题和简单模拟复试
+- KnowledgePoint 常见问法、标准回答、易错点和掌握标准
+- 零碎时间学习入口与移动端学习流程优化
 
-## 9. v0.5.0 轻量 AI
+不建设独立复试题库、模拟复试、追问链系统化流程或院校专区。
 
-- AIProvider
-- 当前知识点辅助、练习题生成和复试问题生成
-- 答案润色、追问和 AI Draft
-
-## 10. v0.6.0 个人资料导入
+## 9. v0.5.0 个人资料导入
 
 - Markdown、TXT、PDF 文本提取和 Word 文本提取
 - 人工确认与来源记录
+
+## 10. v0.6.0 / RC 稳定化
+
+- 数据安全、移动端回归、自托管回归、备份恢复回归和文档
 
 ## 11. v1.0.0 长期个人版
 
 目标是稳定的长期个人电子信息专业知识系统，继续积累 Linux、ARM、驱动开发、RK3588、NPU、ONNX、RKNN、TensorRT、模型量化、模型剪枝和端侧推理等知识。
 
-v1.0 不要求多用户、商业 SaaS、RAG、Vector DB、复杂知识图谱、语音面试或全国院校数据库。
+v1.0 不要求多用户、商业 SaaS、AI Assistant、RAG、Vector DB、复杂知识图谱、独立复试系统或全国院校数据库。
 
 ## 12. Post-v1 / Only if Needed
 
-以下能力只有在产生真实需求后再评估：RAG、Embedding、Vector DB、复杂知识图谱、多用户、注册与 RBAC、商业云同步、复杂对象存储、实时同步协议、语音面试、全国院校数据库、FSRS 和复杂推荐算法。
+以下能力只有在产生真实需求后再评估：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、多用户、注册与 RBAC、商业云同步、复杂对象存储、实时同步协议、独立复试题库、模拟复试、院校专区、语音面试、全国院校数据库、FSRS 和复杂推荐算法。
 
 ## 13. 跨 AI 原则
 

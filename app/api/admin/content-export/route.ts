@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { exportKnowledgeBundle } from "@/features/content-transfer/service";
+import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
+  if (!await verifySessionToken(request.cookies.get(SESSION_COOKIE_NAME)?.value)) return NextResponse.json({ error: "未登录。" }, { status: 401 });
   const course = request.nextUrl.searchParams.get("course")?.trim() || undefined;
   try {
     const bundle = await exportKnowledgeBundle(course);

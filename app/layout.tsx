@@ -4,7 +4,7 @@ import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
   title: "研电 · EE Knowledge",
-  description: "电子信息专业知识库与复试训练系统",
+  description: "电子信息专业知识库与个人学习系统",
   applicationName: "研电 · EE Knowledge",
   manifest: "/manifest.webmanifest",
   formatDetection: { telephone: false },

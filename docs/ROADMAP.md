@@ -24,23 +24,24 @@
 
 本阶段不承诺 offline-first edits、双向 SQLite synchronization、multi-user、RBAC 或 PostgreSQL migration。
 
-## v0.4.0：Interview Training
+## v0.4.0：Knowledge Learning Polish
 
-- InterviewQuestion
-- 30 秒、1 分钟和深入回答
-- 追问链、随机抽题和简单模拟复试
+- KnowledgePoint 常见问法、标准回答和易错点整理
+- 掌握标准与知识点内容增强
+- “随便学一个”/零碎时间学习入口（如后续确认）
+- 移动端学习流程优化
 
-## v0.5.0：Lightweight AI
+本阶段不建设独立复试题库、模拟复试或目标院校复试专区。
 
-- AIProvider
-- 当前知识点辅助
-- 练习题与复试问题生成
-- 答案润色、追问和 AI Draft
-
-## v0.6.0：Personal Material Import
+## v0.5.0：Personal Material Import
 
 - Markdown、TXT、PDF 文本提取和 Word 文本提取
 - 人工确认与来源记录
+
+## v0.6.0 / RC：Stabilization
+
+- 数据安全、移动端回归和自托管回归
+- 备份/恢复回归、UI polish 和文档
 
 ## v1.0.0：Stable Personal EE Knowledge System
 
@@ -51,8 +52,8 @@
 
 以下能力只有在产生真实需求后再评估：
 
-- RAG、Embedding、Vector DB
+- Local AI、AI Assistant、AIProvider、RAG、Embedding、Vector DB
 - 复杂知识图谱
 - 多用户、注册、RBAC 和商业 SaaS
 - 复杂对象存储与实时同步协议
-- 语音面试、全国院校数据库、FSRS 和复杂推荐算法
+- 复试题库、模拟复试、目标院校专区、语音面试、全国院校数据库、FSRS 和复杂推荐算法

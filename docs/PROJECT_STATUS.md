@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.3.0-alpha.1`
+`v0.3.0-alpha.2`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前进入 `v0.3.0-alpha.1` Mobile & Personal Cloud 的 PWA / Mobile Foundation 阶段。
+第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前进入 `v0.3.0-alpha.2` Mobile & Personal Cloud 的 Single-user Authentication 阶段。
 
 ## 已完成
 
@@ -34,7 +34,7 @@
 - KnowledgeImage 图片渲染接口和 DirectMediaProvider 抽象
 - Demo Formula、Example、Relation 幂等 Seed 与验证
 - 修复对称知识关系重复展示及 Markdown、图片 URL 安全边界
-- 内容管理首页和未认证的本地管理入口 `/admin`
+- 内容管理首页和 single-user Authentication 保护的 `/admin`
 - KnowledgePoint 分页、搜索、课程过滤、审核状态过滤和 CRUD
 - 编辑页 Formula、Example、KnowledgeRelation CRUD
 - ChapterKnowledgePoint 关联和移除
@@ -76,20 +76,25 @@
 - 移动端 safe-area、standalone spacing、触摸区域和动态内容溢出保护
 - `npm run verify:pwa` PWA manifest 与 PNG 资源验证
 - Next.js `15.5.26` → `15.5.27` Maintenance LTS patch
+- 环境变量密码 hash、签名 HttpOnly session cookie 和 30 天默认 TTL
+- `middleware.ts` private-by-default 路由策略，页面未认证跳转登录，API 未认证返回 401
+- `/login`、`/api/auth/login`、`/api/auth/logout` 和 AppShell 退出登录
+- `crypto.scrypt` 密码 hash、认证 secret 生成脚本和 `verify:auth`
+- PWA manifest、图标和 Next 静态资源保持公开
 
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
-- v0.3.0-alpha.1 只完成 PWA / Mobile Foundation，不包含公网部署或 Authentication
+- v0.3.0-alpha.2 已完成 Authentication；仍不包含 HTTPS、公网部署、自动备份或 server-side SQLite 部署
 
 ## 未完成
 
-- v0.3.0：Mobile & Personal Cloud（PWA、Android 安装体验、单用户 Authentication、自托管部署、服务器端 SQLite、自动备份）
-- v0.4.0：复试训练
-- v0.5.0：轻量 AI
-- v0.6.0：个人资料导入
+- v0.3.0-alpha.3：Self-host Deployment + HTTPS + Server SQLite
+- v0.4.0：KnowledgePoint 常见问法、标准回答、易错点和移动端学习流程优化
+- v0.5.0：个人资料导入
+- v0.6.0 / RC：数据安全、移动端和自托管稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
-- Post-v1 / Only if Needed：RAG、Embedding、Vector DB、复杂知识图谱、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
+- Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
 
 ## 依赖状态
 
@@ -105,11 +110,13 @@
 ## 已知问题
 
 - Windows 环境可能出现 Next.js SWC 原生模块 fallback 警告；只要 build 最终退出码为 0，不影响本轮发布检查。
-- `/admin` 尚未接入 Authentication，仅适合本地使用或可信网络；这是当前版本的产品边界。
+- 远程公网部署仍需 HTTPS；HTTPS/self-host 属于 `v0.3.0-alpha.3`。
 - 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
-- v0.3.0 后续仍未完成：Single-user Authentication、HTTPS self-host deployment、server SQLite deployment、scheduled backup、secondary backup destination 和 Android 远程安装验收。
+- v0.3.0 后续仍未完成：HTTPS self-host deployment、server SQLite deployment、scheduled backup、secondary backup destination 和 Android 远程安装验收。
 
 ## 数据库
 
 本轮未修改 Prisma Schema 或 migration。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+
+Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。
