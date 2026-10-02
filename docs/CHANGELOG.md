@@ -1,3 +1,4 @@
+# Changelog
 ## 0.3.0-alpha.1 - 2026-10-02
 
 ### Added
@@ -18,7 +19,6 @@
 ### Next
 
 - v0.3.0-alpha.2：Single-user Authentication。
-# Changelog
 
 ## 0.2.0 - 2026-10-02
 
