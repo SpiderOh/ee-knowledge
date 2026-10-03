@@ -140,7 +140,7 @@ EE_BACKUP_SECONDARY_DIR=""
 EE_BACKUP_RETENTION_COUNT="14"
 ```
 
-Primary scheduled backup 不要求停止主应用。它使用 SQLite online backup、`.partial` 临时文件和 `integrity_check`，默认保留最新 14 个严格命名的 scheduled backup。先安装并复制 unit：
+Primary scheduled backup 不要求停止主应用。它使用 SQLite online backup、`.partial` 临时文件和 `integrity_check`，文件名为 `ee-knowledge-scheduled-YYYYMMDD-HHMMSS.db`，默认保留最新 14 个 scheduled backup。Retention 不会删除 `db:backup` 创建的 `ee-knowledge-YYYYMMDD-HHMMSS.db` cold backup，也不会删除 `db:backup:live` 创建的 `ee-knowledge-live-YYYYMMDD-HHMMSS.db`。先安装并复制 unit：
 
 ```bash
 sudo cp /opt/ee-knowledge/deploy/systemd/ee-knowledge-backup.service /etc/systemd/system/
@@ -189,7 +189,7 @@ df -T /var/backups/ee-knowledge /mnt/ee-knowledge-secondary
 EE_BACKUP_SECONDARY_DIR="/mnt/ee-knowledge-secondary"
 ```
 
-配置后，备份会拒绝同一 filesystem 的 Secondary；NAS/USB 掉线导致挂载点退化为主盘普通目录时也会失败，不会悄悄写回主系统盘。Secondary 复制失败时 Primary final backup 保留，备份 service 返回非零状态。
+配置后，备份会在任务开始和真正复制前都检查 Secondary 存在、可写且位于不同 filesystem；NAS/USB 掉线导致挂载点退化为主盘普通目录时也会失败，不会悄悄写回主系统盘。Secondary 复制失败时 Primary final backup 保留，本轮 `.partial` 会清理，备份 service 返回非零状态。
 
 ## Orange Pi / RK3588
 

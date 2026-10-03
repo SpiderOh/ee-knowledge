@@ -15,4 +15,4 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=full
-ReadWritePaths=/var/backups/ee-knowledge /mnt/ee-knowledge-secondary
+ReadWritePaths=/var/backups/ee-knowledge

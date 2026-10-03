@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { parseBackupConfig, validateBackupConfig } from "./lib/backup-config";
-import { sha256File, runSqliteIntegrityCheck } from "./lib/sqlite-backup";
-import { createVerifiedLiveBackup, nextBackupFilename, SCHEDULED_BACKUP_PATTERN } from "./lib/backup-files";
+import { assertWritableDirectory, parseBackupConfig, validateBackupConfig } from "./lib/backup-config";
+import { assertIndependentFilesystem, sha256File, runSqliteIntegrityCheck, type StatReader } from "./lib/sqlite-backup";
+import { createVerifiedLiveBackup, nextScheduledBackupFilename, SCHEDULED_BACKUP_PATTERN } from "./lib/backup-files";
 
 function stageError(stage: string, error: unknown): never {
   throw new Error(`${stage}: ${error instanceof Error ? error.message : String(error)}`);
@@ -29,13 +29,15 @@ export function pruneScheduledBackups(directory: string, retentionCount: number)
   return removed.length;
 }
 
-function copySecondary(primaryPath: string, secondaryPath: string, executable: string) {
+type CopyFile = (source: string, destination: string, flags?: number) => void;
+
+function copySecondary(primaryPath: string, secondaryPath: string, executable: string, copyFile: CopyFile = fs.copyFileSync) {
   const partialPath = `${secondaryPath}.partial`;
-  let createdPartial = false;
+  const hadPartialBefore = fs.existsSync(partialPath);
   try {
     if (fs.existsSync(secondaryPath)) throw new Error(`Secondary backup already exists: ${secondaryPath}`);
-    fs.copyFileSync(primaryPath, partialPath, fs.constants.COPYFILE_EXCL);
-    createdPartial = true;
+    if (hadPartialBefore) throw new Error(`Secondary partial already exists: ${partialPath}`);
+    copyFile(primaryPath, partialPath, fs.constants.COPYFILE_EXCL);
     const primaryHash = sha256File(primaryPath);
     const secondaryHash = sha256File(partialPath);
     if (primaryHash !== secondaryHash) throw new Error("SHA-256 mismatch between Primary and Secondary backup.");
@@ -44,13 +46,15 @@ function copySecondary(primaryPath: string, secondaryPath: string, executable: s
     console.log("Secondary integrity OK");
     fs.renameSync(partialPath, secondaryPath);
   } catch (error) {
-    if (createdPartial && fs.existsSync(partialPath)) fs.rmSync(partialPath, { force: true });
+    if (!hadPartialBefore && fs.existsSync(partialPath)) fs.rmSync(partialPath, { force: true });
     throw error;
   }
 }
 
-export function runScheduledBackup(config: ReturnType<typeof validateBackupConfig>) {
-  const filename = nextBackupFilename(config.primaryDir);
+export type ScheduledBackupOptions = { statReader?: StatReader; copyFile?: CopyFile };
+
+export function runScheduledBackup(config: ReturnType<typeof validateBackupConfig>, options: ScheduledBackupOptions = {}) {
+  const filename = nextScheduledBackupFilename(config.primaryDir);
   let primaryPath: string;
   try {
     primaryPath = createVerifiedLiveBackup(config.sourcePath, config.primaryDir, config.sqliteExecutable, filename);
@@ -72,8 +76,10 @@ export function runScheduledBackup(config: ReturnType<typeof validateBackupConfi
   }
 
   try {
+    assertWritableDirectory(config.secondaryDir, "Secondary backup");
+    assertIndependentFilesystem(config.primaryDir, config.secondaryDir, options.statReader);
     const secondaryPath = path.join(config.secondaryDir, path.basename(primaryPath!));
-    copySecondary(primaryPath!, secondaryPath, config.sqliteExecutable);
+    copySecondary(primaryPath!, secondaryPath, config.sqliteExecutable, options.copyFile);
     console.log(`Secondary file: ${secondaryPath}`);
     const removedSecondary = pruneScheduledBackups(config.secondaryDir, config.retentionCount);
     console.log(`Secondary retention removed ${removedSecondary}`);

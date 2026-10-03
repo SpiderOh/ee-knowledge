@@ -41,6 +41,8 @@ function main() {
   assert(backupService.includes("ExecStartPre=/usr/bin/npm run backup:check"), "backup systemd must check configuration first");
   assert(backupService.includes("ExecStart=/usr/bin/npm run backup:scheduled"), "backup systemd must run scheduled backup");
   assert(!backupService.includes("Requires=ee-knowledge.service") && !backupService.includes("systemctl stop"), "backup systemd must not depend on or stop the main service");
+  assert(backupService.includes("ReadWritePaths=/var/backups/ee-knowledge"), "backup systemd must allow Primary writes");
+  assert(!backupService.includes("ee-knowledge-secondary"), "backup systemd must not require an optional Secondary mountpoint");
   assert(backupTimer.includes("OnCalendar=*-*-* 03:30:00"), "backup timer must run daily");
   assert(backupTimer.includes("Persistent=true"), "backup timer must be persistent");
   assert(backupTimer.includes("RandomizedDelaySec=10m"), "backup timer must randomize daily execution");
