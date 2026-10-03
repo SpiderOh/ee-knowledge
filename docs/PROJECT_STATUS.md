@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.4.0-rc.1`
+`v0.4.0`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud 与 v0.4.0 Knowledge Learning Polish 已完成。当前为 v0.4.0-rc.1 Release Regression & Documentation。
+第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud 与 v0.4.0 Knowledge Learning Polish 已完成。当前为 v0.4.0 stable。
 
 ## 已完成
 
@@ -110,8 +110,6 @@
 
 ## 未完成
 
-- v0.4.0-rc.1：Release Regression & Documentation（当前候选）
-- v0.4.0 stable promotion：等待 RC 审查后正式发布
 - v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
@@ -126,7 +124,7 @@
 
 ## 下一步
 
-- v0.4.0 stable promotion：完成 PR #22 审查后再进行正式发布
+- v0.5.0：Personal Material Import
 
 ## 已知问题
 
@@ -138,6 +136,6 @@
 
 ## 数据库
 
-v0.4.0-rc.1 只做发布回归和文档冻结，不新增 Prisma Schema、migration、依赖或业务代码；v0.4.0 的 1 个 additive migration 已在 alpha.1 完成。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+v0.4.0 stable 未新增 Prisma Schema、migration、依赖或业务代码；v0.4.0 的 1 个 additive migration 已在 alpha.1 完成。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。
