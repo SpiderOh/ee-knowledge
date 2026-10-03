@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.4.0 - 2026-10-03
+
+### Stable highlights
+
+- KnowledgePoint learning content: common mistakes, mastery criteria, common questions and concise, standard and deep answers.
+- Knowledge Bundle v1 learning-content compatibility with schemaVersion `1.0`, additive optional fields and questions.
+- Quick Learning with status priority, course scope and read-only selection.
+- Mobile Learning Polish: Learning Info before long content, mobile textbook context, narrow-screen Q&A and previous/next navigation.
+- RC regression, release documentation and GitHub CI completed before stable promotion.
+
+### Database
+
+- v0.4.0 includes one existing additive migration: `20261003090000_add_learning_content_fields`.
+- No destructive migration, stable-release migration or user-data rewrite.
+
+### Safety
+
+- Quick Learning remains read-only and does not write learning records automatically.
+- Existing Knowledge Bundle v1 imports remain compatible.
+- Real Orange Pi, Caddy HTTPS, Android PWA, 360/390/412 visual and USB/NAS acceptance remain target-environment checks.
+
+### Next
+
+- v0.5.0 Personal Material Import.
+
 ## 0.4.0-rc.1 - 2026-10-03
 
 ### Release Candidate

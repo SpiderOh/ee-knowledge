@@ -34,14 +34,14 @@
 - alpha.2：移动端学习流程与零碎时间学习入口（complete）
 - alpha.3：Mobile Learning Polish（complete）
 - rc.1：Release Regression & Documentation（complete）
-- stable：v0.4.0 正式发布（next）
+- stable：v0.4.0 正式发布（complete）
 - 掌握标准与知识点内容增强
 - “随便学一个”/零碎时间学习入口
 - 移动端学习流程优化
 
 本阶段不建设独立复试题库、模拟复试或目标院校复试专区。
 
-## v0.5.0：Personal Material Import
+## v0.5.0：Personal Material Import（next）
 
 - Markdown、TXT、PDF 文本提取和 Word 文本提取
 - 人工确认与来源记录
