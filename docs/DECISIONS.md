@@ -345,3 +345,15 @@ Native Node + systemd + Caddy 能覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 �
 原因：
 
 快速学习服务于零碎时间入口，应能立即打开一个可读知识点，同时保持现有学习记录语义稳定，不引入推荐历史、学习事件或新的数据模型。
+
+## ADR-026：个人资料导入先做文本基础层
+
+状态：Accepted
+
+- v0.5.0-alpha.1 只支持 Markdown 和 TXT，统一走 UTF-8 文本提取。
+- 文件大小上限为 2 MB，拒绝 NUL 和无效 UTF-8，原始文件不落盘。
+- 用户必须手工确认课程、标题、slug、类别、正文和来源元数据。
+- 课程只能选择已有 Course；不从个人资料自动创建课程、教材或章节。
+- 预览生成草稿快照，确认时必须匹配当前草稿。
+- 个人资料导入只允许创建新 KnowledgePoint，已有 slug 直接阻止，不覆盖正式内容。
+- 复用 Knowledge Bundle v1 preview/import 服务，不改 Prisma schema，不写学习数据；PDF/DOCX 留到 alpha.2。

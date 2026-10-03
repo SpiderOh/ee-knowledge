@@ -41,10 +41,12 @@
 
 本阶段不建设独立复试题库、模拟复试或目标院校复试专区。
 
-## v0.5.0：Personal Material Import（next）
+## v0.5.0：Personal Material Import
 
-- Markdown、TXT、PDF 文本提取和 Word 文本提取
-- 人工确认与来源记录
+- alpha.1：Markdown/TXT 提取、人工确认、来源记录和创建型 KnowledgePoint 草稿导入（complete/current）
+- alpha.2：PDF/DOCX 文本提取，复用同一人工确认与导入管线（next）
+- rc.1：资料导入回归、数据安全和文档
+- stable：v0.5.0 正式发布
 
 ## v0.6.0 / RC：Stabilization
 

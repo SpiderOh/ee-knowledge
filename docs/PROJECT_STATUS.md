@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.4.0`
+`v0.5.0-alpha.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud 与 v0.4.0 Knowledge Learning Polish 已完成。当前为 v0.4.0 stable。
+第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud 与 v0.4.0 Knowledge Learning Polish 已完成。当前为 v0.5.0-alpha.1 Personal Material Import。
 
 ## 已完成
 
@@ -103,6 +103,9 @@
 - `docs/V0.3_RC_CHECKLIST.md` 与 `docs/V0.3_RELEASE_NOTES.md`
 - `docs/V0.4_RC_CHECKLIST.md` 与 `docs/V0.4_RELEASE_NOTES.md`
 
+- 个人资料导入 /admin/material-import：Markdown/TXT、UTF-8、2 MB 限制、人工编辑预览、来源元数据和创建型 KnowledgePoint 导入
+- npm run verify:material-import：资料导入安全边界、预览绑定和无学习副作用验证
+
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
@@ -110,8 +113,11 @@
 
 ## 未完成
 
-- v0.5.0：个人资料导入
-- v0.6.0 / RC：数据安全、移动端和自托管稳定化
+- v0.5.0-alpha.1：Markdown/TXT 个人资料导入基础（当前）
+- v0.5.0-alpha.2：PDF/DOCX 文本提取
+- v0.5.0-rc.1：资料导入回归、数据安全和文档
+- v0.5.0 stable：Personal Material Import
+- v0.6.0：后续稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
 - Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
 
@@ -124,7 +130,7 @@
 
 ## 下一步
 
-- v0.5.0：Personal Material Import
+- v0.5.0-alpha.2：PDF/DOCX 文本提取（下一步）
 
 ## 已知问题
 
@@ -136,6 +142,6 @@
 
 ## 数据库
 
-v0.4.0 stable 未新增 Prisma Schema、migration、依赖或业务代码；v0.4.0 的 1 个 additive migration 已在 alpha.1 完成。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+v0.5.0-alpha.1 未新增 Prisma Schema、migration 或依赖；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。

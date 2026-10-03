@@ -485,3 +485,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .login-error { margin: 3px 0 0; color: #b91c1c; font-size: 13px; line-height: 1.5; }
 .login-home { display: inline-block; margin-top: 22px; color: var(--blue); font-size: 13px; }
 @media (max-width: 620px) { .mobile-logout { display: flex; justify-content: flex-end; margin-bottom: 12px; } .mobile-logout button { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); padding: 8px 12px; font: inherit; cursor: pointer; } .login-page { align-items: start; padding: calc(22px + env(safe-area-inset-top)) 16px 24px; } .login-card { padding: 28px 22px; } }
+.material-import-stack { display: grid; gap: 16px; max-width: 980px; }
+.material-import-card { display: grid; gap: 16px; }
+.material-import-file { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+.material-import-file strong { color: var(--text); }
+.material-import-content { display: grid; gap: 7px; color: var(--muted); font-size: 12px; }
+.material-import-content textarea { min-height: 280px; resize: vertical; }
+@media (max-width: 620px) { .material-import-file { display: grid; gap: 4px; } }

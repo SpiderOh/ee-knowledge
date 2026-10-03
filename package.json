@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.4.0",
+  "version": "0.5.0-alpha.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -38,7 +38,8 @@
     "deploy:check": "tsx scripts/check-production-env.ts",
     "verify:deploy": "tsx scripts/verify-deployment.ts",
     "verify:backup": "tsx scripts/verify-backup.ts",
-    "verify:quick-learning": "tsx scripts/verify-quick-learning.ts"
+    "verify:quick-learning": "tsx scripts/verify-quick-learning.ts",
+    "verify:material-import": "tsx scripts/verify-material-import.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

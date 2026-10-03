@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.4.0`
+`v0.5.0-alpha.1`
 
 已完成：
 
@@ -40,4 +40,5 @@
 下一步：
 
 - v0.4.0：Knowledge Learning Polish stable
-- 下一步：v0.5.0 Personal Material Import；发布边界见 `docs/V0.4_RELEASE_NOTES.md`
+- v0.5.0-alpha.1：个人资料 Markdown/TXT 导入基础
+- 下一步：v0.5.0-alpha.2 PDF/DOCX 文本提取；发布边界见 `docs/V0.4_RELEASE_NOTES.md`
