@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.4.0-rc.1 - 2026-10-03
+
+### Release Candidate
+
+- Frozen and regressed the v0.4.0 Knowledge Learning Polish scope from alpha.1 through alpha.3.
+- Added RC checklist and release notes with explicit learning-content, Quick Learning, mobile and target-environment boundaries.
+- Version is `v0.4.0-rc.1`; next step is v0.4.0 stable promotion.
+
+### Verified
+
+- Content transfer, learning content, Quick Learning, MVP, typecheck, lint, build and production runtime regression.
+- GitHub Actions CI is required for the RC head; real Orange Pi, Caddy HTTPS, Android PWA, 360/390/412 visual inspection and USB/NAS remain target-environment checks.
+
+### Database
+
+- The RC does not modify schema, migrations, dependencies or business code.
+- v0.4.0 contains one existing additive migration; Knowledge Bundle v1 compatibility is unchanged.
+
+### Next
+
+- v0.4.0 stable promotion.
+
 ## 0.4.0-alpha.3 - 2026-10-03
 
 ### Improved

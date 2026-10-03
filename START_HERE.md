@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.4.0-alpha.3`
+`v0.4.0-rc.1`
 
 已完成：
 
@@ -39,4 +39,5 @@
 
 下一步：
 
-- v0.4.0-rc.1：Release Regression & Documentation
+- v0.4.0-rc.1：Release Regression & Documentation（当前 RC）
+- 下一步：v0.4.0 stable promotion；详见 `docs/V0.4_RC_CHECKLIST.md` 与 `docs/V0.4_RELEASE_NOTES.md`
