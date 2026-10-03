@@ -113,7 +113,7 @@
 
 ## 未完成
 
-- v0.5.0-alpha.1：Markdown/TXT 个人资料导入基础（当前）
+- v0.5.0-alpha.2：PDF/DOCX 文本提取（下一步）
 - v0.5.0-alpha.2：PDF/DOCX 文本提取
 - v0.5.0-rc.1：资料导入回归、数据安全和文档
 - v0.5.0 stable：Personal Material Import
@@ -145,3 +145,4 @@
 v0.5.0-alpha.1 未新增 Prisma Schema、migration 或依赖；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。
+
