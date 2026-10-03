@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.4.0-alpha.2",
+  "version": "0.4.0-alpha.3",
   "private": true,
   "scripts": {
     "dev": "next dev",

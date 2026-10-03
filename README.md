@@ -43,7 +43,7 @@
 
 ## 当前版本
 
-`v0.4.0-alpha.2`
+`v0.4.0-alpha.3`
 
 v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。
 
@@ -95,8 +95,8 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-当前阶段是 v0.4.0-alpha.2 Knowledge Learning Polish。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+当前阶段是 v0.4.0-alpha.3 Mobile Learning Polish。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
-v0.4.0-alpha.2 已加入 KnowledgePoint 学习内容增强和“随便学一个”快速学习入口，按学习状态优先级只读选择知识点；移动端学习流程继续完善。不建设独立复试题库、模拟复试或目标院校专区。v0.5.0 处理个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
+v0.4.0-alpha.3 已完成移动端学习信息前置、教材上下文和窄屏操作 polish，并保持“随便学一个”只读选择语义；下一步进入 v0.4.0-rc.1 发布回归。不建设独立复试题库、模拟复试或目标院校专区。v0.5.0 处理个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 
 RAG、向量数据库、复杂知识图谱、多用户、复杂同步和语音面试属于 v1.0 之后仅在产生真实需求时评估的能力。

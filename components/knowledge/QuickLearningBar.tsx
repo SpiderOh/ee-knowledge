@@ -8,10 +8,10 @@ const bucketLabels: Record<QuickLearningBucket, string> = {
   mastered: "已掌握 · 回顾",
 };
 
-export function QuickLearningBar({ slug, bucket, courseSlug }: { slug: string; bucket: QuickLearningBucket; courseSlug?: string }) {
+export function QuickLearningBar({ slug, bucket, courseSlug, courseName }: { slug: string; bucket: QuickLearningBucket; courseSlug?: string; courseName?: string }) {
   const scope = courseSlug ? `&course=${encodeURIComponent(courseSlug)}` : "";
   return <div className="quick-learning-bar" aria-label="快速学习">
-    <div><span className="eyebrow">快速学习</span><strong>当前：{bucketLabels[bucket]}</strong></div>
+    <div><span className="eyebrow">{courseName ? `快速学习 · ${courseName}` : "快速学习"}</span><strong>当前：{bucketLabels[bucket]}</strong></div>
     <div className="quick-learning-actions">
       <Link className="secondary-button" href={`/quick-learn?exclude=${encodeURIComponent(slug)}${scope}`}>换一个</Link>
       <Link className="text-button" href={`/knowledge/${slug}`}>退出快速学习</Link>

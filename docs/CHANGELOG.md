@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0-alpha.3 - 2026-10-03
+
+### Improved
+
+- 移动端 KnowledgePoint 学习流程：Learning Info 和学习操作在长正文之前可达。
+- 移动端教材目录上下文复用 `ChapterTree`，并保持当前知识点选中状态。
+- Quick Learning 仅在 `quickCourse` 与当前 KnowledgePoint 课程一致时保留范围。
+- 常见问法 summary、上一/下一知识点和学习操作适配窄屏触控与换行。
+
+### Database
+
+- No schema change
+- No migration
+
+### Next
+
+- v0.4.0-rc.1 Release Regression & Documentation
+
 ## 0.4.0-alpha.2 - 2026-10-03
 
 ### Added

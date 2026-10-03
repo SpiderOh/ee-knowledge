@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.4.0-alpha.2`
+`v0.4.0-alpha.3`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 与 `v0.3.0` Mobile & Personal Cloud 已完成。当前为 `v0.4.0-alpha.2`，已加入 KnowledgePoint 学习内容增强和只读快速学习入口。
+第一阶段 Knowledge Base MVP 与 `v0.3.0` Mobile & Personal Cloud 已完成。当前为 `v0.4.0-alpha.3`，已完成移动端 KnowledgePoint 学习流程 polish。
 
 ## 已完成
 
@@ -42,6 +42,9 @@
 - KnowledgePoint 易错点、掌握标准、常见问法与简短/标准/深入回答 CRUD
 - 学习内容搜索、前台 Markdown 展示和隔离学习内容验证
 - 快速学习 `/quick-learn`：按 REVIEW > LEARNING > NOT_STARTED > MASTERED 选择知识点，支持课程范围、排除当前知识点和随机偏移
+- 移动端 Learning Info 前置、移动端教材目录上下文和窄屏学习操作优化
+- Quick Learning course scope consistency：仅保留与当前 KnowledgePoint 课程一致的范围
+- 常见问法 summary 窄屏换行与上一/下一知识点移动端触控布局
 - `npm run verify:content` 内容传输验证
 - PR #4 稳定性修复：Markdown Preview 保存保护、Import Preview 内容绑定、已有 Course/SubjectArea 引用导入、子实体 ownership、`db:` key 防劫持、空 Course 导出和关系稳定排序
 - PR #4 本轮修复：管理后台空 reviewStatus 参数归一化、跨数据库 identity 预览计数、确定性 Formula/Example ownership、Bundle 部分更新与 sortOrder 默认语义
@@ -106,8 +109,7 @@
 
 ## 未完成
 
-- v0.4.0-alpha.3：内容质量与学习体验 polish
-- v0.4.0-rc.1：发布回归与文档
+- v0.4.0-rc.1：Release Regression & Documentation
 - v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
@@ -122,13 +124,13 @@
 
 ## 下一步
 
-- v0.4.0-alpha.3：内容质量与学习体验 polish
+- v0.4.0-rc.1：Release Regression & Documentation
 
 ## 已知问题
 
 - Windows 环境可能出现 Next.js SWC 原生模块 fallback 警告；只要 build 最终退出码为 0，不影响本轮发布检查。
 - 真实公网 HTTPS、systemd 服务和 Android 安装仍需在目标服务器上分别验收；本仓库只提供模板和静态检查。
-- 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
+- 移动端教材目录使用内容区域中的原生可折叠目录，后续不默认引入独立抽屉。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
 - 真实 Orange Pi/NAS、systemd timer、Caddy HTTPS、Android PWA 和 backup E2E regression 仍需目标环境验收；本机隔离运行时回归已完成。
 

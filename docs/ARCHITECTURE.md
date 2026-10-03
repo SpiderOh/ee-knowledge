@@ -183,6 +183,8 @@ KnowledgePoint 的 `commonMistakes` 和 `masteryCriteria` 保存学习正文增�
 
 快速学习位于 `features/quick-learning/queries.ts`，页面只读取 KnowledgePoint、Course 和可选的 StudyProgress。查询按 `REVIEW > LEARNING > NOT_STARTED > MASTERED` 分桶，使用 `count + skip` 和注入的随机函数选择单条记录；不写入任何学习或内容数据。`/quick-learn` 负责参数校验和重定向，知识点页通过 `quick=1` 显示可退出的上下文操作条。
 
+KnowledgePoint 页面在桌面端保持 Book Sidebar | Article | Learning Aside；移动端按 Header、Quick Bar、Learning Aside、可选 MobileBookContext、Article、Notes、Prev/Next 排列。MobileBookContext 只接收经过 `getBookContext` 验证的 `validBook`，复用 `ChapterTree`，不增加新的布局层。
+
 ## 7. RAG（Post-v1 / Only if Needed）
 
 RAG 只能作为知识检索层，不得替代正式知识实体。

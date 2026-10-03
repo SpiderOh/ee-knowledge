@@ -32,8 +32,8 @@
 
 - alpha.1：KnowledgePoint 常见问法、标准回答、易错点和掌握标准
 - alpha.2：移动端学习流程与零碎时间学习入口（complete）
-- alpha.3：内容质量和学习体验 polish（next）
-- rc.1：发布回归与文档
+- alpha.3：Mobile Learning Polish（complete）
+- rc.1：Release Regression & Documentation（next）
 - stable：v0.4.0 正式发布
 - 掌握标准与知识点内容增强
 - “随便学一个”/零碎时间学习入口
