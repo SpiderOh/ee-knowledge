@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.3.0-alpha.4",
+  "version": "0.3.0-rc.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -29,6 +29,7 @@
     "verify:statistics": "tsx scripts/verify-statistics.ts",
     "verify:mvp": "tsx scripts/verify-mvp.ts",
     "release:check": "tsx scripts/release-check.ts",
+    "verify:runtime": "tsx scripts/verify-runtime.ts",
     "verify:pwa": "tsx scripts/verify-pwa.ts",
     "auth:hash-password": "tsx scripts/hash-auth-password.ts --",
     "auth:generate-secret": "tsx scripts/generate-auth-secret.ts",

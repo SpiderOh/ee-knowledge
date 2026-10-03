@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0-alpha.4`
+`v0.3.0-rc.1`
 
 已完成：
 
@@ -36,4 +36,4 @@
 
 下一步：
 
-- v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression
+- v0.3.0 stable：Mobile & Personal Cloud（当前 RC 通过后发布）

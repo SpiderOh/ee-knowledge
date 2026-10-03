@@ -1,4 +1,25 @@
 # Changelog
+
+## 0.3.0-rc.1 - 2026-10-03
+
+### Added
+
+- 增加 `verify:runtime`，在 disposable SQLite 上启动已构建的生产 Next.js 并回归公开路由、私有页面、认证 API、登录、unsafe `next` 和退出登录。
+- 增加 Node 20、SQLite CLI、migration、只读完整性检查和 release gate 的 GitHub Actions CI。
+- 增加 v0.3 RC checklist 与 release notes。
+
+### Verified
+
+- PWA、Authentication、self-host、scheduled backup、MVP、typecheck、lint、build 与运行时回归均纳入 `release:check`。
+
+### Not yet target-verified
+
+- 真实 Orange Pi/NAS、systemd timer、Caddy 公网 HTTPS、Android 安装和 USB/NAS 掉线场景仍需目标环境验收。
+
+### Next
+
+- v0.3.0 stable：Mobile & Personal Cloud 正式发布。
+
 ## 0.3.0-alpha.4 - 2026-10-02
 
 ### Added

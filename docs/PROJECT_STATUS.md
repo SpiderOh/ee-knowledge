@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.3.0-alpha.4`
+`v0.3.0-rc.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前完成 `v0.3.0-alpha.4` Mobile & Personal Cloud 的 PWA、Authentication、Linux self-host、HTTPS、server-side SQLite 和 scheduled backup 基础。
+第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前为 `v0.3.0-rc.1` Mobile & Personal Cloud 候选版本，已完成 PWA、Authentication、Linux self-host、HTTPS、server-side SQLite、scheduled backup 基础以及隔离生产运行时回归验证。
 
 ## 已完成
 
@@ -92,15 +92,18 @@
 - optional mounted Secondary backup destination，配置后要求不同 filesystem
 - Secondary `.partial`、SHA-256、SQLite `integrity_check` 和 Primary 保留保护
 - `npm run db:backup:live`、`npm run backup:check`、`npm run backup:scheduled`、`npm run verify:backup`
+- `npm run verify:runtime`：使用 disposable SQLite 启动生产构建并验证公开、私有、登录、认证 API、unsafe next 和退出登录
+- `.github/workflows/ci.yml`：Node 20、SQLite CLI、migration、db:check 与 release:check CI
+- `docs/V0.3_RC_CHECKLIST.md` 与 `docs/V0.3_RELEASE_NOTES.md`
 
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
-- v0.3.0-alpha.4 已完成 scheduled backup 与 secondary backup destination；真实 USB/NAS 和 systemd timer 仍需目标环境验收
+- v0.3.0-rc.1 已完成 scheduled backup、secondary backup destination 和隔离运行时回归；真实 USB/NAS 和 systemd timer 仍需目标环境验收
 
 ## 未完成
 
-- v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression
+- v0.3.0 stable：Mobile & Personal Cloud 正式发布
 - v0.4.0：KnowledgePoint 常见问法、标准回答、易错点和移动端学习流程优化
 - v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
@@ -116,7 +119,7 @@
 
 ## 下一步
 
-- v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression
+- v0.3.0 stable：Mobile & Personal Cloud 正式发布
 
 ## 已知问题
 
@@ -124,7 +127,7 @@
 - 真实公网 HTTPS、systemd 服务和 Android 安装仍需在目标服务器上分别验收；本仓库只提供模板和静态检查。
 - 移动端教材目录仍是内容区域中的可折叠目录，没有独立抽屉交互。
 - 图片仍只支持 Markdown 引用和显示接口，尚未接入上传与媒体库。
-- v0.3.0-rc.1 仍未完成：真实部署、HTTPS、Android PWA 和 backup E2E regression 验收。
+- 真实 Orange Pi/NAS、systemd timer、Caddy HTTPS、Android PWA 和 backup E2E regression 仍需目标环境验收；本机隔离运行时回归已完成。
 
 ## 数据库
 

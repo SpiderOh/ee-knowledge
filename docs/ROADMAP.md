@@ -19,6 +19,7 @@
 - alpha.3：Linux self-host deployment、HTTPS reverse proxy 和 server-side SQLite
 - alpha.4：scheduled backup 与 secondary backup destination（complete）
 - rc.1：Mobile & Personal Cloud End-to-End Regression
+- stable：v0.3.0 正式发布（RC 验证完成后）
 - PWA 与 mobile UX
 - Android 安装体验，后续再评估 Capacitor wrapper / APK
 - 单用户 Authentication
