@@ -186,6 +186,9 @@ Book
 
 - KnowledgePoint 常见问法、标准回答、易错点和掌握标准
 - 复用 InterviewQuestion/InterviewAnswer 保存通用知识问答；不建设独立复试题库
+- alpha.2 已完成只读快速学习入口 `/quick-learn`
+- 快速学习优先选择 `REVIEW > LEARNING > NOT_STARTED > MASTERED`；缺少 `StudyProgress` 的知识点按 `NOT_STARTED` 处理
+- 快速学习支持课程范围、排除当前知识点和同一优先级内的随机偏移，不写入学习、复习、练习、收藏或笔记数据
 - 零碎时间学习入口与移动端学习流程优化
 
 不建设独立复试题库、模拟复试、追问链系统化流程或院校专区。

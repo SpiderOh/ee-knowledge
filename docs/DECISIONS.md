@@ -329,3 +329,19 @@ Native Node + systemd + Caddy 能覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 �
 状态：Accepted
 
 `commonMistakes` 与 `masteryCriteria` 作为 KnowledgePoint 可选正文列；常见问法复用现有 `InterviewQuestion`/`InterviewAnswer` 关系，按 `SHORT_30S`、`MEDIUM_1MIN`、`DEEP` 映射用户可见回答。管理端嵌入 KnowledgeEditor，前台只读展示，不建设独立复试题库或新的问答数据模型。Bundle v1 通过可选字段和 `questions` 扩展保持向后兼容。
+
+---
+
+## ADR-025：快速学习保持只读并按学习状态优先级选择
+
+状态：Accepted
+
+规则：
+
+- `/quick-learn` 只读取 KnowledgePoint、Course 和 StudyProgress，不写入 StudyProgress、ReviewRecord、PracticeAttempt、Favorite 或 Note。
+- 选择优先级固定为 `REVIEW > LEARNING > NOT_STARTED > MASTERED`；没有 StudyProgress 行的知识点属于 `NOT_STARTED`。
+- 每个非空分桶只查询一条记录，使用 `count + skip` 进行可注入的随机偏移；支持课程范围和排除当前知识点，排除后无候选时最多重试一次。
+
+原因：
+
+快速学习服务于零碎时间入口，应能立即打开一个可读知识点，同时保持现有学习记录语义稳定，不引入推荐历史、学习事件或新的数据模型。

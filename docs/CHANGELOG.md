@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0-alpha.2 - 2026-10-03
+
+### Added
+
+- 新增只读快速学习入口 `/quick-learn`，按 REVIEW、LEARNING、NOT_STARTED、MASTERED 优先级选择知识点。
+- 首页增加“随便学一个”，课程详情增加“随便学本课程”，知识点页增加快速学习上下文操作条。
+- 新增 `verify:quick-learning`，覆盖课程范围、排除、单候选重试、随机偏移、缺少学习记录和无副作用语义。
+
+### Safety
+
+- 本轮未修改 Prisma Schema、migration 或任何学习数据写路径。
+
 ## 0.4.0-alpha.1 - 2026-10-03
 
 ### Added
