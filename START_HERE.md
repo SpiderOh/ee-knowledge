@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.4.0-alpha.1`
+`v0.4.0-alpha.2`
 
 已完成：
 
@@ -34,7 +34,8 @@
 - SQLite online scheduled backup、daily systemd timer、Primary retention 和可选独立 Secondary backup
 - Secondary same-filesystem fail-closed、SHA-256 与 SQLite integrity_check 验证
 - GitHub Actions CI 与 production runtime verification
+- `/quick-learn` 快速学习入口、课程范围和学习状态优先级选择
 
 下一步：
 
-- v0.4.0-alpha.1 KnowledgePoint 学习内容：常见问法、回答、易错点和掌握标准
+- v0.4.0-alpha.3：内容质量与学习体验 polish

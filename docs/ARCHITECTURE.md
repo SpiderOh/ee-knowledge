@@ -181,6 +181,8 @@ VERIFIED
 
 KnowledgePoint 的 `commonMistakes` 和 `masteryCriteria` 保存学习正文增强；通用问答复用 `InterviewQuestion` 与 `InterviewAnswer`，前台按简短、标准、深入回答展示，管理端在 KnowledgeEditor 内维护。Knowledge Bundle v1 以可选字段和 `questions` 扩展，缺省字段保持原值，null 清空。
 
+快速学习位于 `features/quick-learning/queries.ts`，页面只读取 KnowledgePoint、Course 和可选的 StudyProgress。查询按 `REVIEW > LEARNING > NOT_STARTED > MASTERED` 分桶，使用 `count + skip` 和注入的随机函数选择单条记录；不写入任何学习或内容数据。`/quick-learn` 负责参数校验和重定向，知识点页通过 `quick=1` 显示可退出的上下文操作条。
+
 ## 7. RAG（Post-v1 / Only if Needed）
 
 RAG 只能作为知识检索层，不得替代正式知识实体。

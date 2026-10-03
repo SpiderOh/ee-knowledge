@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.4.0-alpha.1`
+`v0.4.0-alpha.2`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 与 `v0.3.0` Mobile & Personal Cloud 已完成。当前为 `v0.4.0-alpha.1`，已加入 KnowledgePoint 学习内容增强：易错点、掌握标准、常见问法和多层次回答。
+第一阶段 Knowledge Base MVP 与 `v0.3.0` Mobile & Personal Cloud 已完成。当前为 `v0.4.0-alpha.2`，已加入 KnowledgePoint 学习内容增强和只读快速学习入口。
 
 ## 已完成
 
@@ -41,6 +41,7 @@
 - Knowledge Bundle v1 的 Zod 校验、预览、Merge/Upsert 导入和稳定导出
 - KnowledgePoint 易错点、掌握标准、常见问法与简短/标准/深入回答 CRUD
 - 学习内容搜索、前台 Markdown 展示和隔离学习内容验证
+- 快速学习 `/quick-learn`：按 REVIEW > LEARNING > NOT_STARTED > MASTERED 选择知识点，支持课程范围、排除当前知识点和随机偏移
 - `npm run verify:content` 内容传输验证
 - PR #4 稳定性修复：Markdown Preview 保存保护、Import Preview 内容绑定、已有 Course/SubjectArea 引用导入、子实体 ownership、`db:` key 防劫持、空 Course 导出和关系稳定排序
 - PR #4 本轮修复：管理后台空 reviewStatus 参数归一化、跨数据库 identity 预览计数、确定性 Formula/Example ownership、Bundle 部分更新与 sortOrder 默认语义
@@ -105,7 +106,6 @@
 
 ## 未完成
 
-- v0.4.0-alpha.2：移动端学习流程与零碎时间学习入口
 - v0.4.0-alpha.3：内容质量与学习体验 polish
 - v0.4.0-rc.1：发布回归与文档
 - v0.5.0：个人资料导入
@@ -122,7 +122,7 @@
 
 ## 下一步
 
-- v0.4.0-alpha.2 Quick Learning： “随便学一个” / 零碎时间学习入口
+- v0.4.0-alpha.3：内容质量与学习体验 polish
 
 ## 已知问题
 
@@ -134,6 +134,6 @@
 
 ## 数据库
 
-本轮新增 KnowledgePoint 学习内容字段和一条 additive Prisma migration。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+本轮新增 Quick Learning 只读查询和验证脚本，不修改 Prisma Schema、migration 或用户学习数据。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。
