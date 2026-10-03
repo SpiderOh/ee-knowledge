@@ -2,7 +2,7 @@
 
 ## Current stage
 
-当前实现范围是 `v0.3.0-alpha.4`：PWA、Android 安装基础、移动端体验、single-user Authentication、Linux self-host deployment 和 scheduled backup 基础。
+当前候选版本是 `v0.3.0-rc.1`：PWA、Android 安装基础、移动端体验、single-user Authentication、Linux self-host deployment、scheduled backup 和隔离运行时回归。
 
 ## Install model
 
@@ -30,4 +30,4 @@ alpha.1 不支持 offline writes、离线写入队列、业务数据镜像、Ind
 
 ## Scope boundaries
 
-本阶段已包含 single-user Authentication、self-host deployment、scheduled backup 和 secondary backup destination 基础；不包含 Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0-rc.1` Mobile & Personal Cloud End-to-End Regression。
+本阶段已包含 single-user Authentication、self-host deployment、scheduled backup、secondary backup destination 基础和隔离运行时回归；不包含 Capacitor APK、原生 Android UI、多用户或同步冲突解决。下一阶段为 `v0.3.0` stable 发布。
