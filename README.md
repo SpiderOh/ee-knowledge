@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v0.3.0-alpha.3`
+`v0.3.0-alpha.4`
 
-v0.2.0 已正式发布。v0.3.0-alpha.3 已加入 PWA、Android 安装基础、移动端体验、单用户 Authentication 和 Linux self-host deployment 基础。
+v0.2.0 已正式发布。v0.3.0-alpha.4 已加入 PWA、Android 安装基础、单用户 Authentication、Linux self-host deployment、HTTPS、server-side SQLite 和 scheduled backup 基础。
 
 ## 第一阶段 MVP
 
@@ -95,7 +95,7 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-下一阶段是 v0.3.0 Mobile & Personal Cloud，继续建设 scheduled backup 与 secondary backup destination。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+下一阶段是 v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
 v0.4.0 聚焦 KnowledgePoint 学习内容增强，包括常见问法、标准回答、易错点和移动端学习流程；不建设独立复试题库、模拟复试或目标院校专区。v0.5.0 处理个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 

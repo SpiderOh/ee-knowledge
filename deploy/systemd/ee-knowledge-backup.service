@@ -1,0 +1,18 @@
+[Unit]
+Description=EE Knowledge scheduled SQLite backup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ee-knowledge
+Group=ee-knowledge
+WorkingDirectory=/opt/ee-knowledge
+EnvironmentFile=/etc/ee-knowledge/ee-knowledge.env
+ExecStartPre=/usr/bin/npm run backup:check
+ExecStart=/usr/bin/npm run backup:scheduled
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=/var/backups/ee-knowledge

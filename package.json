@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.3.0-alpha.3",
+  "version": "0.3.0-alpha.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,10 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:check": "tsx scripts/check-db-integrity.ts",
     "db:backup": "tsx scripts/backup-db.ts",
+    "db:backup:live": "tsx scripts/live-backup-db.ts",
     "db:restore": "tsx scripts/restore-db.ts",
+    "backup:check": "tsx scripts/check-backup-config.ts",
+    "backup:scheduled": "tsx scripts/scheduled-backup.ts",
     "verify:demo": "tsx scripts/verify-demo-data.ts",
     "verify:content": "tsx scripts/verify-content-transfer.ts",
     "verify:admin-query": "tsx scripts/verify-admin-query.ts",
@@ -31,7 +34,8 @@
     "auth:generate-secret": "tsx scripts/generate-auth-secret.ts",
     "verify:auth": "tsx scripts/verify-auth.ts",
     "deploy:check": "tsx scripts/check-production-env.ts",
-    "verify:deploy": "tsx scripts/verify-deployment.ts"
+    "verify:deploy": "tsx scripts/verify-deployment.ts",
+    "verify:backup": "tsx scripts/verify-backup.ts"
   },
   "dependencies": {
     "@prisma/client": "6.16.2",

@@ -8,6 +8,7 @@
 - ARM64 或 x86_64
 - Node.js 20 LTS 或更高版本
 - npm、Git、systemd
+- `sqlite3` CLI（live / scheduled backup 必需）
 - Caddy 2
 - 一个解析到服务器的域名（启用公网 HTTPS 时）
 
@@ -17,7 +18,8 @@
 /opt/ee-knowledge                         # 应用代码
 /var/lib/ee-knowledge/ee-knowledge.db     # 生产 SQLite
 /etc/ee-knowledge/ee-knowledge.env        # 生产环境变量
-/var/backups/ee-knowledge                 # 手动备份目录，可预留
+/var/backups/ee-knowledge                 # Primary scheduled backup
+/mnt/ee-knowledge-secondary               # 可选：独立 USB SSD / NAS 挂载点
 ```
 
 生产数据库不应放在仓库的 `prisma/dev.db`。应用服务使用非 root 用户 `ee-knowledge` 运行。
@@ -40,6 +42,13 @@ sudo -u ee-knowledge npm run build
 sudo cp deploy/ee-knowledge.env.example /etc/ee-knowledge/ee-knowledge.env
 sudo chown root:ee-knowledge /etc/ee-knowledge/ee-knowledge.env
 sudo chmod 0640 /etc/ee-knowledge/ee-knowledge.env
+```
+
+Debian / Ubuntu 安装系统 SQLite CLI：
+
+```bash
+sudo apt update
+sudo apt install sqlite3
 ```
 
 编辑 `/etc/ee-knowledge/ee-knowledge.env`，填写服务器绝对路径和凭证：
@@ -121,11 +130,81 @@ sudo systemctl start ee-knowledge
 
 备份命令只注入不含 secret 的 `DATABASE_URL`；服务重新启动时由 systemd EnvironmentFile 读取全部 production env，并自动执行 deploy:check、migration deploy 和 db:check。备份脚本会检查 SQLite 文件头并拒绝带有 `.db-journal`、`.db-wal` 或 `.db-shm` sidecar 的数据库。不要绕过这些检查，也不要在应用仍写入数据库时复制文件。升级后通过 HTTPS 页面、登录、课程页面和管理 API 做基本 smoke test。
 
-本 alpha 只记录手动升级前备份流程，不实现 scheduled backup 或 secondary backup destination。
+## Scheduled backup
+
+生产环境模板包含：
+
+```env
+EE_BACKUP_DIR="/var/backups/ee-knowledge"
+EE_BACKUP_SECONDARY_DIR=""
+EE_BACKUP_RETENTION_COUNT="14"
+```
+
+Primary scheduled backup 不要求停止主应用。它使用 SQLite online backup、`.partial` 临时文件和 `integrity_check`，文件名为 `ee-knowledge-scheduled-YYYYMMDD-HHMMSS.db`，默认保留最新 14 个 scheduled backup。Retention 不会删除 `db:backup` 创建的 `ee-knowledge-YYYYMMDD-HHMMSS.db` cold backup，也不会删除 `db:backup:live` 创建的 `ee-knowledge-live-YYYYMMDD-HHMMSS.db`。先安装并复制 unit：
+
+```bash
+sudo cp /opt/ee-knowledge/deploy/systemd/ee-knowledge-backup.service /etc/systemd/system/
+sudo cp /opt/ee-knowledge/deploy/systemd/ee-knowledge-backup.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+```
+
+首次启用 timer 前，使用与定时任务相同的 systemd 环境手动执行一次：
+
+```bash
+sudo systemctl start ee-knowledge-backup.service
+sudo systemctl status ee-knowledge-backup.service
+sudo journalctl -u ee-knowledge-backup.service -n 100 --no-pager
+```
+
+确认成功后启用每日 03:30（带最多 10 分钟随机延迟、关机补跑）的 timer：
+
+```bash
+sudo systemctl enable --now ee-knowledge-backup.timer
+sudo systemctl list-timers ee-knowledge-backup.timer
+```
+
+backup service 不依赖、不停止也不重启 `ee-knowledge.service`。备份失败只会让备份 service/timer 进入失败状态，主应用继续运行。日志会记录 Primary 文件、integrity、Secondary 状态、SHA-256 和 retention 数量；不会记录认证凭证。
+
+## Secondary mounted filesystem
+
+Secondary 是可选能力。没有第二块盘时保持 `EE_BACKUP_SECONDARY_DIR=""`，Primary scheduled backup 仍正常运行。
+
+推荐挂载点：
+
+```text
+/mnt/ee-knowledge-secondary
+```
+
+创建目录不等于 Secondary 已准备好。必须先把 USB SSD、NAS/NFS 或 SMB 等独立 filesystem 真正挂载到该路径，再检查：
+
+```bash
+sudo install -d -o ee-knowledge -g ee-knowledge /mnt/ee-knowledge-secondary
+findmnt /mnt/ee-knowledge-secondary
+df -T /var/backups/ee-knowledge /mnt/ee-knowledge-secondary
+```
+
+确认 `findmnt` 显示真实挂载且 `df -T` 与 Primary filesystem 不同后，把 `/etc/ee-knowledge/ee-knowledge.env` 改为：
+
+```env
+EE_BACKUP_SECONDARY_DIR="/mnt/ee-knowledge-secondary"
+```
+
+配置后，备份会在任务开始和真正复制前都检查 Secondary 存在、可写且位于不同 filesystem；NAS/USB 掉线导致挂载点退化为主盘普通目录时也会失败，不会悄悄写回主系统盘。Secondary 复制失败时 Primary final backup 保留，本轮 `.partial` 会清理，备份 service 返回非零状态。
 
 ## Orange Pi / RK3588
 
-ARM64 Linux 使用与普通 Debian/Ubuntu 相同的目录、systemd unit、Caddy 配置和环境变量，不建立 Orange Pi 专用代码分支。建议把 `/var/lib/ee-knowledge` 放在 NVMe，而不是 TF 卡；Node.js 应使用正式 ARM64 版本，并在目标设备执行 `npm ci`，以安装目标架构对应的原生依赖。
+ARM64 Linux 使用与普通 Debian/Ubuntu 相同的目录、systemd unit、Caddy 配置和环境变量，不建立 Orange Pi 专用代码分支。建议：
+
+```text
+NVMe：
+/var/lib/ee-knowledge              production SQLite
+/var/backups/ee-knowledge          Primary backup
+
+USB SSD / NAS：
+/mnt/ee-knowledge-secondary        Secondary backup
+```
+
+Primary 同一 NVMe 主要防误删、逻辑损坏和错误更新，不能防 NVMe 物理故障；独立 USB SSD/NAS Secondary 才能增加这一层保护。Node.js 应使用正式 ARM64 版本，并在目标设备执行 `npm ci`，以安装目标架构对应的原生依赖。
 
 家庭 NAT 环境通常需要公网域名、DNS、80/443 端口转发或等效网络能力，Caddy 才能完成公网证书签发。Tailscale 或其他 private network HTTPS 可以作为可选方向，但本项目不依赖它，也不提供自动安装脚本。
 
@@ -149,4 +228,4 @@ npm run deploy:check
 
 该命令应在 systemd 已加载 `/etc/ee-knowledge/ee-knowledge.env` 的服务上下文中运行；本地开发 `.env` 不应被当作 production env。直接在普通 shell 中运行而没有显式加载 production EnvironmentFile，不能代表生产检查结果。本仓库验证不能替代目标机器上的真实 systemd、Caddy 公网 HTTPS 或 Android 安装验收。部署完成后应记录服务日志、HTTPS 登录和数据库读写结果。
 
-本轮未实现：scheduled backup、secondary backup destination、Docker/Kubernetes/PM2、PostgreSQL、offline writes、业务 service-worker cache、Local AI 和 v0.4 学习体验增强。
+本轮未实现：Docker/Kubernetes/PM2、PostgreSQL、offline writes、业务 service-worker cache、Local AI 和 v0.4 学习体验增强。真实 USB/NAS、systemd timer、HTTPS 和 Android 安装仍需目标环境验收。

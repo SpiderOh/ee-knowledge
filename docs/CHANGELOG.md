@@ -1,4 +1,30 @@
 # Changelog
+## 0.3.0-alpha.4 - 2026-10-02
+
+### Added
+
+- SQLite online scheduled backup，不停止运行中的主应用。
+- daily systemd backup service/timer、Primary retention 和 `verify:backup`。
+- 可选 mounted Secondary backup destination，使用同一文件名复制。
+- Secondary SHA-256、SQLite `integrity_check` 和 `.partial` 原子完成流程。
+- 分离 cold、人工 live 与 scheduled backup filename namespace，避免 retention 误删手动备份。
+
+### Safety
+
+- 配置的 Secondary 与 Primary 位于同一 filesystem 时 fail closed。
+- Secondary 失败时保留已完成的 Primary backup。
+- Primary-only systemd 不再要求可选 Secondary 挂载点；Secondary 复制前重新检查 filesystem，并清理失败的本轮 `.partial`。
+- 不自动 restore；retention 只清理严格匹配的 scheduled backup 文件名。
+- 未引入 S3、WebDAV、rclone 或其他 cloud SDK。
+
+### Database
+
+- 未修改 Prisma Schema、migration 或 Knowledge Bundle。
+
+### Next
+
+- v0.3.0-rc.1：Mobile & Personal Cloud End-to-End Regression。
+
 ## 0.3.0-alpha.3 - 2026-10-02
 
 ### Added
