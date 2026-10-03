@@ -173,8 +173,15 @@ export async function importKnowledgeBundle(input: string | unknown) {
          }
          for (const question of point.questions ?? []) {
            const identity = await resolveQuestionIdentity(tx, pointId, point.slug, question.key); if (!identity.ownershipValid) throw new Error(`${question.key}: Question identity 指向其他知识点。`);
-           const questionData = { question: question.question, level: question.level ?? 1, frequency: question.frequency ?? 3, source: question.source ?? null };
-           const saved = identity.exists ? await tx.interviewQuestion.update({ where: { id: identity.id }, data: questionData }) : await tx.interviewQuestion.create({ data: { id: identity.id, knowledgePointId: pointId, ...questionData } });
+           const createData = { id: identity.id, knowledgePointId: pointId, question: question.question, level: question.level ?? 1, frequency: question.frequency ?? 3, source: question.source ?? null };
+           if (identity.exists) {
+             const updateData: Prisma.InterviewQuestionUncheckedUpdateInput = { question: question.question };
+             if (has(question, "level")) updateData.level = question.level;
+             if (has(question, "frequency")) updateData.frequency = question.frequency;
+             if (has(question, "source")) updateData.source = question.source;
+             await tx.interviewQuestion.update({ where: { id: identity.id }, data: updateData });
+           }
+           const saved = identity.exists ? { id: identity.id } : await tx.interviewQuestion.create({ data: createData });
            const answerValues: Array<[InterviewAnswerType, string | null | undefined]> = [[InterviewAnswerType.SHORT_30S, question.shortAnswer], [InterviewAnswerType.MEDIUM_1MIN, question.standardAnswer], [InterviewAnswerType.DEEP, question.deepAnswer]];
            for (const [answerType, content] of answerValues) {
              if (content === undefined) continue;

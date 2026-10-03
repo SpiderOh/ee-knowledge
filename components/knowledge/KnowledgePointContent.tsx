@@ -30,8 +30,8 @@ export function KnowledgePointContent({ point }: { point: KnowledgePointContentD
     {section("engineeringMeaning", "工程意义")}
     {section("commonMistakes", "易错点")}
     {section("masteryCriteria", "掌握标准")}
-    <KnowledgeQuestionSection questions={point.interviewQuestions} />
     <ExampleSection examples={point.examples} />
+    <KnowledgeQuestionSection questions={point.interviewQuestions} />
     <KnowledgeRelations relations={relations} />
   </div>;
 }

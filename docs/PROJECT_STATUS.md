@@ -109,7 +109,6 @@
 - v0.4.0-alpha.3：内容质量与学习体验 polish
 - v0.4.0-rc.1：发布回归与文档
 - v0.5.0：个人资料导入
-- v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
 - Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
@@ -123,7 +122,7 @@
 
 ## 下一步
 
-- v0.4.0-alpha.2 Knowledge Learning Polish 后续迭代
+- v0.4.0-alpha.2 Quick Learning： “随便学一个” / 零碎时间学习入口
 
 ## 已知问题
 
