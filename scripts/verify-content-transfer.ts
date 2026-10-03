@@ -36,6 +36,11 @@ async function main() {
   assert(MAX_BUNDLE_BYTES === 2 * 1024 * 1024, "应用级 Bundle 限制不应改变");
   const oversized = parseKnowledgeBundle("x".repeat(MAX_BUNDLE_BYTES + 1));
   assert(!oversized.ok && oversized.errors.includes("Knowledge Bundle 超过 2 MB 限制。"), "超过 2 MB 应显示应用级错误");
+  const duplicateQuestionBundle = { kind: "ee-knowledge-content" as const, schemaVersion: "1.0" as const, subjectAreas: [], courses: [], knowledgePoints: [{ slug: pointSlug, courseSlug, title: "验证知识点", questions: [{ key: "duplicate", question: "A" }, { key: "duplicate", question: "B" }] }], relations: [] };
+  const duplicateParsed = parseKnowledgeBundle(duplicateQuestionBundle);
+  assert(!duplicateParsed.ok && duplicateParsed.errors.some((error) => error.includes("Question key 重复")), "重复 Question key 未被 parse 拒绝");
+  const duplicatePreview = await previewKnowledgeBundle(duplicateQuestionBundle);
+  assert(!duplicatePreview.ok && duplicatePreview.errors.some((error) => error.includes("Question key 重复")), "重复 Question key 未被 preview 拒绝");
   await cleanup();
   try {
     const first = await importKnowledgeBundle(bundle()); if (!first.ok) throw new Error(`第一次导入失败：${first.errors.join("；")}`);
@@ -84,17 +89,24 @@ async function main() {
     assert(nativeOwnership.knowledgePointId === deterministicOwner.id && nativeOwnership.question === "native owner", "Native Question ownership 失败时改变了原记录");
 
     const existingQuestionId = questionIdForImport(pointSlug, "common");
-    await prisma.interviewQuestion.update({ where: { id: existingQuestionId }, data: { question: "old", level: 4, frequency: 5, source: "original-source" } });
+    const fullAnswerBundle = { kind: "ee-knowledge-content" as const, schemaVersion: "1.0" as const, subjectAreas: [], courses: [], knowledgePoints: [{ slug: pointSlug, courseSlug, title: "验证知识点", questions: [{ key: "common", question: "old", level: 4, frequency: 5, source: "original-source", shortAnswer: "A", standardAnswer: "B", deepAnswer: "C" }] }], relations: [] };
+    assert((await importKnowledgeBundle(fullAnswerBundle)).ok, "Question full answer fixture 导入失败");
+    let fullAnswerQuestion = await prisma.interviewQuestion.findUniqueOrThrow({ where: { id: existingQuestionId }, include: { answers: true } });
+    assert(fullAnswerQuestion.answers.length === 3, "Existing SHORT/STANDARD/DEEP fixture 未完整建立");
     const partialQuestionBundle = { kind: "ee-knowledge-content" as const, schemaVersion: "1.0" as const, subjectAreas: [], courses: [], knowledgePoints: [{ slug: pointSlug, courseSlug, title: "验证知识点", questions: [{ key: "common", question: "updated", standardAnswer: "B2" }] }], relations: [] };
     assert((await importKnowledgeBundle(partialQuestionBundle)).ok, "Question partial update 失败");
     let partialQuestion = await prisma.interviewQuestion.findUniqueOrThrow({ where: { id: existingQuestionId }, include: { answers: true } });
     assert(partialQuestion.question === "updated" && partialQuestion.level === 4 && partialQuestion.frequency === 5 && partialQuestion.source === "original-source", "Question 省略 metadata 未保留原值");
-    assert(partialQuestion.answers.some((answer) => answer.answerType === "SHORT_30S" && answer.content === "简短回答") && partialQuestion.answers.some((answer) => answer.answerType === "MEDIUM_1MIN" && answer.content === "B2"), "Answer omitted/string merge 失败");
+    assert(partialQuestion.answers.some((answer) => answer.answerType === "SHORT_30S" && answer.content === "A") && partialQuestion.answers.some((answer) => answer.answerType === "MEDIUM_1MIN" && answer.content === "B2") && partialQuestion.answers.some((answer) => answer.answerType === "DEEP" && answer.content === "C"), "Answer omitted/string merge 失败");
     const clearQuestionBundle = { ...partialQuestionBundle, knowledgePoints: [{ ...partialQuestionBundle.knowledgePoints[0], questions: [{ key: "common", question: "updated again", source: null, deepAnswer: null }] }] };
     assert((await importKnowledgeBundle(clearQuestionBundle)).ok, "Question explicit null 更新失败");
     partialQuestion = await prisma.interviewQuestion.findUniqueOrThrow({ where: { id: existingQuestionId }, include: { answers: true } });
     assert(partialQuestion.question === "updated again" && partialQuestion.level === 4 && partialQuestion.frequency === 5 && partialQuestion.source === null, "Question source null 未清空或 metadata 被覆盖");
-    assert(partialQuestion.answers.some((answer) => answer.answerType === "SHORT_30S") && partialQuestion.answers.some((answer) => answer.answerType === "MEDIUM_1MIN") && !partialQuestion.answers.some((answer) => answer.answerType === "DEEP"), "Answer null/omitted 语义失败");
+    assert(partialQuestion.answers.some((answer) => answer.answerType === "SHORT_30S" && answer.content === "A") && partialQuestion.answers.some((answer) => answer.answerType === "MEDIUM_1MIN" && answer.content === "B2") && !partialQuestion.answers.some((answer) => answer.answerType === "DEEP"), "Answer null/omitted 语义失败");
+    const reupsertQuestionBundle = { ...partialQuestionBundle, knowledgePoints: [{ ...partialQuestionBundle.knowledgePoints[0], questions: [{ key: "common", question: "updated final", deepAnswer: "C2" }] }] };
+    assert((await importKnowledgeBundle(reupsertQuestionBundle)).ok, "Question DEEP answer re-upsert 失败");
+    fullAnswerQuestion = await prisma.interviewQuestion.findUniqueOrThrow({ where: { id: existingQuestionId }, include: { answers: true } });
+    assert(fullAnswerQuestion.answers.some((answer) => answer.answerType === "DEEP" && answer.content === "C2"), "Question DEEP answer string 未重新写入");
     await prisma.interviewQuestion.create({ data: { id: questionIdForImport(pointSlug, "keep"), knowledgePointId: point.id, question: "Question B" } });
     assert((await importKnowledgeBundle({ ...partialQuestionBundle, knowledgePoints: [{ ...partialQuestionBundle.knowledgePoints[0], questions: [{ key: "common", question: "only A" }] }] })).ok, "Question 缺省删除回归导入失败");
     assert(Boolean(await prisma.interviewQuestion.findUnique({ where: { id: questionIdForImport(pointSlug, "keep") } })), "Bundle 缺失 Question 错误删除了现有记录");

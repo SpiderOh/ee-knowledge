@@ -24,6 +24,7 @@ export function parseKnowledgeBundle(input: string | unknown): BundleValidation 
     seenPoints.add(point.slug);
     const formulaKeys = new Set<string>(); for (const formula of point.formulas ?? []) { if (formulaKeys.has(formula.key)) errors.push(`knowledgePoints[${index}].formulas.${formula.key}: Formula key 重复。`); formulaKeys.add(formula.key); }
     const exampleKeys = new Set<string>(); for (const example of point.examples ?? []) { if (exampleKeys.has(example.key)) errors.push(`knowledgePoints[${index}].examples.${example.key}: Example key 重复。`); exampleKeys.add(example.key); }
+    const questionKeys = new Set<string>(); for (const question of point.questions ?? []) { if (questionKeys.has(question.key)) errors.push(`knowledgePoints[${index}].questions.${question.key}: Question key 重复。`); questionKeys.add(question.key); }
   }
   const relationKeys = new Set<string>();
   for (const [index, relation] of parsed.data.relations.entries()) {
