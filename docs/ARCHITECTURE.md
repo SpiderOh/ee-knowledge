@@ -177,6 +177,10 @@ VERIFIED
 - 语义搜索
 - 向量搜索
 
+## KnowledgePoint Learning Content
+
+KnowledgePoint 的 `commonMistakes` 和 `masteryCriteria` 保存学习正文增强；通用问答复用 `InterviewQuestion` 与 `InterviewAnswer`，前台按简短、标准、深入回答展示，管理端在 KnowledgeEditor 内维护。Knowledge Bundle v1 以可选字段和 `questions` 扩展，缺省字段保持原值，null 清空。
+
 ## 7. RAG（Post-v1 / Only if Needed）
 
 RAG 只能作为知识检索层，不得替代正式知识实体。

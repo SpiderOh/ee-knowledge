@@ -1,4 +1,4 @@
-import { PrismaClient, KnowledgeCategory, PracticeQuestionType, RelationType, ReviewStatus } from "@prisma/client";
+import { PrismaClient, KnowledgeCategory, PracticeQuestionType, RelationType, ReviewStatus, InterviewAnswerType } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -45,6 +45,10 @@ async function main() {
     prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: "electric-current" } }),
   ]);
   await prisma.knowledgeRelation.deleteMany({ where: { id: "demo-relation-kvl-kcl", sourceKnowledgePointId: voltageLaw.id, targetKnowledgePointId: currentLaw.id, relationType: RelationType.RELATED } });
+  await prisma.knowledgePoint.update({ where: { id: currentLaw.id }, data: { commonMistakes: "把节点电流代数和写成电压代数和，或忽略参考方向导致符号错误。", masteryCriteria: "能够说明 KCL 的物理依据，按参考方向正确列写节点方程，并检查单位与符号。" } });
+  await prisma.interviewQuestion.upsert({ where: { id: "demo-question-kcl-1" }, update: { knowledgePointId: currentLaw.id, question: "什么是基尔霍夫电流定律？", level: 2, frequency: 5, source: "Demo 内容" }, create: { id: "demo-question-kcl-1", knowledgePointId: currentLaw.id, question: "什么是基尔霍夫电流定律？", level: 2, frequency: 5, source: "Demo 内容" } });
+  await prisma.interviewAnswer.upsert({ where: { interviewQuestionId_answerType: { interviewQuestionId: "demo-question-kcl-1", answerType: InterviewAnswerType.SHORT_30S } }, update: { content: "任一节点流入电流的代数和等于流出电流的代数和。" }, create: { interviewQuestionId: "demo-question-kcl-1", answerType: InterviewAnswerType.SHORT_30S, content: "任一节点流入电流的代数和等于流出电流的代数和。" } });
+  await prisma.interviewAnswer.upsert({ where: { interviewQuestionId_answerType: { interviewQuestionId: "demo-question-kcl-1", answerType: InterviewAnswerType.MEDIUM_1MIN } }, update: { content: "在集总参数电路中，任一节点上各支路电流的代数和为零，这是电荷守恒在节点处的体现。" }, create: { interviewQuestionId: "demo-question-kcl-1", answerType: InterviewAnswerType.MEDIUM_1MIN, content: "在集总参数电路中，任一节点上各支路电流的代数和为零，这是电荷守恒在节点处的体现。" } });
   await prisma.formula.upsert({ where: { id: "demo-formula-kcl-1" }, update: { knowledgePointId: currentLaw.id, name: "节点电流定律", latex: "\\sum_{k=1}^{n} i_k = 0", description: "节点处各支路电流的代数和为零。", conditions: "集总参数电路节点分析。", sortOrder: 0 }, create: { id: "demo-formula-kcl-1", knowledgePointId: currentLaw.id, name: "节点电流定律", latex: "\\sum_{k=1}^{n} i_k = 0", description: "节点处各支路电流的代数和为零。", conditions: "集总参数电路节点分析。", sortOrder: 0 } });
   await prisma.formula.upsert({ where: { id: "demo-formula-kvl-1" }, update: { knowledgePointId: voltageLaw.id, name: "回路电压定律", latex: "\\sum_{k=1}^{n} u_k = 0", description: "沿闭合回路电压的代数和为零。", conditions: "集总参数电路闭合回路分析。", sortOrder: 0 }, create: { id: "demo-formula-kvl-1", knowledgePointId: voltageLaw.id, name: "回路电压定律", latex: "\\sum_{k=1}^{n} u_k = 0", description: "沿闭合回路电压的代数和为零。", conditions: "集总参数电路闭合回路分析。", sortOrder: 0 } });
   await prisma.example.upsert({ where: { id: "demo-example-kcl-1" }, update: { knowledgePointId: currentLaw.id, title: "节点电流计算", content: "某节点有 $2A$ 和 $3A$ 电流流入，另有 $1A$ 电流流出，求另一支路流出电流。", solution: "根据 KCL：\n\n$$\n2+3=1+I\n$$\n\n因此：\n\n$$\nI=4A\n$$", type: "计算题", sortOrder: 0 }, create: { id: "demo-example-kcl-1", knowledgePointId: currentLaw.id, title: "节点电流计算", content: "某节点有 $2A$ 和 $3A$ 电流流入，另有 $1A$ 电流流出，求另一支路流出电流。", solution: "根据 KCL：\n\n$$\n2+3=1+I\n$$\n\n因此：\n\n$$\nI=4A\n$$", type: "计算题", sortOrder: 0 } });

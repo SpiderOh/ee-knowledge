@@ -13,7 +13,7 @@ export async function getAdminStats() {
 export async function getAdminKnowledgeList(input: Record<string, string | undefined>) {
   const params = parseAdminKnowledgeQueryParams(input);
   const where = {
-    ...(params.q ? { OR: [{ title: { contains: params.q } }, { summary: { contains: params.q } }, { definition: { contains: params.q } }] } : {}),
+    ...(params.q ? { OR: [{ title: { contains: params.q } }, { summary: { contains: params.q } }, { definition: { contains: params.q } }, { commonMistakes: { contains: params.q } }, { masteryCriteria: { contains: params.q } }, { interviewQuestions: { some: { question: { contains: params.q } } } }] } : {}),
     ...(params.course ? { course: { slug: params.course } } : {}),
     ...(params.reviewStatus ? { reviewStatus: params.reviewStatus } : {}),
   };
@@ -34,6 +34,7 @@ export async function getKnowledgePointAdmin(id: string) {
     incomingRelations: { include: { source: { select: { id: true, title: true, slug: true } } } },
     chapters: { include: { chapter: { include: { book: { select: { id: true, title: true } } } } }, orderBy: { sortOrder: "asc" } },
     practiceQuestions: { orderBy: { id: "asc" }, include: { options: { orderBy: { sortOrder: "asc" } }, _count: { select: { attempts: true } } } },
+    interviewQuestions: { orderBy: [{ frequency: "desc" }, { level: "asc" }, { createdAt: "asc" }, { id: "asc" }], include: { answers: true } },
   } });
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "ee-knowledge-starter",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -22,6 +22,7 @@
     "backup:scheduled": "tsx scripts/scheduled-backup.ts",
     "verify:demo": "tsx scripts/verify-demo-data.ts",
     "verify:content": "tsx scripts/verify-content-transfer.ts",
+    "verify:learning-content": "tsx scripts/verify-learning-content.ts",
     "verify:admin-query": "tsx scripts/verify-admin-query.ts",
     "verify:structure": "tsx scripts/verify-structure.ts",
     "verify:review": "tsx scripts/verify-review.ts",

@@ -1,7 +1,7 @@
 import { KnowledgeCategory, RelationType, ReviewStatus } from "@prisma/client";
 import { z } from "zod";
 
-const optionalText = z.string().trim().max(50000).nullable().optional();
+const optionalText = z.preprocess((value) => typeof value === "string" && value.trim() === "" ? null : value, z.string().trim().max(50000).nullable().optional());
 const optionalNumber = (min: number, max: number) => z.preprocess((value) => value === "" || value === null || value === undefined ? undefined : typeof value === "string" ? Number(value) : value, z.number().int().min(min).max(max).optional());
 
 export const knowledgePointInputSchema = z.object({
@@ -11,6 +11,8 @@ export const knowledgePointInputSchema = z.object({
   courseId: z.string().trim().min(1, "请选择课程。"),
   category: z.nativeEnum(KnowledgeCategory),
   summary: optionalText,
+  commonMistakes: optionalText,
+  masteryCriteria: optionalText,
   definition: optionalText,
   plainExplanation: optionalText,
   principle: optionalText,
@@ -66,6 +68,20 @@ export const formulaDeleteSchema = z.object({ id: entityIdSchema, knowledgePoint
 export const exampleDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
 export const relationDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
 export const chapterLinkDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
+
+export const knowledgeQuestionInputSchema = z.object({
+  id: z.preprocess((value) => value === "" ? undefined : value, z.string().trim().min(1).optional()),
+  knowledgePointId: entityIdSchema,
+  question: z.string().trim().min(1, "问题不能为空。").max(5000),
+  level: optionalNumber(1, 5).default(1),
+  frequency: optionalNumber(1, 5).default(3),
+  source: optionalText,
+  shortAnswer: optionalText,
+  standardAnswer: optionalText,
+  deepAnswer: optionalText,
+});
+
+export const knowledgeQuestionDeleteSchema = z.object({ id: entityIdSchema, knowledgePointId: entityIdSchema });
 
 const optionalReviewStatus = z.preprocess((value) => typeof value === "string" && value.trim() === "" ? undefined : value, z.nativeEnum(ReviewStatus).optional());
 

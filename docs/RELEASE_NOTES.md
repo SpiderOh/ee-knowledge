@@ -1,3 +1,9 @@
+# EE Knowledge v0.4.0-alpha.1
+
+KnowledgePoint learning content alpha: 易错点、掌握标准、常见问法与多层次回答，复用现有 InterviewQuestion/InterviewAnswer 关系。
+
+本候选版本不包含独立复试题库、AI、RAG 或资料导入。
+
 # EE Knowledge v0.2.0
 
 ## 简介

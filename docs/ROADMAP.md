@@ -30,7 +30,11 @@
 
 ## v0.4.0：Knowledge Learning Polish
 
-- KnowledgePoint 常见问法、标准回答和易错点整理
+- alpha.1：KnowledgePoint 常见问法、标准回答、易错点和掌握标准
+- alpha.2：移动端学习流程与零碎时间学习入口
+- alpha.3：内容质量和学习体验 polish
+- rc.1：发布回归与文档
+- stable：v0.4.0 正式发布
 - 掌握标准与知识点内容增强
 - “随便学一个”/零碎时间学习入口（如后续确认）
 - 移动端学习流程优化

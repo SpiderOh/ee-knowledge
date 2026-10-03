@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.4.0-alpha.1 - 2026-10-03
+
+### Added
+
+- KnowledgePoint 易错点、掌握标准、常见问法和简短/标准/深入回答。
+- KnowledgeEditor 内嵌问答 CRUD、学习内容搜索、Knowledge Bundle v1 可选字段与 questions 扩展。
+- Demo KCL 学习内容与 `verify:learning-content` 隔离验证。
+
+### Scope
+
+- 复用现有 InterviewQuestion/InterviewAnswer，不建设独立复试题库；不进入 v0.5 资料导入。
+
 ## 0.3.0 - 2026-10-03
 
 ### Highlights

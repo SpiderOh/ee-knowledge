@@ -185,6 +185,7 @@ Book
 ## 8. v0.4.0 Knowledge Learning Polish
 
 - KnowledgePoint 常见问法、标准回答、易错点和掌握标准
+- 复用 InterviewQuestion/InterviewAnswer 保存通用知识问答；不建设独立复试题库
 - 零碎时间学习入口与移动端学习流程优化
 
 不建设独立复试题库、模拟复试、追问链系统化流程或院校专区。

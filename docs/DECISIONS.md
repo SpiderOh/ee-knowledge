@@ -320,3 +320,12 @@ Native Node + systemd + Caddy 能覆盖 Debian/Ubuntu、ARM64 Orange Pi/RK3588 �
 原因：
 
 个人 single-user self-host 需要每日可靠备份和可选独立存储，但不需要备份数据库模型或远程存储协议。systemd service/timer 将备份故障与主服务故障隔离，同时让失败进入 journal。
+
+
+---
+
+## ADR-024：KnowledgePoint 学习内容复用现有问答关系
+
+状态：Accepted
+
+`commonMistakes` 与 `masteryCriteria` 作为 KnowledgePoint 可选正文列；常见问法复用现有 `InterviewQuestion`/`InterviewAnswer` 关系，按 `SHORT_30S`、`MEDIUM_1MIN`、`DEEP` 映射用户可见回答。管理端嵌入 KnowledgeEditor，前台只读展示，不建设独立复试题库或新的问答数据模型。Bundle v1 通过可选字段和 `questions` 扩展保持向后兼容。

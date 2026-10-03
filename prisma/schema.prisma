@@ -134,6 +134,8 @@ model KnowledgePoint {
   slug                String            @unique
   category            KnowledgeCategory @default(CONCEPT)
   summary             String?
+  commonMistakes      String?
+  masteryCriteria     String?
   definition          String?
   plainExplanation    String?
   principle           String?
