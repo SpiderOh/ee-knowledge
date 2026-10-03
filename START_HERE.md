@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0`
+`v0.4.0-alpha.1`
 
 已完成：
 
@@ -37,4 +37,4 @@
 
 下一步：
 
-- v0.4.0 Knowledge Learning Polish
+- v0.4.0-alpha.1 KnowledgePoint 学习内容：常见问法、回答、易错点和掌握标准

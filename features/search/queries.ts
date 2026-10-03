@@ -27,7 +27,7 @@ export async function getSearchResults(params: SearchParams) {
   const text = params.q;
   const courseFilter = params.course ? { course: { slug: params.course } } : {};
   const bookFilter = params.book ? { chapters: { some: { chapter: { bookId: params.book } } } } : {};
-  const textFilter = text ? { OR: [{ title: { contains: text } }, { summary: { contains: text } }, { definition: { contains: text } }] } : {};
+  const textFilter = text ? { OR: [{ title: { contains: text } }, { summary: { contains: text } }, { definition: { contains: text } }, { commonMistakes: { contains: text } }, { masteryCriteria: { contains: text } }, { interviewQuestions: { some: { question: { contains: text } } } }] } : {};
   const courseTextFilter = text ? { OR: [{ name: { contains: text } }, { description: { contains: text } }] } : {};
   const bookTextFilter = text ? { OR: [{ title: { contains: text } }, { author: { contains: text } }, { publisher: { contains: text } }] } : {};
 

@@ -7,3 +7,4 @@ function portableId(prefix: string, slug: string, key: string) {
 
 export function formulaIdForImport(slug: string, key: string) { return portableId("formula", slug, key); }
 export function exampleIdForImport(slug: string, key: string) { return portableId("example", slug, key); }
+export function questionIdForImport(slug: string, key: string) { return portableId("question", slug, key); }

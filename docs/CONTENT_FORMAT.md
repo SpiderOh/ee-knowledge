@@ -16,7 +16,7 @@
 }
 ```
 
-Bundle 包含 SubjectArea、Course、KnowledgePoint、Formula、Example 和 KnowledgeRelation。不包含 Book、Chapter、ChapterKnowledgePoint，也不包含 Note、Favorite、StudyProgress、ReviewRecord。教材结构未来由独立 Library Bundle 处理。
+Bundle v1 包含 SubjectArea、Course、KnowledgePoint、Formula、Example、KnowledgeRelation，以及可选的 KnowledgePoint 学习内容字段和 questions。不包含 Book、Chapter、ChapterKnowledgePoint，也不包含 Note、Favorite、StudyProgress、ReviewRecord。教材结构未来由独立 Library Bundle 处理。
 
 Knowledge Bundle v1 的应用级输入上限为 **2 MB**。Server Action 的传输上限设置为 **3 MB**，仅用于容纳请求序列化和协议开销，不改变 2 MB 的业务限制。
 
@@ -34,7 +34,7 @@ Knowledge Bundle v1 的应用级输入上限为 **2 MB**。Server Action 的传�
 
 ## 内容字段
 
-KnowledgePoint 的正文和 Formula、Example 的 Markdown 内容原样保存。图片只保存 Markdown URL，例如 `![节点图](/media/circuit/kcl.png)` 或 `![节点图](https://cdn.example.com/kcl.png)`。系统不下载图片，不嵌入二进制，也禁止 `data:image/...;base64,...`。
+KnowledgePoint 的正文、易错点、掌握标准、问答回答和 Formula、Example 的 Markdown 内容原样保存。缺省字段保持原值，显式 null 清空；Bundle 不因缺失 questions 删除数据库中的问答。图片只保存 Markdown URL，例如 `![节点图](/media/circuit/kcl.png)` 或 `![节点图](https://cdn.example.com/kcl.png)`。系统不下载图片，不嵌入二进制，也禁止 `data:image/...;base64,...`。
 
 KnowledgePoint 的 `category`、`reviewStatus`、`importance`、`interviewImportance`、`difficulty` 和 `confidence` 在导入时经过 Zod 校验。slug 使用小写英文、数字和连字符。
 

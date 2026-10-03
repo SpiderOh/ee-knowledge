@@ -6,6 +6,7 @@ export async function getKnowledgePointBySlug(slug: string) {
     where: { slug },
     include: {
       course: true,
+      interviewQuestions: { orderBy: [{ frequency: "desc" }, { level: "asc" }, { createdAt: "asc" }, { id: "asc" }], select: { id: true, question: true, level: true, frequency: true, source: true, createdAt: true, answers: { select: { answerType: true, content: true } } } },
       formulas: { orderBy: { sortOrder: "asc" } },
       examples: { orderBy: { sortOrder: "asc" } },
       outgoingRelations: {

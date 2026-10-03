@@ -15,6 +15,8 @@
 教材章节，支持多级父子结构。
 
 ### KnowledgePoint
+
+`commonMistakes` 与 `masteryCriteria` 是可选学习内容字段；常见问法继续通过 `InterviewQuestion` 与 `InterviewAnswer` 关联保存。
 知识点，系统核心实体。
 
 ### ChapterKnowledgePoint

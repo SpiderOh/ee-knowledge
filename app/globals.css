@@ -101,6 +101,14 @@ h1 { margin: 6px 0 8px; font-size: 32px; letter-spacing: -.03em; }
 .knowledge-content h2 { font-size: 17px; margin: 0 0 10px; }
 .knowledge-content p { line-height: 1.9; margin: 0; color: #374151; white-space: pre-line; }
 .knowledge-aside { align-self: start; position: sticky; top: 24px; }
+.knowledge-questions { border-top: 1px solid var(--line); padding-top: 22px; }
+.knowledge-question { border: 1px solid var(--line); border-radius: 10px; margin: 10px 0; padding: 0 14px; background: #fff; }
+.knowledge-question summary { cursor: pointer; display: flex; justify-content: space-between; gap: 12px; padding: 14px 0; font-weight: 600; }
+.knowledge-question summary small { color: var(--muted); font-weight: 400; white-space: nowrap; }
+.question-answers { border-top: 1px solid var(--line); padding: 14px 0; }
+.question-answer + .question-answer { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 14px; }
+.question-answer h3 { font-size: 14px; margin: 0 0 8px; }
+
 .knowledge-aside h2 { font-size: 17px; margin: 0 0 18px; }
 .knowledge-aside h3 { font-size: 14px; margin: 18px 0 10px; }
 .status-control { padding: 12px 0; display: grid; gap: 7px; }
