@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v0.3.0-rc.1`
+`v0.3.0`
 
-v0.2.0 已正式发布。v0.3.0-rc.1 已完成 PWA、Authentication、Linux self-host、server-side SQLite、scheduled backup 与生产构建后的隔离运行时回归验证。
+v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。
 
 ## 第一阶段 MVP
 
@@ -95,7 +95,7 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-下一阶段是 v0.3.0 stable：Mobile & Personal Cloud。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+下一阶段是 v0.4.0 Knowledge Learning Polish。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
 v0.4.0 聚焦 KnowledgePoint 学习内容增强，包括常见问法、标准回答、易错点和移动端学习流程；不建设独立复试题库、模拟复试或目标院校专区。v0.5.0 处理个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 

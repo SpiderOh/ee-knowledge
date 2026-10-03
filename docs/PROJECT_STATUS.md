@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.3.0-rc.1`
+`v0.3.0`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，当前为 `v0.3.0-rc.1` Mobile & Personal Cloud 候选版本，已完成 PWA、Authentication、Linux self-host、HTTPS、server-side SQLite、scheduled backup 基础以及隔离生产运行时回归验证。
+第一阶段 Knowledge Base MVP 已完成。`v0.2.0` 已正式发布，`v0.3.0` Mobile & Personal Cloud 正式完成，覆盖 PWA、Authentication、Linux self-host、HTTPS、server-side SQLite、scheduled backup、GitHub CI 和隔离生产运行时回归验证。
 
 ## 已完成
 
@@ -99,11 +99,10 @@
 ## 部分完成
 
 - 当前无 v0.2.0 未完成阻塞项；图表、每日学习时长和更细粒度复习算法属于后续增强
-- v0.3.0-rc.1 已完成 scheduled backup、secondary backup destination 和隔离运行时回归；真实 USB/NAS 和 systemd timer 仍需目标环境验收
+- v0.3.0 已完成 scheduled backup、secondary backup destination、GitHub CI 和隔离运行时回归；真实 USB/NAS 和 systemd timer 仍需目标环境验收
 
 ## 未完成
 
-- v0.3.0 stable：Mobile & Personal Cloud 正式发布
 - v0.4.0：KnowledgePoint 常见问法、标准回答、易错点和移动端学习流程优化
 - v0.5.0：个人资料导入
 - v0.6.0 / RC：数据安全、移动端和自托管稳定化
@@ -119,7 +118,7 @@
 
 ## 下一步
 
-- v0.3.0 stable：Mobile & Personal Cloud 正式发布
+- v0.4.0 Knowledge Learning Polish
 
 ## 已知问题
 
