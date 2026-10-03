@@ -189,6 +189,7 @@ Book
 - alpha.2 已完成只读快速学习入口 `/quick-learn`
 - 快速学习优先选择 `REVIEW > LEARNING > NOT_STARTED > MASTERED`；缺少 `StudyProgress` 的知识点按 `NOT_STARTED` 处理
 - 快速学习支持课程范围、排除当前知识点和同一优先级内的随机偏移，不写入学习、复习、练习、收藏或笔记数据
+- 移动端 KnowledgePoint 学习信息应在正文前可达，教材上下文不能因桌面侧栏隐藏而丢失
 - 零碎时间学习入口与移动端学习流程优化
 
 不建设独立复试题库、模拟复试、追问链系统化流程或院校专区。

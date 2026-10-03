@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.4.0-alpha.2`
+`v0.4.0-alpha.3`
 
 已完成：
 
@@ -35,7 +35,8 @@
 - Secondary same-filesystem fail-closed、SHA-256 与 SQLite integrity_check 验证
 - GitHub Actions CI 与 production runtime verification
 - `/quick-learn` 快速学习入口、课程范围和学习状态优先级选择
+- 移动端 KnowledgePoint 学习信息、教材上下文和窄屏操作 polish
 
 下一步：
 
-- v0.4.0-alpha.3：内容质量与学习体验 polish
+- v0.4.0-rc.1：Release Regression & Documentation
