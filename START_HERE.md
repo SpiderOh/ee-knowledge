@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.3.0-rc.1`
+`v0.3.0`
 
 已完成：
 
@@ -33,7 +33,8 @@
 - `deploy:check`、`verify:deploy` 和自托管部署文档
 - SQLite online scheduled backup、daily systemd timer、Primary retention 和可选独立 Secondary backup
 - Secondary same-filesystem fail-closed、SHA-256 与 SQLite integrity_check 验证
+- GitHub Actions CI 与 production runtime verification
 
 下一步：
 
-- v0.3.0 stable：Mobile & Personal Cloud（当前 RC 通过后发布）
+- v0.4.0 Knowledge Learning Polish

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.3.0 - 2026-10-03
+
+### Highlights
+
+- Mobile/PWA 与 Android install foundation、移动端 UX。
+- single-user Authentication、private-by-default 页面/API 与 HttpOnly signed session。
+- Linux self-host、HTTPS architecture、server-side SQLite canonical data source。
+- scheduled/Secondary backup、运行时回归验证与 GitHub Actions CI。
+
+### Safety
+
+- 保持 single-user、private-by-default、server DB canonical 和 no automatic restore。
+- v0.3 阶段没有新增 Prisma schema migration，Knowledge Bundle 保持不变。
+
+### Next
+
+- v0.4.0 Knowledge Learning Polish。
+
 ## 0.3.0-rc.1 - 2026-10-03
 
 ### Added
