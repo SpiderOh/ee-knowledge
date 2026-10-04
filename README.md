@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v0.5.0-rc.1`
+`v0.5.0`
 
-v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。v0.5.0-rc.1 正在进行资料导入回归、部署兼容性和发布文档审查，下一步是稳定版晋级。
+v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。v0.5.0 Personal Material Import stable code/docs 已准备完成；正式 GitHub Tag 与 GitHub Release 将在 stable PR 合并并确认最终 main CI 后创建。
 
 ## 第一阶段 MVP
 
@@ -95,8 +95,8 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-当前阶段是 v0.5.0-rc.1 Personal Material Import 回归。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+当前阶段是 v0.5.0 Stable Promotion。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
-v0.5.0-alpha.1/alpha.2 已完成 Markdown/TXT、PDF 和 DOCX 文本提取，v0.5.0-rc.1 正在完成资料导入回归、部署兼容性与发布文档；下一步是 v0.5.0 stable 正式晋级。不建设独立复试题库、模拟复试或目标院校专区。v0.5.0-alpha.1 处理 Markdown/TXT 个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
+v0.5.0 已完成 Markdown/TXT、PDF 和 DOCX 文本提取、资料导入回归、部署兼容性与发布文档；正式 Tag 与 GitHub Release 等待 stable PR 合并并确认最终 main CI。不建设独立复试题库、模拟复试或目标院校专区。v0.5.0-alpha.1 处理 Markdown/TXT 个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 
 RAG、向量数据库、复杂知识图谱、多用户、复杂同步和语音面试属于 v1.0 之后仅在产生真实需求时评估的能力。

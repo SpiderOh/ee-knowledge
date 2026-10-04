@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.5.0-rc.1`
+`v0.5.0`
 
 已完成：
 
@@ -42,5 +42,6 @@
 - v0.4.0：Knowledge Learning Polish stable
 - v0.5.0-alpha.1：个人资料 Markdown/TXT 导入基础（已完成）
 - v0.5.0-alpha.2：PDF/DOCX 文本提取与同一人工确认导入管线（已完成）
-- v0.5.0-rc.1：资料导入回归、部署兼容性和发布文档（当前）
-- 下一步：v0.5.0 stable 正式发布
+- v0.5.0-rc.1：资料导入回归、部署兼容性和发布文档（已完成）
+- v0.5.0 stable：代码与发布文档晋级（当前）
+- 下一步：v0.5.0 Tag + GitHub Release after final merged-main CI

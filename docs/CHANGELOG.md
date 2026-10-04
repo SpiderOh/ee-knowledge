@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 - 2026-10-04
+
+### Stable Personal Material Import
+
+- 稳定版包含 Markdown/TXT UTF-8 导入、PDF text-layer 提取和 DOCX raw-text 提取。
+- 支持人工确认、来源元数据、单文件创建一个 KnowledgePoint，以及 atomic create-only 写入。
+- 解析器仅在服务端运行；Node.js 运行时契约为 20.x >= 20.16.0 或 >= 22.3.0，并明确排除 Node.js 21.x。
+- 保持无 raw 文件持久化、无 OCR、无学习数据写入；不新增 Prisma migration，Knowledge Bundle v1 保持兼容。
+- 完成 RC 回归、部署兼容性检查和发布文档校准。
+
+### Release safety
+
+- 正式 Tag 与 GitHub Release 等待 stable PR 合并并确认最终 main CI 后创建。
+
 ## 0.5.0-rc.1 - 2026-10-04
 
 ### Regression and release readiness
@@ -10,7 +24,7 @@
 
 ### Next
 
-- v0.5.0 stable：完成 PR review 后进行稳定版晋级。
+- v0.5.0 stable：等待 stable PR 合并、最终 main CI、Tag 和 GitHub Release。
 
 ## 0.5.0-alpha.2 - 2026-10-04
 
