@@ -43,7 +43,7 @@
 
 ## 当前版本
 
-`v0.6.0-alpha.2`
+`v0.6.0-rc.1`
 
 v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。v0.5.0 Personal Material Import 已正式发布（Tag `v0.5.0`，GitHub Release：EE Knowledge v0.5.0）。
 
@@ -95,10 +95,12 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-当前阶段是 v0.6.0-alpha.2 Stabilization：Mobile & Self-host。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+当前阶段是 v0.6.0-rc.1 Stabilization：Full-system Regression & Documentation。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
-v0.5.0 已正式发布，包含 Markdown/TXT、PDF 和 DOCX 文本提取、资料导入回归、部署兼容性与发布文档。本轮 v0.6.0-alpha.2 补充 production preflight、移动端静态 contract 和主导航 runtime smoke，并提供真实设备人工验收清单；Orange Pi、公开 HTTPS 与 Android PWA 实机状态不会由仓库 CI 代为声称。数据安全与恢复回归保持不变，不建设独立复试题库、模拟复试或目标院校专区。v0.5.0-alpha.1 处理 Markdown/TXT 个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
+v0.5.0 已正式发布，包含 Markdown/TXT、PDF 和 DOCX 文本提取、资料导入回归、部署兼容性与发布文档。本轮 v0.6.0-rc.1 完成全系统回归、release blocker 检查和 RC 文档收口；不新增产品功能、Schema、migration 或依赖。Orange Pi、公开 HTTPS、Android PWA 与 USB/NAS 实机状态不会由仓库 CI 代为声称。v0.5.0-alpha.1 处理 Markdown/TXT 个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
 
 真实 Orange Pi/RK3588、Caddy 公网 HTTPS、Android PWA 安装和 USB/NAS 验收步骤见 [`docs/V0.6_TARGET_ACCEPTANCE.md`](docs/V0.6_TARGET_ACCEPTANCE.md)。
+
+RC 验收清单见 [`docs/V0.6_RC_CHECKLIST.md`](docs/V0.6_RC_CHECKLIST.md)，稳定版说明见 [`docs/V0.6_RELEASE_NOTES.md`](docs/V0.6_RELEASE_NOTES.md)。下一步是 v0.6.0 Stable Promotion。
 
 RAG、向量数据库、复杂知识图谱、多用户、复杂同步和语音面试属于 v1.0 之后仅在产生真实需求时评估的能力。

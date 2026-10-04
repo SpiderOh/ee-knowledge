@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0-rc.1 - 2026-10-04
+
+### Full-system Regression & Documentation
+
+- 完成内容、学习内容、快速学习、复习、练习、统计、认证、部署、备份、PWA、资料导入、MVP、构建和 production runtime smoke 的 RC 回归矩阵。
+- 新增 `docs/V0.6_RC_CHECKLIST.md` 与 `docs/V0.6_RELEASE_NOTES.md`，收口稳定版前的安全边界、目标环境边界和自托管更新流程。
+- 版本元数据从 `v0.6.0-alpha.2` 更新为 `v0.6.0-rc.1`；不新增产品功能、Schema、migration、seed 或依赖。
+
+### Next
+
+- v0.6.0 stable：Stable Promotion。
+
 ## 0.6.0-alpha.2 - 2026-10-04
 
 ### Mobile & Self-host Stabilization
