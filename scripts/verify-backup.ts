@@ -154,13 +154,13 @@ function main() {
     assert.equal(fs.readdirSync(restorePreDirectory).filter((file) => file.startsWith("pre-restore-")).length, 1);
     console.log("Header-valid corrupted source rejection before target mutation: PASS");
 
-    const sourceSidecar = `${restoreBackup}.wal`;
+    const sourceSidecar = `${restoreBackup}-wal`;
     fs.writeFileSync(sourceSidecar, "sidecar");
     assert.throws(() => restoreDatabase({ sourcePath: restoreBackup, targetPath: restoreTarget, preRestoreDirectory: restorePreDirectory, sqliteExecutable: executable }), /sidecar/);
     fs.rmSync(sourceSidecar);
     console.log("Source sidecar rejection: PASS");
 
-    const targetSidecar = `${restoreTarget}.wal`;
+    const targetSidecar = `${restoreTarget}-wal`;
     fs.writeFileSync(targetSidecar, "sidecar");
     assert.throws(() => restoreDatabase({ sourcePath: restoreBackup, targetPath: restoreTarget, preRestoreDirectory: restorePreDirectory, sqliteExecutable: executable }), /sidecar/);
     fs.rmSync(targetSidecar);
