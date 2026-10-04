@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { KnowledgeCategory } from "@prisma/client";
 import { extractMaterialAction, importMaterialAction, previewMaterialAction } from "@/features/material-import/actions";
-import { MAX_MATERIAL_BYTES, suggestMaterialSlug, suggestMaterialTitle, type ExtractedMaterial } from "@/features/material-import/extract";
+import { MAX_DOCUMENT_MATERIAL_BYTES, MAX_TEXT_MATERIAL_BYTES, isDocumentMaterialExtension, isTextMaterialExtension, suggestMaterialSlug, suggestMaterialTitle, type ExtractedMaterial } from "@/features/material-import/extract";
 import type { MaterialDraft } from "@/features/material-import/schema";
 
 const categoryLabels: Record<KnowledgeCategory, string> = { CONCEPT: "概念", THEOREM: "定理", FORMULA: "公式", ALGORITHM: "算法", CIRCUIT: "电路", SYSTEM: "系统", PROTOCOL: "协议", DEVICE: "器件", METHOD: "方法", EXPERIMENT: "实验", OTHER: "其他" };
@@ -40,9 +40,16 @@ export function MaterialImportPanel({ courses }: Props) {
     setExtracted(null);
     setDraft(null);
     const file = event.currentTarget.files?.[0];
-    if (file && file.size > MAX_MATERIAL_BYTES) {
-      event.currentTarget.value = "";
-      setError(["文件超过 2 MB。"]);
+    if (file) {
+      const isText = isTextMaterialExtension(file.name);
+      const isDocument = isDocumentMaterialExtension(file.name);
+      if (isText && file.size > MAX_TEXT_MATERIAL_BYTES) {
+        event.currentTarget.value = "";
+        setError(["Markdown / TXT 文件不能超过 2 MB。"]);
+      } else if (isDocument && file.size > MAX_DOCUMENT_MATERIAL_BYTES) {
+        event.currentTarget.value = "";
+        setError(["PDF / DOCX 文件不能超过 10 MB。"]);
+      }
     }
   }
   async function extract(formData: FormData) {
@@ -76,8 +83,8 @@ export function MaterialImportPanel({ courses }: Props) {
   function reset() { setFileKey((value) => value + 1); setExtracted(null); setDraft(null); setPreview(null); setResult(null); setError([]); setMessage(""); }
 
   return <div className="material-import-stack">
-    {!draft && <form className="card material-import-card" action={extract}><h2>选择文本资料</h2><p className="subtitle">支持 UTF-8 编码的 Markdown 或 TXT，单文件不超过 2 MB。原始文件仅用于本次文本提取，EE Knowledge 不会保存原始文件。</p><input key={fileKey} name="file" type="file" accept=".md,.markdown,.txt,text/markdown,text/plain" onChange={handleFileChange} required /><button className="primary-button" type="submit" disabled={pending}>{pending ? "读取中…" : "读取资料"}</button></form>}
-    {extracted && draft && !result && <div className="card material-import-card"><div className="material-import-file"><strong>{extracted.originalFileName}</strong><span>{extracted.format.toUpperCase()} · {extracted.byteSize} bytes</span></div><div className="form-grid">
+    {!draft && <form className="card material-import-card" action={extract}><h2>选择资料文件</h2><p className="subtitle">支持 UTF-8 Markdown/TXT（不超过 2 MB）以及 PDF/DOCX（不超过 10 MB）。仅提取文本，原始文件不会被 EE Knowledge 保存。</p><input key={fileKey} name="file" type="file" accept=".md,.markdown,.txt,.pdf,.docx,text/markdown,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" onChange={handleFileChange} required /><button className="primary-button" type="submit" disabled={pending}>{pending ? "读取中…" : "读取资料"}</button></form>}
+    {extracted && draft && !result && <div className="card material-import-card"><div className="material-import-file"><strong>{extracted.originalFileName}</strong><span>{extracted.format.toUpperCase()} · {extracted.byteSize} bytes{extracted.pageCount ? ` · ${extracted.pageCount} 页` : ""}</span></div><div className="form-grid">
       <label>所属课程<select value={draft.courseSlug} onChange={(event) => updateDraft("courseSlug", event.target.value)}><option value="">请选择已有课程</option>{courses.map((course) => <option value={course.slug} key={course.id}>{course.name}</option>)}</select></label>
       <label>知识点标题<input value={draft.title} onChange={(event) => updateDraft("title", event.target.value)} /></label>
       <label>slug<input value={draft.slug} onChange={(event) => updateDraft("slug", event.target.value)} /></label>

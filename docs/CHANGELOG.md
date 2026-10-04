@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.0-alpha.2 - 2026-10-04
+
+### Added
+
+- `/admin/material-import` 支持 PDF 和 DOCX 纯文本提取，并复用现有人工确认、预览、来源元数据和 create-only KnowledgePoint 导入流程。
+- PDF 使用 `pdf-parse` 2.x `PDFParse.getText()`，DOCX 使用 `mammoth.extractRawText`；增加真实 PDF/DOCX fixture 与隔离验证覆盖。
+- 增加 PDF/DOCX 10 MB 限制、文本 2 MB 限制和 12 MB Server Action 传输上限。
+
+### Safety
+
+- 解析器只在 server-only 模块加载；原始文件不落盘，不做 OCR、图片、表格或自动结构切分。
+- 不修改 Prisma Schema、migration 或学习数据写路径；已有 slug 继续拒绝覆盖。
+
+### Next
+
+- v0.5.0-rc.1：资料导入回归、数据安全和发布文档。
+
 ## 0.5.0-alpha.1 - 2026-10-03
 
 ### Personal Material Import

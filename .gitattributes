@@ -1,1 +1,5 @@
 * text=auto eol=lf
+
+# Parser fixtures are binary assets and should not be normalized as text.
+*.pdf binary
+*.docx binary
