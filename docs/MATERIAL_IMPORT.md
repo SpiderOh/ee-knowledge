@@ -1,6 +1,6 @@
 # Personal Material Import
 
-v0.5.0-alpha.2 提供一个受控的个人资料导入流程，入口为 `/admin/material-import`。
+v0.5.0-rc.1 提供一个受控的个人资料导入流程，延续 alpha.1/alpha.2 的冻结导入边界并完成 RC 回归，入口为 `/admin/material-import`。
 
 ## 支持范围
 

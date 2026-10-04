@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.0-rc.1 - 2026-10-04
+
+### Regression and release readiness
+
+- 回归 Markdown/TXT、PDF、DOCX 的提取、大小限制、空内容拒绝、预览绑定和 create-only 竞态保护。
+- 对齐 PDF/DOCX 解析器的 Node.js 运行时要求（`20.x >= 20.16.0` 或 `>= 22.3.0`，明确排除 Node.js 21.x），并加强自托管部署检查。
+- 更新 RC checklist、release notes、版本元数据和发布路线文档；不新增导入格式、业务功能或数据库变更。
+
+### Next
+
+- v0.5.0 stable：完成 PR review 后进行稳定版晋级。
+
 ## 0.5.0-alpha.2 - 2026-10-04
 
 ### Added

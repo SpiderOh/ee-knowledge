@@ -117,6 +117,13 @@ async function main() {
     assert(home.status >= 300 && home.status < 400 && decodeURIComponent(location(home)).includes("/login") && decodeURIComponent(location(home)).includes("next=/"), "Unauthenticated home did not redirect safely.");
     const admin = await request(`${baseUrl}/admin`, { redirect: "manual" });
     assert(admin.status >= 300 && admin.status < 400 && decodeURIComponent(location(admin)).includes("next=/admin"), "Unauthenticated admin did not preserve next path.");
+    const materialImportUnauthenticated = await request(`${baseUrl}/admin/material-import`, { redirect: "manual" });
+    assert(
+      materialImportUnauthenticated.status >= 300 &&
+      materialImportUnauthenticated.status < 400 &&
+      decodeURIComponent(location(materialImportUnauthenticated)).includes("next=/admin/material-import"),
+      "Unauthenticated material import did not preserve next path.",
+    );
     const exportUnauthenticated = await request(`${baseUrl}/api/admin/content-export`);
     assert(exportUnauthenticated.status === 401 && (exportUnauthenticated.headers.get("content-type") ?? "").includes("application/json"), "Unauthenticated admin API did not return JSON 401.");
     console.log("[verify:runtime] login, authenticated page/API, unsafe next, logout");
@@ -127,6 +134,8 @@ async function main() {
     assert(authenticatedHome.status === 200, "Authenticated home was not readable.");
     const authenticatedAdmin = await request(`${baseUrl}/admin`, { headers: { cookie } });
     assert(authenticatedAdmin.status === 200, "Authenticated admin page was not readable.");
+    const authenticatedMaterialImport = await request(`${baseUrl}/admin/material-import`, { headers: { cookie } });
+    assert(authenticatedMaterialImport.status === 200, "Authenticated material import page was not readable.");
     const authenticatedExport = await request(`${baseUrl}/api/admin/content-export`, { headers: { cookie } });
     assert(authenticatedExport.status !== 401 && authenticatedExport.status < 500, "Authenticated admin API remained unauthorized.");
     const unsafeNext = await request(`${baseUrl}/api/auth/login`, { method: "POST", redirect: "manual", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ password: testPassword, next: "https://evil.example" }) });

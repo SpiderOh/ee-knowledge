@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { repoRoot } from "./lib/sqlite-path";
+import { isSupportedNodeVersion, NODE_RUNTIME_REQUIREMENT } from "./lib/node-runtime";
 
 function read(relativePath: string) {
   const absolutePath = path.join(repoRoot, relativePath);
@@ -24,6 +25,29 @@ function main() {
   const hashScript = read("scripts/hash-auth-password.ts");
   const packageJson = JSON.parse(read("package.json")) as { scripts?: Record<string, string> };
 
+  assert(
+    !isSupportedNodeVersion("20.15.0") &&
+    isSupportedNodeVersion("20.16.0") &&
+    isSupportedNodeVersion("20.99.0") &&
+    !isSupportedNodeVersion("21.0.0") &&
+    !isSupportedNodeVersion("21.99.0") &&
+    !isSupportedNodeVersion("22.2.0") &&
+    isSupportedNodeVersion("22.3.0") &&
+    isSupportedNodeVersion("22.99.0") &&
+    isSupportedNodeVersion("23.0.0") &&
+    isSupportedNodeVersion("24.0.0"),
+    "Node runtime version gate regression",
+  );
+  assert(
+    selfHost.includes("Node.js 20.x >= 20.16.0") &&
+    selfHost.includes("Node.js >= 22.3.0") &&
+    selfHost.includes("Node.js 21.x"),
+    "SELF_HOST.md must document the parser Node runtime requirement and Node 21 exclusion",
+  );
+  assert(
+    NODE_RUNTIME_REQUIREMENT.includes("20.x >= 20.16.0") && NODE_RUNTIME_REQUIREMENT.includes("22.3.0"),
+    "Node runtime requirement constant is missing",
+  );
   assert(packageJson.scripts?.["start:prod"] === "next start -H 127.0.0.1 -p 3000", "start:prod must bind 127.0.0.1:3000");
   assert(packageJson.scripts?.["deploy:check"] === "tsx scripts/check-production-env.ts", "deploy:check script is missing");
   assert(packageJson.scripts?.["verify:deploy"] === "tsx scripts/verify-deployment.ts", "verify:deploy script is missing");

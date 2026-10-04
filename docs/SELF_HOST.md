@@ -6,7 +6,7 @@
 
 - Debian / Ubuntu compatible Linux
 - ARM64 或 x86_64
-- Node.js 20 LTS 或更高版本
+- Node.js 20.x >= 20.16.0，或 Node.js >= 22.3.0（`pdf-parse@2.4.5` / `mammoth@1.13.0` 的运行时要求；Node.js 21.x 不在当前支持范围内）
 - npm、Git、systemd
 - `sqlite3` CLI（live / scheduled backup 必需）
 - Caddy 2
@@ -37,6 +37,7 @@ sudo install -d -o root -g ee-knowledge -m 0750 /etc/ee-knowledge
 sudo -u ee-knowledge git clone <repository-url> /opt/ee-knowledge
 cd /opt/ee-knowledge
 sudo -u ee-knowledge npm ci
+# ARM64 / Orange Pi / RK3588：必须在目标机器本机执行 npm ci，不能复制其他架构的 node_modules。
 # Fresh-server build does not require production secrets or DATABASE_URL.
 sudo -u ee-knowledge npm run build
 sudo cp deploy/ee-knowledge.env.example /etc/ee-knowledge/ee-knowledge.env
@@ -204,7 +205,7 @@ USB SSD / NAS：
 /mnt/ee-knowledge-secondary        Secondary backup
 ```
 
-Primary 同一 NVMe 主要防误删、逻辑损坏和错误更新，不能防 NVMe 物理故障；独立 USB SSD/NAS Secondary 才能增加这一层保护。Node.js 应使用正式 ARM64 版本，并在目标设备执行 `npm ci`，以安装目标架构对应的原生依赖。
+Primary 同一 NVMe 主要防误删、逻辑损坏和错误更新，不能防 NVMe 物理故障；独立 USB SSD/NAS Secondary 才能增加这一层保护。Node.js 应使用满足 `20.x >= 20.16.0` 或 `>= 22.3.0` 的正式 ARM64 版本；当前解析依赖不支持 Node.js 21.x。并在目标设备执行 `npm ci`，以安装目标架构对应的原生依赖；不能复制其他架构的 `node_modules`。
 
 家庭 NAT 环境通常需要公网域名、DNS、80/443 端口转发或等效网络能力，Caddy 才能完成公网证书签发。Tailscale 或其他 private network HTTPS 可以作为可选方向，但本项目不依赖它，也不提供自动安装脚本。
 

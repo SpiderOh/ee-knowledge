@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { getAuthConfig } from "@/lib/auth/config";
 import { repoRoot } from "./lib/sqlite-path";
+import { isSupportedNodeVersion, NODE_RUNTIME_REQUIREMENT } from "./lib/node-runtime";
 
 function fail(message: string): never {
   throw new Error(message);
@@ -20,6 +21,7 @@ function getAbsoluteProductionSqlitePath(databaseUrl: string) {
 }
 
 function main() {
+  if (!isSupportedNodeVersion(process.versions.node)) fail(`Node.js 版本过低，当前文档解析依赖要求 ${NODE_RUNTIME_REQUIREMENT}。`);
   if (process.env.NODE_ENV !== "production") fail("NODE_ENV 必须为 production。");
   const databaseUrl = process.env.DATABASE_URL?.trim();
   if (!databaseUrl) fail("DATABASE_URL 未配置。");
@@ -32,7 +34,7 @@ function main() {
   if (!auth.ok) fail(`Authentication 配置无效：${auth.reason}`);
   const repoPath = repoRoot.replaceAll("\\", "/").toLowerCase();
   if (sqlitePath.toLowerCase().startsWith(`${repoPath}/`)) fail("生产 SQLite 必须位于仓库目录之外。");
-  console.log(`Production environment valid (SQLite: ${sqlitePath}, TTL: ${auth.config.sessionTtlDays} days)`);
+  console.log(`Production environment valid (SQLite: ${sqlitePath}, TTL: ${auth.config.sessionTtlDays} days, Node: ${process.versions.node})`);
 }
 
 try { main(); } catch (error) { console.error(error instanceof Error ? error.message : error); process.exitCode = 1; }
