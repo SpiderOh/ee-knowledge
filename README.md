@@ -15,7 +15,7 @@
 - 复习系统
 - 知识点问法与标准回答增强（后续轻量内容增强）
 - 个人 PWA 与自托管访问
-- 资料导入（后续）
+- 个人资料导入
 
 ## 开发前必读
 
@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v0.6.0`
+`v1.0.0-rc.1`
 
-v0.2.0 已正式发布。v0.3.0 已完成 Mobile & Personal Cloud：PWA、single-user Authentication、Linux self-host、server-side SQLite、scheduled backup、GitHub CI 与 production runtime regression。v0.5.0 Personal Material Import 已正式发布（Tag `v0.5.0`，GitHub Release：EE Knowledge v0.5.0）。
+v0.2.0、v0.3.0、v0.4.0、v0.5.0 与 v0.6.0 已正式发布。v0.6.0 的稳定 main 为 `07c598cfa511f4dc7bfeb5b847eebb8436cabe0b`，Tag 为 `v0.6.0`，GitHub Release 为 `EE Knowledge v0.6.0`。当前版本是 v1.0.0-rc.1，进入 Final Product Readiness。
 
 ## 第一阶段 MVP
 
@@ -95,12 +95,12 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-当前阶段是 v0.6.0 Stabilization Stable。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+当前阶段是 v1.0.0-rc.1 Final Product Readiness。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
-v0.5.0 已正式发布，包含 Markdown/TXT、PDF 和 DOCX 文本提取、资料导入回归、部署兼容性与发布文档。本轮 v0.6.0 完成 stable code/docs promotion，并保留全系统回归、数据安全、自托管和移动端稳定化成果；不新增产品功能、Schema、migration 或依赖。Orange Pi、公开 HTTPS、Android PWA 与 USB/NAS 实机状态不会由仓库 CI 代为声称。v0.5.0-alpha.1 处理 Markdown/TXT 个人资料导入，AI Assistant 属于 Post-v1 / Optional Local AI。
+v0.5.0 已正式发布个人资料导入，v0.6.0 已正式发布全系统稳定化、数据安全、自托管和移动端成果。v1.0.0-rc.1 只做最终产品回归、状态文档校准和发布文档，不新增产品功能、Schema、migration 或依赖。Orange Pi、公开 HTTPS、Android PWA 与 USB/NAS 实机状态不会由仓库 CI 代为声称。AI Assistant 属于 Post-v1 / Optional Local AI。
 
 真实 Orange Pi/RK3588、Caddy 公网 HTTPS、Android PWA 安装和 USB/NAS 验收步骤见 [`docs/V0.6_TARGET_ACCEPTANCE.md`](docs/V0.6_TARGET_ACCEPTANCE.md)。
 
-RC 验收清单见 [`docs/V0.6_RC_CHECKLIST.md`](docs/V0.6_RC_CHECKLIST.md)，稳定版说明见 [`docs/V0.6_RELEASE_NOTES.md`](docs/V0.6_RELEASE_NOTES.md)。v0.6.0 stable code/docs 已准备完成；正式 Tag 与 GitHub Release 将在 stable PR 合并并确认最终 main CI 后创建。
+历史 v0.6 RC 验收清单见 [`docs/V0.6_RC_CHECKLIST.md`](docs/V0.6_RC_CHECKLIST.md)，稳定版说明见 [`docs/V0.6_RELEASE_NOTES.md`](docs/V0.6_RELEASE_NOTES.md)。当前 RC 验收清单见 [`docs/V1_RC_CHECKLIST.md`](docs/V1_RC_CHECKLIST.md)，未来正式版说明见 [`docs/V1_RELEASE_NOTES.md`](docs/V1_RELEASE_NOTES.md)。v1.0.0 下一步是 Stable Promotion。
 
 RAG、向量数据库、复杂知识图谱、多用户、复杂同步和语音面试属于 v1.0 之后仅在产生真实需求时评估的能力。

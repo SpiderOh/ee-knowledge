@@ -53,10 +53,12 @@
 - alpha.1：Data Safety & Restore Regression（complete）
 - alpha.2：Mobile & Self-host Stabilization（complete）
 - rc.1：Full-system Regression & Documentation（complete）
-- stable：v0.6.0 正式发布（current；等待 stable PR merge + final main CI + Tag/Release）
+- stable：v0.6.0 正式发布（complete；Tag v0.6.0 + GitHub Release）
 
 ## v1.0.0：Stable Personal EE Knowledge System
 
+- rc.1：Final Product Readiness（current）
+- stable：v1.0.0 正式发布（next）
 - 稳定的长期个人电子信息专业知识系统
 - 面向长期积累、复习和个人自托管使用
 
