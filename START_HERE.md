@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.6.0-alpha.2`
+`v0.6.0-rc.1`
 
 已完成：
 
@@ -36,6 +36,7 @@
 - GitHub Actions CI 与 production runtime verification
 - `/quick-learn` 快速学习入口、课程范围和学习状态优先级选择
 - 移动端 KnowledgePoint 学习信息、教材上下文和窄屏操作 polish
+- v0.6.0-rc.1 全系统回归、RC checklist 和 release notes
 
 下一步：
 
@@ -45,5 +46,6 @@
 - v0.5.0-rc.1：资料导入回归、部署兼容性和发布文档（已完成）
 - v0.5.0 stable：正式发布（Tag v0.5.0 + GitHub Release，已完成）
 - v0.6.0-alpha.1：数据安全与恢复回归（已完成）
-- v0.6.0-alpha.2：Mobile & Self-host Stabilization（当前）
-- 下一步：v0.6.0-rc.1 Full-system Regression & Documentation
+- v0.6.0-alpha.2：Mobile & Self-host Stabilization（已完成）
+- v0.6.0-rc.1：Full-system Regression & Documentation（当前）
+- 下一步：v0.6.0 Stable Promotion
