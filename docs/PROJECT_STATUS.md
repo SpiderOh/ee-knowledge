@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.5.0`
+`v0.6.0-alpha.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish 与 v0.5.0 Personal Material Import 已完成代码与发布文档晋级。当前为 v0.5.0 Stable Promotion，等待 stable PR 合并。
+第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish 与 v0.5.0 Personal Material Import 已完成并正式发布。当前为 v0.6.0-alpha.1 Stabilization：Data Safety & Restore Regression。
 
 ## 已完成
 
@@ -108,6 +108,8 @@
 - npm run verify:material-import：文本、PDF、DOCX 安全边界、真实解析器、预览绑定和无学习副作用验证
 - v0.5.0-rc.1 回归：资料导入安全边界、create-only 竞态、Bundle v1 合并兼容性和运行时鉴权检查
 - v0.5.0 stable code/docs promotion：Personal Material Import stable 范围、Node.js 运行时门禁和发布文档已校准
+- v0.5.0 formal release：Tag `v0.5.0`、GitHub Release `EE Knowledge v0.5.0` 和 stable main `3673932602177abf89e1719fe7e3be48fa9267b6` 已验证
+- v0.6.0-alpha.1 restore regression：source integrity、sidecar fail-closed、pre-restore backup、staged restore、post-restore integrity 和隔离失败清理已覆盖
 - Node.js 运行时门禁与自托管文档已对齐 `20.x >= 20.16.0` 或 `>= 22.3.0`，并明确排除 Node.js 21.x；新增 RC checklist/release notes
 
 ## 部分完成
@@ -117,8 +119,9 @@
 
 ## 未完成
 
-- v0.5.0 Tag + GitHub Release
-- v0.6.0：后续稳定化
+- v0.6.0-alpha.2：Mobile & Self-host Stabilization
+- v0.6.0-rc.1：Full-system Regression & Documentation
+- v0.6.0：稳定发布
 - v1.0.0：稳定的长期个人电子信息专业知识系统
 - Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
 
@@ -132,7 +135,7 @@
 
 ## 下一步
 
-- v0.5.0 Tag + GitHub Release
+- v0.6.0-alpha.2：Mobile & Self-host Stabilization
 
 ## 已知问题
 
@@ -144,6 +147,6 @@
 
 ## 数据库
 
-v0.5.0 未新增 Prisma Schema 或 migration；`pdf-parse` 2.4.5 与 `mammoth` 1.13.0 保持冻结，仅用于服务端文档文本提取；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+v0.5.0 未新增 Prisma Schema 或 migration；v0.6.0-alpha.1 也不新增 Prisma Schema 或 migration；`pdf-parse` 2.4.5 与 `mammoth` 1.13.0 保持冻结，仅用于服务端文档文本提取；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。

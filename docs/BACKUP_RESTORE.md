@@ -48,7 +48,17 @@ npm run db:check
 npm run dev
 ```
 
-`--confirm` 是强制要求的显式确认。恢复前会自动创建 `backups/pre-restore-<timestamp>.db`；源备份不会移动或删除。恢复不会自动运行 migration，也不会自动清理 journal、wal 或 shm 文件。
+`--confirm` 是强制要求的显式确认。恢复流程是：
+
+1. 停止应用和其他 SQLite 写入进程。
+2. 使用 standalone SQLite 备份作为 source；source 先通过 SQLite 文件头、sidecar 和 `PRAGMA integrity_check` 检查。
+3. 若 target 已存在，恢复前自动创建不覆盖已有文件的 `backups/pre-restore-<timestamp>.db`。
+4. source 或 target 存在 journal、wal 或 shm sidecar 时 fail-closed，工具不会自动删除 sidecar。
+5. source 先写入 `<target>.restore-partial`，检查通过后替换 target。
+6. 替换后再次运行 SQLite `integrity_check`，只有检查成功才返回恢复成功。
+7. 恢复后运行 `npm run db:check`，确认应用领域数据不变量。
+
+当前替换流程不宣称跨平台事务级 atomic restore；异常时保留 pre-restore backup，必要时可按同一流程手工恢复。恢复不会自动运行 migration，也不会自动清理 journal、wal 或 shm 文件。
 
 ## 数据库路径
 
