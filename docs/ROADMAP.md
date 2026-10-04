@@ -52,8 +52,8 @@
 
 - alpha.1：Data Safety & Restore Regression（complete）
 - alpha.2：Mobile & Self-host Stabilization（complete）
-- rc.1：Full-system Regression & Documentation（complete/current）
-- stable：v0.6.0 正式发布（next）
+- rc.1：Full-system Regression & Documentation（complete）
+- stable：v0.6.0 正式发布（current；等待 stable PR merge + final main CI + Tag/Release）
 
 ## v1.0.0：Stable Personal EE Knowledge System
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 - 2026-10-04
+
+### Stable
+
+- 完成 Data Safety & Restore、Self-host、Mobile/PWA stabilization 与 full-system regression。
+- 将已验证的 v0.6.0-rc.1 晋级为 stable code/docs promotion；不新增 Schema、migration、seed 或依赖。
+- 正式 Tag 与 GitHub Release 等待 stable PR 合并并确认最终 main CI。
+
 ## 0.6.0-rc.1 - 2026-10-04
 
 ### Full-system Regression & Documentation
