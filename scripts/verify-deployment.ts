@@ -62,6 +62,7 @@ function main() {
   const caddy = read("deploy/Caddyfile.example");
   const env = read("deploy/ee-knowledge.env.example");
   const selfHost = read("docs/SELF_HOST.md");
+  const targetAcceptance = read("docs/V0.6_TARGET_ACCEPTANCE.md");
   const authDocs = read("docs/AUTH.md");
   const envExample = read(".env.example");
   const hashScript = read("scripts/hash-auth-password.ts");
@@ -123,6 +124,9 @@ function main() {
   assert(selfHost.includes("sudo install -d -o ee-knowledge -g ee-knowledge /var/backups/ee-knowledge"), "SELF_HOST.md must create the backup directory with safe ownership");
   assert(!selfHost.includes("0777"), "SELF_HOST.md must not recommend 0777 permissions");
   for (const ambiguousCommand of ["sudo -u ee-knowledge npm run deploy:check", "sudo -u ee-knowledge npm run db\n", "sudo -u ee-knowledge npm run db:check"]) assert(!selfHost.includes(ambiguousCommand), "SELF_HOST.md must not run production checks without EnvironmentFile");
+  assert(!/^npm run deploy:check$/m.test(targetAcceptance), "Target acceptance must not run deploy:check without production EnvironmentFile");
+  assert(targetAcceptance.includes("/etc/ee-knowledge/ee-knowledge.env") && targetAcceptance.includes("systemd"), "Target acceptance must explain the production EnvironmentFile/systemd preflight path");
+  assert(targetAcceptance.includes("sudo -u ee-knowledge npm ci") && targetAcceptance.includes("sudo -u ee-knowledge npm run build"), "Target acceptance host baseline must use the ee-knowledge service user");
   assert(authDocs.includes("npm run auth:hash-password -- --dotenv"), "AUTH.md must document dotenv-safe local hash output");
   assert(authDocs.includes("production systemd EnvironmentFile") && authDocs.includes("raw"), "AUTH.md must document raw production hash output");
   assert(envExample.includes("auth:hash-password -- --dotenv"), ".env.example must mention dotenv-safe hash output");
