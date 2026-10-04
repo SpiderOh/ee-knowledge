@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.0-alpha.1 - 2026-10-04
+
+### Data Safety & Restore Regression
+
+- 增加 restore source 的 SQLite `integrity_check` 门禁，在目标数据库变更前拒绝损坏备份。
+- 保留 source/target sidecar fail-closed、显式 `--confirm` 和 pre-restore backup，并增加 staged restore、恢复后完整性检查与失败清理。
+- 扩展隔离 `verify:backup` 覆盖有效恢复、空目标、损坏 source、sidecar、命名冲突和临时文件清理。
+- 记录 v0.5.0 正式 Tag/Release 状态并开启 v0.6 Stabilization；不新增 schema、migration、seed 或依赖。
+
+### Next
+
+- v0.6.0-alpha.2：Mobile & Self-host Stabilization。
+
 ## 0.5.0 - 2026-10-04
 
 ### Stable Personal Material Import
@@ -12,7 +25,7 @@
 
 ### Release safety
 
-- 正式 Tag 与 GitHub Release 等待 stable PR 合并并确认最终 main CI 后创建。
+- 正式 Tag `v0.5.0` 与 GitHub Release `EE Knowledge v0.5.0` 已创建并验证。
 
 ## 0.5.0-rc.1 - 2026-10-04
 
@@ -24,7 +37,7 @@
 
 ### Next
 
-- v0.5.0 stable：等待 stable PR 合并、最终 main CI、Tag 和 GitHub Release。
+- v0.5.0 stable：已正式发布。
 
 ## 0.5.0-alpha.2 - 2026-10-04
 

@@ -45,13 +45,15 @@
 
 - alpha.1：Markdown/TXT 提取、人工确认、来源记录和创建型 KnowledgePoint 草稿导入（complete）
 - alpha.2：PDF/DOCX 文本提取，复用同一人工确认与导入管线（complete）
-- rc.1：资料导入回归、数据安全和文档（complete/current）
-- stable：v0.5.0 正式发布（current；等待 stable PR merge + final main CI + Tag/Release）
+- rc.1：资料导入回归、数据安全和文档（complete）
+- stable：v0.5.0 正式发布（complete；Tag v0.5.0 + GitHub Release）
 
-## v0.6.0 / RC：Stabilization
+## v0.6.0：Stabilization
 
-- 数据安全、移动端回归和自托管回归
-- 备份/恢复回归、UI polish 和文档
+- alpha.1：Data Safety & Restore Regression（current）
+- alpha.2：Mobile & Self-host Stabilization
+- rc.1：Full-system Regression & Documentation
+- stable：v0.6.0 正式发布
 
 ## v1.0.0：Stable Personal EE Knowledge System
 
