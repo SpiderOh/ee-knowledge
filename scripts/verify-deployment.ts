@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { repoRoot } from "./lib/sqlite-path";
 import { isSupportedNodeVersion, NODE_RUNTIME_REQUIREMENT } from "./lib/node-runtime";
+import { validateProductionEnv, type ProductionEnvInput } from "./lib/production-env";
 
 function read(relativePath: string) {
   const absolutePath = path.join(repoRoot, relativePath);
@@ -13,13 +14,55 @@ function assert(condition: boolean, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
+function verifyProductionEnvRegression() {
+  const existingDirectories = new Set(["/srv/ee-test", "/srv/readonly"]);
+  const fsAdapter = {
+    exists: (filePath: string) => existingDirectories.has(filePath),
+    writable: (directoryPath: string) => directoryPath !== "/srv/readonly",
+  };
+  const base: ProductionEnvInput = {
+    nodeVersion: "20.16.0",
+    nodeEnv: "production",
+    databaseUrl: "file:/srv/ee-test/ee-knowledge.db",
+    repoRoot: "/opt/ee-knowledge",
+    authEnv: {
+      EE_AUTH_PASSWORD_HASH: "scrypt$16384$8$1$abc$def",
+      EE_AUTH_SESSION_SECRET: "x".repeat(32),
+      EE_AUTH_SESSION_TTL_DAYS: "30",
+    },
+    fs: fsAdapter,
+  };
+  validateProductionEnv(base);
+
+  function mustFail(label: string, changes: Partial<ProductionEnvInput>) {
+    let failed = false;
+    try { validateProductionEnv({ ...base, ...changes }); } catch { failed = true; }
+    assert(failed, `${label} production environment case unexpectedly passed`);
+  }
+
+  for (const nodeVersion of ["20.15.0", "21.0.0", "22.2.0"]) mustFail(`Node ${nodeVersion}`, { nodeVersion });
+  mustFail("NODE_ENV", { nodeEnv: "development" });
+  mustFail("missing NODE_ENV", { nodeEnv: undefined });
+  mustFail("missing DATABASE_URL", { databaseUrl: undefined });
+  mustFail("relative SQLite path", { databaseUrl: "file:./production.db" });
+  mustFail("Windows SQLite path", { databaseUrl: "file:C:\\data\\ee.db" });
+  mustFail("repo-local SQLite path", { databaseUrl: "file:/opt/ee-knowledge/data.db" });
+  mustFail("prisma/dev.db", { databaseUrl: "file:/srv/ee-test/prisma/dev.db" });
+  mustFail("missing parent", { databaseUrl: "file:/srv/missing/ee.db" });
+  mustFail("unwritable parent", { databaseUrl: "file:/srv/readonly/ee.db" });
+  mustFail("invalid auth", { authEnv: { ...base.authEnv, EE_AUTH_PASSWORD_HASH: "invalid" } });
+  console.log("Production environment regression: PASS");
+}
+
 function main() {
+  verifyProductionEnvRegression();
   const service = read("deploy/systemd/ee-knowledge.service");
   const backupService = read("deploy/systemd/ee-knowledge-backup.service");
   const backupTimer = read("deploy/systemd/ee-knowledge-backup.timer");
   const caddy = read("deploy/Caddyfile.example");
   const env = read("deploy/ee-knowledge.env.example");
   const selfHost = read("docs/SELF_HOST.md");
+  const targetAcceptance = read("docs/V0.6_TARGET_ACCEPTANCE.md");
   const authDocs = read("docs/AUTH.md");
   const envExample = read(".env.example");
   const hashScript = read("scripts/hash-auth-password.ts");
@@ -81,6 +124,9 @@ function main() {
   assert(selfHost.includes("sudo install -d -o ee-knowledge -g ee-knowledge /var/backups/ee-knowledge"), "SELF_HOST.md must create the backup directory with safe ownership");
   assert(!selfHost.includes("0777"), "SELF_HOST.md must not recommend 0777 permissions");
   for (const ambiguousCommand of ["sudo -u ee-knowledge npm run deploy:check", "sudo -u ee-knowledge npm run db\n", "sudo -u ee-knowledge npm run db:check"]) assert(!selfHost.includes(ambiguousCommand), "SELF_HOST.md must not run production checks without EnvironmentFile");
+  assert(!/^npm run deploy:check$/m.test(targetAcceptance), "Target acceptance must not run deploy:check without production EnvironmentFile");
+  assert(targetAcceptance.includes("/etc/ee-knowledge/ee-knowledge.env") && targetAcceptance.includes("systemd"), "Target acceptance must explain the production EnvironmentFile/systemd preflight path");
+  assert(targetAcceptance.includes("sudo -u ee-knowledge npm ci") && targetAcceptance.includes("sudo -u ee-knowledge npm run build"), "Target acceptance host baseline must use the ee-knowledge service user");
   assert(authDocs.includes("npm run auth:hash-password -- --dotenv"), "AUTH.md must document dotenv-safe local hash output");
   assert(authDocs.includes("production systemd EnvironmentFile") && authDocs.includes("raw"), "AUTH.md must document raw production hash output");
   assert(envExample.includes("auth:hash-password -- --dotenv"), ".env.example must mention dotenv-safe hash output");

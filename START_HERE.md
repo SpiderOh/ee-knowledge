@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.6.0-alpha.1`
+`v0.6.0-alpha.2`
 
 已完成：
 
@@ -44,5 +44,6 @@
 - v0.5.0-alpha.2：PDF/DOCX 文本提取与同一人工确认导入管线（已完成）
 - v0.5.0-rc.1：资料导入回归、部署兼容性和发布文档（已完成）
 - v0.5.0 stable：正式发布（Tag v0.5.0 + GitHub Release，已完成）
-- v0.6.0-alpha.1：数据安全与恢复回归（当前）
-- 下一步：v0.6.0-alpha.2 Mobile & Self-host Stabilization
+- v0.6.0-alpha.1：数据安全与恢复回归（已完成）
+- v0.6.0-alpha.2：Mobile & Self-host Stabilization（当前）
+- 下一步：v0.6.0-rc.1 Full-system Regression & Documentation

@@ -2,6 +2,8 @@
 
 本指南适用于 single-user personal system 的 Linux 自托管部署。推荐使用 Native Node.js、systemd、Caddy 和服务器端 SQLite；不需要 Docker、Kubernetes、PM2、PostgreSQL 或云厂商 SDK。
 
+部署完成后的 Orange Pi/RK3588、systemd、Caddy、备份、Android PWA 和 USB/NAS 人工验收步骤见 [`docs/V0.6_TARGET_ACCEPTANCE.md`](V0.6_TARGET_ACCEPTANCE.md)。该清单不会把未连接的真实设备或公网 HTTPS 标记为仓库 CI 已通过。
+
 ## Requirements
 
 - Debian / Ubuntu compatible Linux
