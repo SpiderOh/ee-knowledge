@@ -37,10 +37,7 @@ export async function importMaterialDraft(input: unknown, expectedSnapshot: stri
   const course = await prisma.course.findUnique({ where: { slug: draft.courseSlug }, select: { id: true } });
   if (!course) return { ok: false as const, errors: ["课程不存在，请先选择已有课程。"] };
   const bundle = buildMaterialKnowledgeBundle(draft);
-  const preview = await previewKnowledgeBundle(bundle);
-  if (!preview.ok) return preview;
-  if (preview.summary.knowledgePoints.update > 0) return { ok: false as const, errors: ["该 slug 已存在，个人资料导入只允许创建新的知识点。"] };
-  const imported = await importKnowledgeBundle(bundle);
+  const imported = await importKnowledgeBundle(bundle, { knowledgePointMode: "create-only" });
   if (!imported.ok) return imported;
   if (imported.result.updatedKnowledgePoints > 0) return { ok: false as const, errors: ["该 slug 已存在，个人资料导入只允许创建新的知识点。"] };
   const created = await prisma.knowledgePoint.findUnique({ where: { slug: draft.slug }, select: { id: true, slug: true, title: true, source: true } });

@@ -31,6 +31,7 @@ async function runCase() {
   const prisma = new PrismaClient();
   const primarySlug = "verify-material-import-point";
   const optionalSlug = "verify-material-import-optional";
+  const raceSlug = "verify-material-race";
   try {
     const extracted = extractTextMaterial({ fileName: "folder/sub/ohm-law.md", mimeType: "text/markdown", bytes: new TextEncoder().encode("\uFEFF标题\r\n\r\n正文") });
     assert(extracted.originalFileName === "ohm-law.md" && extracted.text === "标题\n\n正文", "UTF-8/BOM/CRLF or safe filename failed");
@@ -45,7 +46,7 @@ async function runCase() {
     expectExtractionError("bad.txt", new Uint8Array(2 * 1024 * 1024 + 1), "2 MB");
 
     const course = await prisma.course.findUniqueOrThrow({ where: { slug: "circuit-theory" } });
-    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug] } } });
+    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug] } } });
     const sideEffectsBefore = await Promise.all([prisma.studyProgress.count(), prisma.reviewRecord.count(), prisma.practiceAttempt.count(), prisma.favorite.count(), prisma.note.count()]);
     const extractedDraftText = extractTextMaterial({ fileName: "manual-edit.md", bytes: new TextEncoder().encode("原始提取文本 A") }).text;
     const manuallyConfirmedText = extractedDraftText + "\n人工确认后的正文 B";
@@ -73,6 +74,14 @@ async function runCase() {
     const existingAfter = await prisma.knowledgePoint.findUniqueOrThrow({ where: { slug: "kirchhoff-current-law" }, select: { title: true, definition: true, source: true, sourceBook: true, sourceChapter: true, sourcePage: true, reviewStatus: true } });
     assert(JSON.stringify(existingBefore) === JSON.stringify(existingAfter), "existing slug data changed");
 
+    const raceDraft = { ...draft, slug: raceSlug, title: "资料导入竞争者测试", content: "资料导入不应覆盖竞争者" };
+    const racePreview = await previewMaterialDraft(raceDraft);
+    assert(racePreview.ok && racePreview.summary.knowledgePoints.create === 1 && racePreview.summary.knowledgePoints.update === 0, "race preview failed");
+    const competitor = await prisma.knowledgePoint.create({ data: { slug: raceSlug, title: "competitor title", courseId: course.id, category: KnowledgeCategory.CONCEPT, definition: "competitor content", source: "competitor source", reviewStatus: ReviewStatus.VERIFIED } });
+    const raceResult = await importMaterialDraft(raceDraft, racePreview.ok ? racePreview.snapshot : "");
+    assert(!raceResult.ok, "post-preview competing slug was accepted");
+    const competitorAfter = await prisma.knowledgePoint.findUniqueOrThrow({ where: { id: competitor.id }, select: { title: true, definition: true, source: true, courseId: true, reviewStatus: true } });
+    assert(competitorAfter.title === "competitor title" && competitorAfter.definition === "competitor content" && competitorAfter.source === "competitor source" && competitorAfter.courseId === course.id && competitorAfter.reviewStatus === ReviewStatus.VERIFIED, "competing slug was modified");
     const optionalDraft = { courseSlug: course.slug, title: "验证无来源元数据", slug: optionalSlug, category: KnowledgeCategory.CONCEPT, source: "optional-source.txt", content: "仅保留来源名称" };
     const optionalPreview = await previewMaterialDraft(optionalDraft);
     assert(optionalPreview.ok, "optional source preview failed");
@@ -85,7 +94,7 @@ async function runCase() {
     assert(!stale.ok, "stale snapshot was accepted");
     console.log("Material import verification passed", { extractionBoundaries: true, manualConfirmation: true, createOnly: true, snapshotBinding: true, sideEffects: "none" });
   } finally {
-    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, "verify-material-missing-course", "verify-material-oversized"] } } });
+    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug, "verify-material-missing-course", "verify-material-oversized"] } } });
     await prisma.$disconnect();
   }
 }
