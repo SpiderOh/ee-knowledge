@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.5.0-rc.1`
+`v0.5.0`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish 与 v0.5.0-alpha.1/alpha.2 Personal Material Import 已完成。当前为 v0.5.0-rc.1 回归与发布准备。
+第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish 与 v0.5.0 Personal Material Import 已完成代码与发布文档晋级。当前为 v0.5.0 Stable Promotion，等待 stable PR 合并。
 
 ## 已完成
 
@@ -107,6 +107,7 @@
 - PDF 使用 server-only `pdf-parse` 文本提取，DOCX 使用 `mammoth.extractRawText`；不做 OCR、图片、表格或原始文件持久化
 - npm run verify:material-import：文本、PDF、DOCX 安全边界、真实解析器、预览绑定和无学习副作用验证
 - v0.5.0-rc.1 回归：资料导入安全边界、create-only 竞态、Bundle v1 合并兼容性和运行时鉴权检查
+- v0.5.0 stable code/docs promotion：Personal Material Import stable 范围、Node.js 运行时门禁和发布文档已校准
 - Node.js 运行时门禁与自托管文档已对齐 `20.x >= 20.16.0` 或 `>= 22.3.0`，并明确排除 Node.js 21.x；新增 RC checklist/release notes
 
 ## 部分完成
@@ -116,7 +117,7 @@
 
 ## 未完成
 
-- v0.5.0 stable：Personal Material Import 正式发布
+- v0.5.0 Tag + GitHub Release
 - v0.6.0：后续稳定化
 - v1.0.0：稳定的长期个人电子信息专业知识系统
 - Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
@@ -131,7 +132,7 @@
 
 ## 下一步
 
-- v0.5.0 stable：Personal Material Import 正式发布
+- v0.5.0 Tag + GitHub Release
 
 ## 已知问题
 
@@ -143,6 +144,6 @@
 
 ## 数据库
 
-v0.5.0-rc.1 未新增 Prisma Schema 或 migration；`pdf-parse` 2.4.5 与 `mammoth` 1.13.0 保持冻结，仅用于服务端文档文本提取；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
+v0.5.0 未新增 Prisma Schema 或 migration；`pdf-parse` 2.4.5 与 `mammoth` 1.13.0 保持冻结，仅用于服务端文档文本提取；复用现有 KnowledgePoint source/sourceBook/sourceChapter/sourcePage 字段和 Knowledge Bundle v1 导入服务。学习统计只读取 StudyProgress 当前状态、ReviewRecord 复习事件和 PracticeAttempt 作答事件，不引入 StudyEvent、StudySession 或 LearningLog；Knowledge Bundle 仍不包含用户学习数据。升级前请先执行 `npm run db:backup`，再执行 `npm run db` 和 `npm run db:check`。
 
 Authentication 使用环境变量凭证和签名 cookie，不写入 SQLite，不新增 User 或 Session 表。

@@ -46,7 +46,7 @@
 - alpha.1：Markdown/TXT 提取、人工确认、来源记录和创建型 KnowledgePoint 草稿导入（complete）
 - alpha.2：PDF/DOCX 文本提取，复用同一人工确认与导入管线（complete）
 - rc.1：资料导入回归、数据安全和文档（complete/current）
-- stable：v0.5.0 正式发布（next）
+- stable：v0.5.0 正式发布（current；等待 stable PR merge + final main CI + Tag/Release）
 
 ## v0.6.0 / RC：Stabilization
 
