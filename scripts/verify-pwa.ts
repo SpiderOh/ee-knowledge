@@ -37,6 +37,25 @@ for (const icon of icons) {
   assert(icon.type === "image/png", `icon MIME type must be image/png: ${icon.src}`);
 }
 
+const appShell = readFileSync(join(process.cwd(), "components", "layout", "AppShell.tsx"), "utf8");
+const styles = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
+const mobileRoutes = ["/", "/courses", "/review", "/practice", "/wrong-answers", "/statistics", "/search", "/favorites", "/admin"];
+assert(appShell.includes('className="mobile-nav"') && appShell.includes('aria-label="移动端导航"'), "mobile navigation landmark is missing");
+for (const route of mobileRoutes) assert(appShell.includes(`href="${route}"`), `mobile navigation route is missing: ${route}`);
+assert(/\.mobile-nav\s*\{[^}]*position:\s*fixed/.test(styles), "mobile navigation must be fixed");
+assert(/\.mobile-nav\s*\{[^}]*overflow-x:\s*auto/.test(styles), "mobile navigation must scroll horizontally");
+assert(styles.includes("env(safe-area-inset-top)") && styles.includes("env(safe-area-inset-bottom)"), "mobile safe-area contract is missing");
+assert(styles.includes(".main, .knowledge-main { padding-bottom: calc(82px + env(safe-area-inset-bottom));"), "main content must reserve mobile navigation space");
+assert(styles.includes(".mobile-nav a { min-height: 44px;"), "mobile navigation touch target contract is missing");
+assert(styles.includes(".markdown-content pre, .knowledge-content pre") && styles.includes("overflow-x: auto"), "markdown code overflow contract is missing");
+assert(styles.includes(".katex-display { max-width: 100%; overflow-x: auto;"), "KaTeX overflow contract is missing");
+assert(styles.includes(".course-stat-scroll { overflow-x: auto; }"), "statistics table overflow contract is missing");
+assert(styles.includes(".knowledge-nav { grid-template-columns: 1fr; display: grid;"), "knowledge navigation mobile collapse is missing");
+assert(styles.includes(".admin-stat-grid, .admin-entry-grid { grid-template-columns: 1fr;"), "admin mobile grid collapse is missing");
+assert(styles.includes(".form-grid { grid-template-columns: 1fr;"), "form mobile grid collapse is missing");
+assert(styles.includes(".material-import-file { display: grid; gap: 4px;"), "material import mobile layout contract is missing");
+console.log("Mobile static regression: PASS");
+
 console.log("PWA verification passed", {
   name: config.name,
   display: config.display,

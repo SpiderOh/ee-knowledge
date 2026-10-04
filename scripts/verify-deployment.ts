@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { repoRoot } from "./lib/sqlite-path";
 import { isSupportedNodeVersion, NODE_RUNTIME_REQUIREMENT } from "./lib/node-runtime";
+import { validateProductionEnv, type ProductionEnvInput } from "./lib/production-env";
 
 function read(relativePath: string) {
   const absolutePath = path.join(repoRoot, relativePath);
@@ -13,7 +14,48 @@ function assert(condition: boolean, message: string): asserts condition {
   if (!condition) throw new Error(message);
 }
 
+function verifyProductionEnvRegression() {
+  const existingDirectories = new Set(["/srv/ee-test", "/srv/readonly"]);
+  const fsAdapter = {
+    exists: (filePath: string) => existingDirectories.has(filePath),
+    writable: (directoryPath: string) => directoryPath !== "/srv/readonly",
+  };
+  const base: ProductionEnvInput = {
+    nodeVersion: "20.16.0",
+    nodeEnv: "production",
+    databaseUrl: "file:/srv/ee-test/ee-knowledge.db",
+    repoRoot: "/opt/ee-knowledge",
+    authEnv: {
+      EE_AUTH_PASSWORD_HASH: "scrypt$16384$8$1$abc$def",
+      EE_AUTH_SESSION_SECRET: "x".repeat(32),
+      EE_AUTH_SESSION_TTL_DAYS: "30",
+    },
+    fs: fsAdapter,
+  };
+  validateProductionEnv(base);
+
+  function mustFail(label: string, changes: Partial<ProductionEnvInput>) {
+    let failed = false;
+    try { validateProductionEnv({ ...base, ...changes }); } catch { failed = true; }
+    assert(failed, `${label} production environment case unexpectedly passed`);
+  }
+
+  for (const nodeVersion of ["20.15.0", "21.0.0", "22.2.0"]) mustFail(`Node ${nodeVersion}`, { nodeVersion });
+  mustFail("NODE_ENV", { nodeEnv: "development" });
+  mustFail("missing NODE_ENV", { nodeEnv: undefined });
+  mustFail("missing DATABASE_URL", { databaseUrl: undefined });
+  mustFail("relative SQLite path", { databaseUrl: "file:./production.db" });
+  mustFail("Windows SQLite path", { databaseUrl: "file:C:\\data\\ee.db" });
+  mustFail("repo-local SQLite path", { databaseUrl: "file:/opt/ee-knowledge/data.db" });
+  mustFail("prisma/dev.db", { databaseUrl: "file:/srv/ee-test/prisma/dev.db" });
+  mustFail("missing parent", { databaseUrl: "file:/srv/missing/ee.db" });
+  mustFail("unwritable parent", { databaseUrl: "file:/srv/readonly/ee.db" });
+  mustFail("invalid auth", { authEnv: { ...base.authEnv, EE_AUTH_PASSWORD_HASH: "invalid" } });
+  console.log("Production environment regression: PASS");
+}
+
 function main() {
+  verifyProductionEnvRegression();
   const service = read("deploy/systemd/ee-knowledge.service");
   const backupService = read("deploy/systemd/ee-knowledge-backup.service");
   const backupTimer = read("deploy/systemd/ee-knowledge-backup.timer");

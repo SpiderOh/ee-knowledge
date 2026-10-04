@@ -136,6 +136,15 @@ async function main() {
     assert(authenticatedAdmin.status === 200, "Authenticated admin page was not readable.");
     const authenticatedMaterialImport = await request(`${baseUrl}/admin/material-import`, { headers: { cookie } });
     assert(authenticatedMaterialImport.status === 200, "Authenticated material import page was not readable.");
+    const authenticatedRoutes = ["/", "/courses", "/review", "/practice", "/wrong-answers", "/statistics", "/search", "/favorites", "/admin", "/admin/structure", "/admin/material-import"];
+    for (const route of authenticatedRoutes) {
+      const response = await request(`${baseUrl}${route}`, { headers: { cookie }, redirect: "manual" });
+      assert(response.status === 200, `Authenticated route ${route} returned ${response.status}.`);
+    }
+    const quickLearning = await request(`${baseUrl}/quick-learn`, { headers: { cookie }, redirect: "manual" });
+    const quickLocation = decodeURIComponent(location(quickLearning));
+    assert(quickLearning.status === 200 || (quickLearning.status >= 300 && quickLearning.status < 400 && quickLocation.startsWith("/knowledge/")), `Authenticated /quick-learn returned an invalid ${quickLearning.status} response.`);
+    console.log("[verify:runtime] authenticated main navigation routes and quick-learning contract");
     const authenticatedExport = await request(`${baseUrl}/api/admin/content-export`, { headers: { cookie } });
     assert(authenticatedExport.status !== 401 && authenticatedExport.status < 500, "Authenticated admin API remained unauthorized.");
     const unsafeNext = await request(`${baseUrl}/api/auth/login`, { method: "POST", redirect: "manual", headers: { "content-type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ password: testPassword, next: "https://evil.example" }) });

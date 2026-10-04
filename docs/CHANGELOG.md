@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0-alpha.2 - 2026-10-04
+
+### Mobile & Self-host Stabilization
+
+- 将 `deploy:check` 核心规则抽为可注入 production-env helper，并覆盖有效配置、Node/NODE_ENV/DATABASE_URL/路径/parent/auth 失败分支。
+- 扩大隔离 production runtime smoke，覆盖认证后的主导航链和 `/quick-learn` 合法响应契约；继续使用 disposable SQLite。
+- 在既有 PWA manifest/icon 检查上增加移动导航 href、安全区、44px 触控区、代码/KaTeX/统计表溢出、知识点导航、后台窄屏网格和资料导入布局 contract。
+- 新增 `docs/V0.6_TARGET_ACCEPTANCE.md`，记录 Orange Pi/RK3588、systemd、Caddy、backup、Android PWA 和 USB/NAS 的人工验收步骤；不伪造真实目标环境 PASS。
+- 不新增 Schema、migration、seed 或依赖；v0.6.0-alpha.1 backup/restore regression 保持不变。
+
+### Next
+
+- v0.6.0-rc.1：Full-system Regression & Documentation。
+
 ## 0.6.0-alpha.1 - 2026-10-04
 
 ### Data Safety & Restore Regression
