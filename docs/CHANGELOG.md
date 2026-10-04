@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.0-alpha.1 - 2026-10-03
+
+### Personal Material Import
+
+- 新增 /admin/material-import，支持 Markdown/TXT 的 UTF-8 文本提取、CRLF 归一化、2 MB 限制和二进制/NUL 防护。
+- 支持人工编辑标题、slug、类别、课程、正文和来源元数据，先预览再确认。
+- 复用 Knowledge Bundle v1 预览/导入服务，仅创建新 KnowledgePoint，阻止已有 slug 覆盖。
+
+### Safety
+
+- 原始文件不落盘，不写入学习记录，不新增 Prisma schema、migration 或依赖。
+
+### Next
+
+- v0.5.0-alpha.2：PDF/DOCX 文本提取。
+
+
 ## 0.4.0 - 2026-10-03
 
 ### Stable highlights
