@@ -1,4 +1,4 @@
-export const NODE_RUNTIME_REQUIREMENT = "Node >= 20.16.0 or >= 22.3.0";
+export const NODE_RUNTIME_REQUIREMENT = "Node.js 20.x >= 20.16.0 or Node.js >= 22.3.0";
 
 export function isSupportedNodeVersion(version: string) {
   const match = /^(\d+)\.(\d+)\.(\d+)/.exec(version.trim());

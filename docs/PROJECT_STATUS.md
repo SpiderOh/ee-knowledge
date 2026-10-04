@@ -107,7 +107,7 @@
 - PDF 使用 server-only `pdf-parse` 文本提取，DOCX 使用 `mammoth.extractRawText`；不做 OCR、图片、表格或原始文件持久化
 - npm run verify:material-import：文本、PDF、DOCX 安全边界、真实解析器、预览绑定和无学习副作用验证
 - v0.5.0-rc.1 回归：资料导入安全边界、create-only 竞态、Bundle v1 合并兼容性和运行时鉴权检查
-- Node.js 运行时门禁与自托管文档已对齐 `>= 20.16.0` 或 `>= 22.3.0`；新增 RC checklist/release notes
+- Node.js 运行时门禁与自托管文档已对齐 `20.x >= 20.16.0` 或 `>= 22.3.0`，并明确排除 Node.js 21.x；新增 RC checklist/release notes
 
 ## 部分完成
 
