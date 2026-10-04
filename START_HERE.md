@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.5.0-alpha.1`
+`v0.5.0-alpha.2`
 
 已完成：
 
@@ -41,4 +41,5 @@
 
 - v0.4.0：Knowledge Learning Polish stable
 - v0.5.0-alpha.1：个人资料 Markdown/TXT 导入基础
-- 下一步：v0.5.0-alpha.2 PDF/DOCX 文本提取；发布边界见 `docs/V0.4_RELEASE_NOTES.md`
+- v0.5.0-alpha.2：PDF/DOCX 文本提取与同一人工确认导入管线
+- 下一步：v0.5.0-rc.1 资料导入回归与发布文档；发布边界见 `docs/V0.4_RELEASE_NOTES.md`

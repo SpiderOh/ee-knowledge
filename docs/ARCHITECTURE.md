@@ -112,9 +112,9 @@ ChapterKnowledgePoint
 
 ## 3.5 Material Import Layer
 
-User File (.md/.txt) → Secure Text Extractor → Editable Material Draft → Knowledge Bundle v1 Builder → Preview / Snapshot Binding → Create-only Gate → Existing Import Service → KnowledgePoint (AI_DRAFT)
+User File (.md/.txt/.pdf/.docx) → Secure Text Extractor → Editable Material Draft → Knowledge Bundle v1 Builder → Preview / Snapshot Binding → Create-only Gate → Existing Import Service → KnowledgePoint (AI_DRAFT)
 
-当前只支持 Markdown/TXT。原始文件不持久化；PDF/DOCX 在 alpha.2 复用相同的文本、人工确认和来源元数据契约。导入不写入学习数据，也不自动建立 Book/Chapter 关系。
+文本提取模块保持 client-safe；PDF/DOCX 解析器位于带 `server-only` 边界的服务端模块。支持 Markdown/TXT、PDF 和 DOCX 的纯文本提取，原始文件不持久化；不做 OCR、图片、表格或自动结构切分。导入复用相同的文本、人工确认和来源元数据契约，不写入学习数据，也不自动建立 Book/Chapter 关系。
 
 ## 4. AI 架构（Post-v1 / Optional Local AI）
 

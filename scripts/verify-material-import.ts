@@ -2,7 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { KnowledgeCategory, PrismaClient, ReviewStatus } from "@prisma/client";
-import { extractTextMaterial } from "@/features/material-import/extract";
+import { MAX_DOCUMENT_MATERIAL_BYTES, extractTextMaterial } from "@/features/material-import/extract";
+import { extractMaterial } from "@/features/material-import/document-extract-core";
 import { importMaterialDraft, materialDraftSnapshot, previewMaterialDraft } from "@/features/material-import/service";
 import { repoRoot, resolveSqlitePath, sidecarPaths } from "./lib/sqlite-path";
 import { runNpmScript } from "./lib/run-command";
@@ -16,6 +17,9 @@ function assert(value: unknown, message: string): asserts value {
 }
 function expectExtractionError(fileName: string, bytes: Uint8Array, expected: string) {
   try { extractTextMaterial({ fileName, bytes }); throw new Error("extraction accepted invalid input"); } catch (error) { assert(error instanceof Error && error.message.includes(expected), "extraction regression: " + expected); }
+}
+async function expectDocumentExtractionError(fileName: string, bytes: Uint8Array, expected: string) {
+  try { await extractMaterial({ fileName, bytes }); throw new Error("document extraction accepted invalid input"); } catch (error) { assert(error instanceof Error && error.message.includes(expected), "document extraction regression: " + expected); }
 }
 async function expectDraftBlocked(draft: Record<string, unknown>, label: string) {
   const preview = await previewMaterialDraft(draft);
@@ -32,6 +36,8 @@ async function runCase() {
   const primarySlug = "verify-material-import-point";
   const optionalSlug = "verify-material-import-optional";
   const raceSlug = "verify-material-race";
+  const pdfSlug = "verify-material-pdf";
+  const docxSlug = "verify-material-docx";
   try {
     const extracted = extractTextMaterial({ fileName: "folder/sub/ohm-law.md", mimeType: "text/markdown", bytes: new TextEncoder().encode("\uFEFF标题\r\n\r\n正文") });
     assert(extracted.originalFileName === "ohm-law.md" && extracted.text === "标题\n\n正文", "UTF-8/BOM/CRLF or safe filename failed");
@@ -44,10 +50,34 @@ async function runCase() {
     expectExtractionError("bad.txt", Uint8Array.from([0xc3, 0x28]), "UTF-8");
     expectExtractionError("bad.txt", Uint8Array.from([1, 0, 2]), "二进制");
     expectExtractionError("bad.txt", new Uint8Array(2 * 1024 * 1024 + 1), "2 MB");
+    const fixtureDir = path.join(repoRoot, "scripts", "fixtures", "material-import");
+    const pdfBytes = new Uint8Array(fs.readFileSync(path.join(fixtureDir, "sample.pdf")));
+    const docxBytes = new Uint8Array(fs.readFileSync(path.join(fixtureDir, "sample.docx")));
+    const pdf = await extractMaterial({ fileName: "sample.pdf", mimeType: "application/pdf", bytes: pdfBytes });
+    assert(pdf.format === "pdf" && pdf.pageCount === 1 && pdf.text.includes("Ohm law") && !pdf.text.includes("-- 1 of 1 --"), "valid PDF extraction failed");
+    await expectDocumentExtractionError("no-text.pdf", new Uint8Array(fs.readFileSync(path.join(fixtureDir, "no-text.pdf"))), "没有检测到可提取的 PDF 文本");
+    const docx = await extractMaterial({ fileName: "sample.docx", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", bytes: docxBytes });
+    assert(docx.format === "docx" && docx.text.includes("Kirchhoff current law"), "valid DOCX extraction failed");
+    await expectDocumentExtractionError("invalid.pdf", new TextEncoder().encode("not a PDF"), "PDF 无法解析或文件已损坏");
+    await expectDocumentExtractionError("invalid.docx", new TextEncoder().encode("not a DOCX"), "DOCX 无法解析或文件已损坏");
+    await expectDocumentExtractionError("legacy.doc", new TextEncoder().encode("legacy"), "当前只支持 DOCX");
+    await expectDocumentExtractionError("large.pdf", new Uint8Array(MAX_DOCUMENT_MATERIAL_BYTES + 1), "10 MB");
+    await expectDocumentExtractionError("large.docx", new Uint8Array(MAX_DOCUMENT_MATERIAL_BYTES + 1), "10 MB");
 
     const course = await prisma.course.findUniqueOrThrow({ where: { slug: "circuit-theory" } });
-    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug] } } });
+    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug, pdfSlug, docxSlug] } } });
     const sideEffectsBefore = await Promise.all([prisma.studyProgress.count(), prisma.reviewRecord.count(), prisma.practiceAttempt.count(), prisma.favorite.count(), prisma.note.count()]);
+    const pdfDraft = { courseSlug: course.slug, title: "验证 PDF 资料", slug: pdfSlug, category: KnowledgeCategory.CONCEPT, source: "sample.pdf", content: pdf.text };
+    const pdfPreview = await previewMaterialDraft(pdfDraft);
+    assert(pdfPreview.ok, "PDF draft preview failed");
+    const pdfImport = await importMaterialDraft(pdfDraft, pdfPreview.ok ? pdfPreview.snapshot : "");
+    assert(pdfImport.ok, "PDF draft import failed");
+    const docxDraft = { courseSlug: course.slug, title: "验证 DOCX 资料", slug: docxSlug, category: KnowledgeCategory.CONCEPT, source: "sample.docx", content: docx.text };
+    const docxPreview = await previewMaterialDraft(docxDraft);
+    assert(docxPreview.ok, "DOCX draft preview failed");
+    const docxImport = await importMaterialDraft(docxDraft, docxPreview.ok ? docxPreview.snapshot : "");
+    assert(docxImport.ok, "DOCX draft import failed");
+
     const extractedDraftText = extractTextMaterial({ fileName: "manual-edit.md", bytes: new TextEncoder().encode("原始提取文本 A") }).text;
     const manuallyConfirmedText = extractedDraftText + "\n人工确认后的正文 B";
     const draft = { courseSlug: course.slug, title: "验证资料导入", slug: primarySlug, category: KnowledgeCategory.CONCEPT, source: "verify-material.md", sourceBook: "电路（第五版）", sourceChapter: "第一章", sourcePage: "12", content: manuallyConfirmedText };
@@ -94,7 +124,7 @@ async function runCase() {
     assert(!stale.ok, "stale snapshot was accepted");
     console.log("Material import verification passed", { extractionBoundaries: true, manualConfirmation: true, createOnly: true, snapshotBinding: true, sideEffects: "none" });
   } finally {
-    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug, "verify-material-missing-course", "verify-material-oversized"] } } });
+    await prisma.knowledgePoint.deleteMany({ where: { slug: { in: [primarySlug, optionalSlug, raceSlug, pdfSlug, docxSlug, "verify-material-missing-course", "verify-material-oversized"] } } });
     await prisma.$disconnect();
   }
 }
