@@ -29,6 +29,17 @@ function config(sourcePath: string, primaryDir: string, secondaryDir: string | u
   return { sourcePath, primaryDir, secondaryDir, retentionCount, sqliteExecutable: executable };
 }
 
+function runRestoreWithoutConfirmation(restoreBackup: string) {
+  const npmArgs = ["run", "db:restore", "--", restoreBackup];
+  if (process.env.npm_execpath) {
+    return spawnSync(process.execPath, [process.env.npm_execpath, ...npmArgs], { cwd: repoRoot, encoding: "utf8", windowsHide: true });
+  }
+  if (process.platform === "win32") {
+    return spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", `npm run db:restore -- "${restoreBackup.replaceAll('"', '\\"')}"`], { cwd: repoRoot, encoding: "utf8", windowsHide: true });
+  }
+  return spawnSync("npm", npmArgs, { cwd: repoRoot, encoding: "utf8", windowsHide: true });
+}
+
 function main() {
   const executable = findSqliteExecutable();
   const root = temporaryDirectory();
@@ -113,8 +124,7 @@ function main() {
     const restorePreDirectory = path.join(restoreRoot, "pre-restore");
     createFixtureDatabase(executable, restoreBackup, "restored-data");
     createFixtureDatabase(executable, restoreTarget, "old-data");
-    const restoreCli = process.platform === "win32" ? "npm.cmd" : "npm";
-    const missingConfirmation = spawnSync(restoreCli, ["run", "db:restore", "--", restoreBackup], { cwd: repoRoot, encoding: "utf8", windowsHide: true });
+    const missingConfirmation = runRestoreWithoutConfirmation(restoreBackup);
     assert.notEqual(missingConfirmation.status, 0);
     assert.match(`${missingConfirmation.stdout ?? ""}${missingConfirmation.stderr ?? ""}`, /--confirm/);
     console.log("Restore confirmation requirement: PASS");
@@ -162,7 +172,7 @@ function main() {
 
     const targetSidecar = `${restoreTarget}-wal`;
     fs.writeFileSync(targetSidecar, "sidecar");
-    assert.throws(() => restoreDatabase({ sourcePath: restoreBackup, targetPath: restoreTarget, preRestoreDirectory: restorePreDirectory, sqliteExecutable: executable }), /sidecar/);
+    assert.throws(() => restoreDatabase({ sourcePath: restoreBackup, targetPath: restoreTarget, preRestoreDirectory: restorePreDirectory, sqliteExecutable: executable }), /journal\/wal\/shm/);
     fs.rmSync(targetSidecar);
     assertQuery(executable, restoreTarget, "restored-data");
     console.log("Target sidecar rejection: PASS");
