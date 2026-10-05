@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-rc.1 - 2026-10-04
+## 1.0.0-rc.1 - 2026-10-05
 
 ### Final Product Readiness
 
