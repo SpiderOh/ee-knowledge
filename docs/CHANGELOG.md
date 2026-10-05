@@ -1,12 +1,24 @@
 # Changelog
 
+## 1.0.0-rc.1 - 2026-10-05
+
+### Final Product Readiness
+
+- 进入 Personal v1.0.0-rc.1，完成知识系统、学习闭环、认证、自托管、资料导入、数据安全和移动/PWA 的最终回归范围定义。
+- 新增 `docs/V1_RC_CHECKLIST.md` 与 `docs/V1_RELEASE_NOTES.md`，统一跨 AI 维护文档、产品验收矩阵和未来正式发布说明。
+- 校准 v0.6.0 正式发布状态与 v1.0.0 Stable Promotion 路线；不新增产品功能、Schema、migration、seed 或依赖。
+
+### Next
+
+- v1.0.0：Stable Promotion 与正式发布。
+
 ## 0.6.0 - 2026-10-04
 
 ### Stable
 
 - 完成 Data Safety & Restore、Self-host、Mobile/PWA stabilization 与 full-system regression。
 - 将已验证的 v0.6.0-rc.1 晋级为 stable code/docs promotion；不新增 Schema、migration、seed 或依赖。
-- 正式 Tag 与 GitHub Release 等待 stable PR 合并并确认最终 main CI。
+- 正式 Tag `v0.6.0` 与 GitHub Release `EE Knowledge v0.6.0` 已完成，stable main 为 `07c598cfa511f4dc7bfeb5b847eebb8436cabe0b`。
 
 ## 0.6.0-rc.1 - 2026-10-04
 

@@ -2,11 +2,11 @@
 
 ## 当前版本
 
-`v0.6.0`
+`v1.0.0-rc.1`
 
 ## 当前阶段
 
-第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish 与 v0.5.0 Personal Material Import 已完成并正式发布。v0.6.0-alpha.1 Data Safety & Restore Regression、v0.6.0-alpha.2 Mobile & Self-host 与 v0.6.0-rc.1 Full-system Regression & Documentation 已完成。当前为 v0.6.0 Stable Promotion，等待 stable PR 合并和最终 main CI。
+第一阶段 Knowledge Base MVP、v0.3.0 Mobile & Personal Cloud、v0.4.0 Knowledge Learning Polish、v0.5.0 Personal Material Import 与 v0.6.0 Stabilization 已完成并正式发布。v0.6.0 正式 Tag 为 `v0.6.0`，GitHub Release 为 `EE Knowledge v0.6.0`，stable main 为 `07c598cfa511f4dc7bfeb5b847eebb8436cabe0b`。当前为 v1.0.0-rc.1 Final Product Readiness。
 
 ## 已完成
 
@@ -116,7 +116,8 @@
 - v0.6.0-alpha.2 target acceptance：新增 Orange Pi/RK3588、systemd、Caddy、backup、Android PWA 和 USB/NAS 人工验收清单；真实目标环境仍未测试
 - v0.6.0-rc.1 full-system regression：内容、学习内容、快速学习、复习、练习、统计、认证、部署、备份、PWA、资料导入、MVP、构建和 runtime smoke 已纳入 RC 矩阵
 - v0.6.0-rc.1 release documentation：新增 `docs/V0.6_RC_CHECKLIST.md` 与 `docs/V0.6_RELEASE_NOTES.md`
-- v0.6.0 stable code/docs promotion：版本、稳定状态、路线图和发布文档已校准，等待 stable PR 合并与最终 main CI
+- v0.6.0 stable code/docs promotion：版本、稳定状态、路线图和发布文档已校准并完成正式 Tag/Release
+- v1.0.0-rc.1：最终产品回归、跨 AI 文档维护性检查、状态一致性校准和 RC 发布文档
 - Node.js 运行时门禁与自托管文档已对齐 `20.x >= 20.16.0` 或 `>= 22.3.0`，并明确排除 Node.js 21.x；新增 RC checklist/release notes
 
 ## 部分完成
@@ -126,8 +127,7 @@
 
 ## 未完成
 
-- v0.6.0：Tag + GitHub Release
-- v1.0.0：稳定的长期个人电子信息专业知识系统
+- v1.0.0：Stable Promotion 与正式发布
 - Post-v1 / Optional Local AI：Local AI、AIProvider、RAG、Embedding、Vector DB、复杂知识图谱、独立复试题库、模拟复试、目标院校专区、多用户、商业 SaaS、语音面试、全国院校数据库、FSRS 和复杂推荐算法
 
 ## 依赖状态
@@ -140,7 +140,8 @@
 
 ## 下一步
 
-- v0.6.0：Tag + GitHub Release
+- v1.0.0-rc.1：Final Product Readiness
+- v1.0.0：Stable Promotion 与正式发布
 
 ## 已知问题
 

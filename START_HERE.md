@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v0.6.0`
+`v1.0.0-rc.1`
 
 已完成：
 
@@ -38,6 +38,8 @@
 - 移动端 KnowledgePoint 学习信息、教材上下文和窄屏操作 polish
 - v0.6.0-rc.1 全系统回归、RC checklist 和 release notes
 - v0.6.0 stable code/docs promotion
+- v0.6.0 正式发布（Tag `v0.6.0` + GitHub Release `EE Knowledge v0.6.0`）
+- v1.0.0-rc.1 Final Product Readiness checklist 和 release notes
 
 下一步：
 
@@ -49,5 +51,6 @@
 - v0.6.0-alpha.1：数据安全与恢复回归（已完成）
 - v0.6.0-alpha.2：Mobile & Self-host Stabilization（已完成）
 - v0.6.0-rc.1：Full-system Regression & Documentation（已完成）
-- v0.6.0：Stable code/docs promotion（当前，等待 stable PR 合并）
-- 下一步：v0.6.0 Tag + GitHub Release
+- v0.6.0：Stable code/docs promotion 与正式发布（已完成）
+- v1.0.0-rc.1：Final Product Readiness（当前）
+- 下一步：v1.0.0 Stable Promotion
