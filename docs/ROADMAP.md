@@ -57,8 +57,8 @@
 
 ## v1.0.0：Stable Personal EE Knowledge System
 
-- rc.1：Final Product Readiness（current）
-- stable：v1.0.0 正式发布（next）
+- rc.1：Final Product Readiness（complete）
+- stable：v1.0.0 正式发布（current；等待 stable PR merge + final main CI + Tag/Release）
 - 稳定的长期个人电子信息专业知识系统
 - 面向长期积累、复习和个人自托管使用
 

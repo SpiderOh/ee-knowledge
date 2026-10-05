@@ -43,9 +43,9 @@
 
 ## 当前版本
 
-`v1.0.0-rc.1`
+`v1.0.0`
 
-v0.2.0、v0.3.0、v0.4.0、v0.5.0 与 v0.6.0 已正式发布。v0.6.0 的稳定 main 为 `07c598cfa511f4dc7bfeb5b847eebb8436cabe0b`，Tag 为 `v0.6.0`，GitHub Release 为 `EE Knowledge v0.6.0`。当前版本是 v1.0.0-rc.1，进入 Final Product Readiness。
+v0.2.0、v0.3.0、v0.4.0、v0.5.0 与 v0.6.0 已正式发布。v0.6.0 的稳定 main 为 `07c598cfa511f4dc7bfeb5b847eebb8436cabe0b`，Tag 为 `v0.6.0`，GitHub Release 为 `EE Knowledge v0.6.0`。v1.0.0 stable code/docs promotion 已准备完成；正式 Tag 与 GitHub Release 将在 stable PR 合并并确认最终 main CI 后创建。
 
 ## 第一阶段 MVP
 
@@ -95,12 +95,12 @@ single-user Authentication 已加入，个人页面、管理后台和管理 API 
 
 ## 长期路线
 
-当前阶段是 v1.0.0-rc.1 Final Product Readiness。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
+当前阶段是 v1.0.0 Stable Promotion。手机与电脑访问同一个服务器数据库，不维护独立的离线业务数据库。
 
-v0.5.0 已正式发布个人资料导入，v0.6.0 已正式发布全系统稳定化、数据安全、自托管和移动端成果。v1.0.0-rc.1 只做最终产品回归、状态文档校准和发布文档，不新增产品功能、Schema、migration 或依赖。Orange Pi、公开 HTTPS、Android PWA 与 USB/NAS 实机状态不会由仓库 CI 代为声称。AI Assistant 属于 Post-v1 / Optional Local AI。
+v0.5.0 已正式发布个人资料导入，v0.6.0 已正式发布全系统稳定化、数据安全、自托管和移动端成果。v1.0.0 stable code/docs promotion 不新增产品功能、Schema、migration 或依赖；正式 Tag 与 GitHub Release 待 stable PR 合并并确认最终 main CI 后创建。Orange Pi、公开 HTTPS、Android PWA 与 USB/NAS 实机状态不会由仓库 CI 代为声称。AI Assistant 属于 Post-v1 / Optional Local AI。
 
 真实 Orange Pi/RK3588、Caddy 公网 HTTPS、Android PWA 安装和 USB/NAS 验收步骤见 [`docs/V0.6_TARGET_ACCEPTANCE.md`](docs/V0.6_TARGET_ACCEPTANCE.md)。
 
-历史 v0.6 RC 验收清单见 [`docs/V0.6_RC_CHECKLIST.md`](docs/V0.6_RC_CHECKLIST.md)，稳定版说明见 [`docs/V0.6_RELEASE_NOTES.md`](docs/V0.6_RELEASE_NOTES.md)。当前 RC 验收清单见 [`docs/V1_RC_CHECKLIST.md`](docs/V1_RC_CHECKLIST.md)，未来正式版说明见 [`docs/V1_RELEASE_NOTES.md`](docs/V1_RELEASE_NOTES.md)。v1.0.0 下一步是 Stable Promotion。
+历史 v0.6 RC 验收清单见 [`docs/V0.6_RC_CHECKLIST.md`](docs/V0.6_RC_CHECKLIST.md)，稳定版说明见 [`docs/V0.6_RELEASE_NOTES.md`](docs/V0.6_RELEASE_NOTES.md)。v1 RC 验收清单见 [`docs/V1_RC_CHECKLIST.md`](docs/V1_RC_CHECKLIST.md)，v1 正式版说明见 [`docs/V1_RELEASE_NOTES.md`](docs/V1_RELEASE_NOTES.md)。v1.0.0 下一步是 Tag 与 GitHub Release。
 
 RAG、向量数据库、复杂知识图谱、多用户、复杂同步和语音面试属于 v1.0 之后仅在产生真实需求时评估的能力。

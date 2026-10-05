@@ -8,7 +8,7 @@
 
 当前版本：
 
-`v1.0.0-rc.1`
+`v1.0.0`
 
 已完成：
 
@@ -40,6 +40,7 @@
 - v0.6.0 stable code/docs promotion
 - v0.6.0 正式发布（Tag `v0.6.0` + GitHub Release `EE Knowledge v0.6.0`）
 - v1.0.0-rc.1 Final Product Readiness checklist 和 release notes
+- v1.0.0 stable code/docs promotion（当前）
 
 下一步：
 
@@ -52,5 +53,6 @@
 - v0.6.0-alpha.2：Mobile & Self-host Stabilization（已完成）
 - v0.6.0-rc.1：Full-system Regression & Documentation（已完成）
 - v0.6.0：Stable code/docs promotion 与正式发布（已完成）
-- v1.0.0-rc.1：Final Product Readiness（当前）
-- 下一步：v1.0.0 Stable Promotion
+- v1.0.0-rc.1：Final Product Readiness（已完成）
+- v1.0.0：Stable code/docs promotion（当前）
+- 下一步：v1.0.0 Tag + GitHub Release（等待 stable PR 合并与最终 main CI）
