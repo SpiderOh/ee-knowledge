@@ -104,4 +104,8 @@ The repository CI proves production-like preflight, localhost runtime, static sy
 
 ## Stable Promotion Gate
 
-After this RC PR is reviewed and merged, the stable promotion process must verify the merged `main` CI before creating a stable tag or GitHub Release. This PR creates no tag and no GitHub Release.
+- RC PR #32: merged.
+- RC merge main: `d75061fdabc93dd3a7fd3aff44456d06d822f56c`.
+- Stable PR #33: branch `release/v1.0.0`, based on the RC merge main.
+- The stable tag and GitHub Release remain pending until Stable PR #33 is merged and the final `main` CI succeeds.
+- This stable promotion branch creates no tag and no GitHub Release.

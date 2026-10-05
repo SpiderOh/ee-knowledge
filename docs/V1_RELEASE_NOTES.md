@@ -1,5 +1,9 @@
 # EE Knowledge v1.0.0
 
+## Stable Status
+
+v1.0.0 stable code/docs promotion is prepared from the verified `v1.0.0-rc.1` candidate. The formal `v1.0.0` tag and GitHub Release are created only after the stable PR is merged and the final `main` CI succeeds.
+
 ## What EE Knowledge v1 Is
 
 EE Knowledge v1 is a single-user, personal, long-term electronic-information knowledge and learning system. It supports undergraduate professional study, graduate interview preparation, review, gap finding and long-term accumulation across embedded systems, AI, Edge AI and related engineering topics.
@@ -39,4 +43,3 @@ v1.0.0 adds no new Prisma migration. For a self-hosted installation, stop the se
 ## Target-environment Boundary
 
 Orange Pi/RK3588, a real systemd service, Caddy public HTTPS, Android PWA installation and USB/NAS backup remain manual target acceptance checks. They are not represented as automated PASS results when those environments have not been connected and tested.
-

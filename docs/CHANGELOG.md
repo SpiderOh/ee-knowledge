@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.0 - 2026-10-05
+
+### Stable Personal EE Knowledge System
+
+- 将已验证的 v1.0.0-rc.1 Final Product Readiness candidate 晋级为 stable code/docs promotion。
+- 覆盖完整 Personal v1 范围：知识系统、学习闭环、单用户 Personal Cloud、资料导入、数据安全与自托管。
+- Post-v1 AI、RAG、多用户等能力继续保持在 `Post-v1 / Only if Needed` 范围。
+- 不新增产品功能、Schema、migration、seed 或依赖；正式 Tag 与 GitHub Release 将在 stable PR 合并并确认最终 main CI 后创建。
+
 ## 1.0.0-rc.1 - 2026-10-05
 
 ### Final Product Readiness
